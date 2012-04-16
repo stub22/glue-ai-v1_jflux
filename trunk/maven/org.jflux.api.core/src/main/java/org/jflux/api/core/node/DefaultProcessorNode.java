@@ -15,13 +15,13 @@
  */
 package org.jflux.api.core.node;
 
-import org.jflux.api.core.util.playable.BasicPlayable;
-import org.jflux.api.core.util.proc.Processor;
+import org.jflux.api.core.playable.BasicPlayable;
+import org.jflux.api.core.proc.Processor;
+import org.jflux.api.core.playable.PlayableListener;
+import org.jflux.api.core.playable.PlayableNotifier;
 import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.api.core.util.Listener;
 import org.jflux.api.core.util.Notifier;
-import org.jflux.api.core.util.playable.PlayableListener;
-import org.jflux.api.core.util.playable.PlayableNotifier;
 
 /**
  *

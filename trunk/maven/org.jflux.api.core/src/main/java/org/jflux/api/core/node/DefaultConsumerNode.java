@@ -15,10 +15,10 @@
  */
 package org.jflux.api.core.node;
 
-import org.jflux.api.core.util.playable.BasicPlayable;
-import org.jflux.api.core.util.proc.Consumer;
+import org.jflux.api.core.playable.BasicPlayable;
+import org.jflux.api.core.proc.Consumer;
+import org.jflux.api.core.playable.PlayableListener;
 import org.jflux.api.core.util.Listener;
-import org.jflux.api.core.util.playable.PlayableListener;
 
 /**
  *

@@ -20,7 +20,7 @@ import org.jflux.api.core.node.ConsumerNode;
 import org.jflux.api.core.node.Node;
 import org.jflux.api.core.node.ProcessorNode;
 import org.jflux.api.core.node.ProducerNode;
-import org.jflux.api.core.util.playable.BasicPlayable;
+import org.jflux.api.core.playable.BasicPlayable;
 import org.jflux.api.core.util.Notifier;
 
 /**
