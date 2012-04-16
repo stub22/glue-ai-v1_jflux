@@ -20,7 +20,7 @@ import org.jflux.api.core.command.CommandInterpreterFactory;
 import org.jflux.api.core.command.CommandSet;
 import org.jflux.api.core.command.DefaultCommandInterpreter;
 import org.jflux.api.core.node.Node;
-import org.jflux.api.core.util.playable.PlayCommands;
+import org.jflux.api.core.playable.PlayCommands;
 import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.api.core.util.Notifier;
 

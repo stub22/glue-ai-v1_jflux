@@ -15,9 +15,9 @@
  */
 package org.jflux.api.core.service;
 
+import org.jflux.api.core.node.Node;
 import org.jflux.api.core.util.Listener;
 import org.jflux.api.core.util.Notifier;
-import org.jflux.api.core.node.Node;
 
 /**
  *
