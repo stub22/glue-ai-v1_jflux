@@ -21,6 +21,7 @@ import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.api.core.util.Listener;
 import org.jflux.api.core.util.Notifier;
 import org.jflux.api.core.util.playable.PlayableListener;
+import org.jflux.api.core.util.playable.PlayableNotifier;
 
 /**
  *
@@ -39,7 +40,8 @@ public class DefaultProcessorNode<In, Out> extends
         }
         myInputListener = 
                 new PlayableListener<In>(this, new DefaultInputListener());
-        myOutputNotifier = new DefaultNotifier<Out>();
+        myOutputNotifier = 
+                new PlayableNotifier<Out>(this, new DefaultNotifier<Out>());
         myProcessor = proc;
     }
     
