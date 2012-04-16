@@ -21,7 +21,7 @@ import org.jflux.api.core.node.Node;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Service<Cmd, Status, Ident, N extends Node> {
     public Ident getIdentifier();

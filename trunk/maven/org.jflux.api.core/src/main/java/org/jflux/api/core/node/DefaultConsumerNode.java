@@ -22,7 +22,7 @@ import org.jflux.api.core.util.playable.PlayableListener;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class DefaultConsumerNode<In> extends 
         BasicPlayable implements ConsumerNode<In> {

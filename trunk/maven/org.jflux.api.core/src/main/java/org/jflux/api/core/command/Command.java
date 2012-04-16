@@ -17,7 +17,7 @@ package org.jflux.api.core.command;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Command {
     public String getCommandName();

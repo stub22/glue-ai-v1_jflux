@@ -17,7 +17,7 @@ package org.jflux.api.core.util;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Adapter<A,B> {
     public B adapt(A a);

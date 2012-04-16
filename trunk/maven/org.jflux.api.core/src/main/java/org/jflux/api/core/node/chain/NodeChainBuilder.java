@@ -23,7 +23,7 @@ import org.jflux.api.core.node.ProducerNode;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class NodeChainBuilder<T> {
     private ProducerNode myProducer;

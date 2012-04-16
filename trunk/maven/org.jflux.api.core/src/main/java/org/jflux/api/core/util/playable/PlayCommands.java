@@ -25,7 +25,7 @@ import org.jflux.api.core.util.Listener;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class PlayCommands {
     public final static String START = "START";
