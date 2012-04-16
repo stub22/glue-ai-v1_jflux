@@ -19,7 +19,7 @@ import org.jflux.api.core.util.playable.Playable;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Node extends Playable{
 }

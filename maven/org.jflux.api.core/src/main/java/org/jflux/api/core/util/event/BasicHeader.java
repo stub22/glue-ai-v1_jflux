@@ -19,7 +19,7 @@ import java.util.Properties;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface BasicHeader<SourceRef, Time> {
     public SourceRef getSourceReference();

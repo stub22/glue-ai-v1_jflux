@@ -17,7 +17,7 @@ package org.jflux.api.core.util;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Notifier<E> {
     public void addListener(Listener<E> listener);

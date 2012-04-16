@@ -17,7 +17,7 @@ package org.jflux.api.core.util.event;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Event<Header, Data> {
     public Header getHeader();

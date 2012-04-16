@@ -19,7 +19,7 @@ import org.jflux.api.core.util.Listener;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface CommandSet<Cmd> extends Listener<Cmd> {    
     public CommandInterpreter<Cmd> getInterpreter(Cmd cmd);

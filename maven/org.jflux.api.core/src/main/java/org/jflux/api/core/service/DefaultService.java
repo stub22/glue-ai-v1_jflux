@@ -26,7 +26,7 @@ import org.jflux.api.core.util.Notifier;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class DefaultService<Cmd, Status, Ident, N extends Node> implements 
         Service<Cmd, Status, Ident, N> {

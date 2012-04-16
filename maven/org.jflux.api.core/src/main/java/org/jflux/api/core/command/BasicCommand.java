@@ -17,7 +17,7 @@ package org.jflux.api.core.command;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class BasicCommand implements Command{
     private String myCommandName;

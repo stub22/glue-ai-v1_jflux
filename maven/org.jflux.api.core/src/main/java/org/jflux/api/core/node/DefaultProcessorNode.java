@@ -25,7 +25,7 @@ import org.jflux.api.core.util.playable.PlayableNotifier;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class DefaultProcessorNode<In, Out> extends 
         BasicPlayable implements ProcessorNode<In, Out> {

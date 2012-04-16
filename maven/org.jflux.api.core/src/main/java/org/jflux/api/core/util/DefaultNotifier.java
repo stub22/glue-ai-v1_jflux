@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class DefaultNotifier<E> implements Notifier<E> {
     protected List<Listener<E>> myListeners;

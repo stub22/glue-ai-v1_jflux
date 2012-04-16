@@ -21,7 +21,7 @@ import org.jflux.api.core.util.Listener;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class PlayableListener<E> implements Listener<E> {
     private final static Logger theLogger = Logger.getLogger(PlayableListener.class.getName());

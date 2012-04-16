@@ -17,7 +17,7 @@ package org.jflux.api.core.util.proc;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Processor<In,Out> {
     public Out process(In a);

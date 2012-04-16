@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class DefaultCommandSet<Cmd extends Command> implements CommandSet<Cmd> {
     private Map<String,CommandInterpreter<Cmd>> myIntpreterMap;

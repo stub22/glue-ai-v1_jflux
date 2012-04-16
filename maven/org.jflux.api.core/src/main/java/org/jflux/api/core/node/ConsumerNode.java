@@ -19,7 +19,7 @@ import org.jflux.api.core.util.Listener;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface ConsumerNode<E> extends Node{
     public Listener<E> getListener();
