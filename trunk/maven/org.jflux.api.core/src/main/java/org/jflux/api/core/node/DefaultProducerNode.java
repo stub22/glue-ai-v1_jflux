@@ -16,7 +16,6 @@
 package org.jflux.api.core.node;
 
 import org.jflux.api.core.playable.BasicPlayable;
-import org.jflux.api.core.proc.Producer;
 import org.jflux.api.core.playable.PlayableNotifier;
 import org.jflux.api.core.util.Notifier;
 
@@ -27,14 +26,14 @@ import org.jflux.api.core.util.Notifier;
 public class DefaultProducerNode<Out> extends 
         BasicPlayable implements ProducerNode<Out> {
     private Notifier<Out> myNotifier;
-    protected Producer<Out> myProducer;
+    private Class<Out> myOutputClass;
 
-    public DefaultProducerNode(Producer<Out> producer){
-        if(producer == null){
+    public DefaultProducerNode(Class<Out> outputClass, Notifier<Out> producer){
+        if(outputClass == null || producer == null){
             throw new NullPointerException();
         }
-        myProducer = producer;
-        myNotifier = new PlayableNotifier<Out>(this, myProducer);
+        myOutputClass = outputClass;
+        myNotifier = new PlayableNotifier<Out>(this, producer);
     }
 
     @Override
@@ -44,6 +43,6 @@ public class DefaultProducerNode<Out> extends
 
     @Override
     public Class<Out> getProducedClass() {
-        return myProducer.getOutputClass();
+        return myOutputClass;
     }
 }

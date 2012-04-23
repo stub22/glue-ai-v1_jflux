@@ -16,7 +16,6 @@
 package org.jflux.api.core.node;
 
 import org.jflux.api.core.playable.BasicPlayable;
-import org.jflux.api.core.proc.Consumer;
 import org.jflux.api.core.playable.PlayableListener;
 import org.jflux.api.core.util.Listener;
 
@@ -27,14 +26,14 @@ import org.jflux.api.core.util.Listener;
 public class DefaultConsumerNode<In> extends 
         BasicPlayable implements ConsumerNode<In> {
     private Listener<In> myListener;
-    private Consumer<In> myConsumer;
+    private Class<In> myInputClass;
 
-    public DefaultConsumerNode(Consumer<In> proc){
-        if(proc == null){
+    public DefaultConsumerNode(Class<In> inputClass, Listener<In> proc){
+        if(inputClass == null || proc == null){
             throw new NullPointerException();
         }
-        myConsumer = proc;
-        myListener = new PlayableListener<In>(this, myConsumer);
+        myInputClass = inputClass;
+        myListener = new PlayableListener<In>(this, proc);
     }
     
     @Override
@@ -44,6 +43,6 @@ public class DefaultConsumerNode<In> extends
 
     @Override
     public Class<In> getConsumedClass() {
-        return myConsumer.getInputClass();
+        return myInputClass;
     }
 }
