@@ -20,6 +20,7 @@ package org.jflux.api.core.playable;
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Playable {
+    
     public static enum PlayState{
         INITIALIZING,
         PENDING,

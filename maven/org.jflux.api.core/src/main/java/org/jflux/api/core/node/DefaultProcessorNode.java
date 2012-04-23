@@ -16,9 +16,9 @@
 package org.jflux.api.core.node;
 
 import org.jflux.api.core.playable.BasicPlayable;
-import org.jflux.api.core.proc.Processor;
 import org.jflux.api.core.playable.PlayableListener;
 import org.jflux.api.core.playable.PlayableNotifier;
+import org.jflux.api.core.util.Adapter;
 import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.api.core.util.Listener;
 import org.jflux.api.core.util.Notifier;
@@ -29,15 +29,19 @@ import org.jflux.api.core.util.Notifier;
  */
 public class DefaultProcessorNode<In, Out> extends 
         BasicPlayable implements ProcessorNode<In, Out> {
-    private Processor<In, Out> myProcessor;
-            
-    protected Listener<In> myInputListener;
-    protected Notifier<Out> myOutputNotifier;
+    private Adapter<In, Out> myProcessor;
+    private Listener<In> myInputListener;
+    private Notifier<Out> myOutputNotifier;
+    private Class<In> myInputClass;
+    private Class<Out> myOutputClass;
 
-    public DefaultProcessorNode(Processor<In,Out> proc){
-        if(proc == null){
+    public DefaultProcessorNode(Class<In> inputClass, 
+            Class<Out> outputClass, Adapter<In,Out> proc){
+        if(inputClass == null || outputClass == null || proc == null){
             throw new NullPointerException();
         }
+        myInputClass = inputClass;
+        myOutputClass = outputClass;
         myInputListener = 
                 new PlayableListener<In>(this, new DefaultInputListener());
         myOutputNotifier = 
@@ -56,12 +60,12 @@ public class DefaultProcessorNode<In, Out> extends
     }
     @Override
     public Class<In> getConsumedClass() {
-        return myProcessor.getInputClass();
+        return myInputClass;
     }
 
     @Override
     public Class<Out> getProducedClass() {
-        return myProcessor.getOutputClass();
+        return myOutputClass;
     }
     
     class DefaultInputListener implements Listener<In>{
@@ -71,7 +75,7 @@ public class DefaultProcessorNode<In, Out> extends
             if(event == null || myProcessor == null || notifier == null){
                 return;
             }
-            Out out = myProcessor.process(event);
+            Out out = myProcessor.adapt(event);
             if(out != null){
                 notifier.notifyListeners(out);
             }
