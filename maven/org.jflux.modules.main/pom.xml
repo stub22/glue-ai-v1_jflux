@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jflux</groupId>
 		<artifactId>org.jflux.project.root</artifactId>
-		<version>0.1.0</version>
+		<version>0.1.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>	
 	
@@ -17,6 +17,7 @@
     
 	<modules>
 		<module>../org.jflux.api.core</module>
+		<module>../org.jflux.impl.messaging</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
