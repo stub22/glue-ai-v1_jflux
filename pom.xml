@@ -23,7 +23,7 @@
   
 	<groupId>org.jflux</groupId>
 	<artifactId>org.jflux.project.root</artifactId>
-	<version>0.1.1-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId} - Root pom</name>
 	<url>http://www.jflux.org</url>
