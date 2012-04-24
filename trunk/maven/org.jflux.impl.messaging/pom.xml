@@ -3,7 +3,7 @@
 
     <groupId>org.jflux</groupId>
     <artifactId>org.jflux.impl.messaging</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <name>org.jflux.impl.messaging OSGi Bundle</name>
