@@ -48,7 +48,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>org.jflux.api.core</artifactId>
-            <version>${project.version}</version>
+            <version>0.1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
