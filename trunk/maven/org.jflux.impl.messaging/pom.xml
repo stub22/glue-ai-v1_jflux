@@ -28,12 +28,12 @@
         <dependency>
             <groupId>org.appdapter</groupId>
             <artifactId>ext.bundle.apache_qpid_010</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.appdapter</groupId>
             <artifactId>ext.bundle.apache_avro_151</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <artifactId>slf4j-api</artifactId>
