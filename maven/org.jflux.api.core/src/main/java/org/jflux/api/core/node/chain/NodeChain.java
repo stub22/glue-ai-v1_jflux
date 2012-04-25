@@ -31,19 +31,26 @@ import org.jflux.api.core.util.Notifier;
  */
 public class NodeChain<P,C> extends PlayableGroup implements Node{
     private ProducerNode<P> myProducer;
-    private ProcessorChain<P,C> myProcessorChain;
+    private List<ProcessorNode<?,?>> myProcessors;
     private ConsumerNode<C> myConsumer;
     private List<Playable> myPlayables;
     private boolean myWiredFlag;
     
-    NodeChain(ProducerNode<P> producer, ProcessorChain<P,C> chain){
+    NodeChain(List<ProcessorNode<?,?>> chain){
+        if(chain == null){
+            throw new NullPointerException();
+        }
+        build(null, chain, null);
+    }
+    
+    NodeChain(ProducerNode<P> producer, List<ProcessorNode<?,?>> chain){
         if(producer == null || chain == null){
             throw new NullPointerException();
         }
         build(producer, chain, null);
     }
     
-    NodeChain(ProcessorChain<P,C> chain, ConsumerNode<C> consumer){
+    NodeChain(List<ProcessorNode<?,?>> chain, ConsumerNode<C> consumer){
         if(chain == null || consumer == null){
             throw new NullPointerException();
         }
@@ -51,7 +58,7 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
     }
     
     NodeChain(ProducerNode<P> producer, 
-            ProcessorChain<P,C> chain, ConsumerNode<C> consumer){
+            List<ProcessorNode<?,?>> chain, ConsumerNode<C> consumer){
         if(producer == null || consumer == null){
             throw new NullPointerException();
         }
@@ -60,25 +67,40 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
     
     private void build(
             ProducerNode<P> producer, 
-            ProcessorChain<P,C> chain,
+            List<ProcessorNode<?,?>> chain,
             ConsumerNode<C> consumer){
         myProducer = producer;
-        myProcessorChain = chain;
+        myProcessors = chain;
         myConsumer = consumer;
         myWiredFlag = false;
         
         int len = myProducer == null ? 0 : 1;
         len = myConsumer == null ? len : len + 1;
-        len = myProcessorChain == null ? len : len + 1;
+        len = myProcessors == null ? len : len + 1;
         
         myPlayables = new ArrayList<Playable>(len);
+        Class inputClass = null;
         if(myProducer != null){
             myPlayables.add(myProducer);
+            inputClass = myProducer.getProducedClass();
         }
-        if(myProcessorChain != null){
-            myPlayables.add(myProcessorChain);
+        if(myProcessors != null){
+            for(ProcessorNode<?,?> proc : myProcessors){
+                if(inputClass != null && 
+                        !proc.getConsumedClass().isAssignableFrom(inputClass)){
+                    throw new IllegalArgumentException(
+                            "Bad processor input class.");
+                }
+                myPlayables.add(proc);
+                inputClass = proc.getProducedClass();
+            }
         }
         if(myConsumer != null){
+            if(inputClass != null && 
+                    !myConsumer.getConsumedClass().isAssignableFrom(inputClass)){
+                throw new IllegalArgumentException(
+                        "Bad consumer input class.");
+            }
             myPlayables.add(myConsumer);
         }
     }
@@ -87,8 +109,8 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         return myProducer;
     }
     
-    protected ProcessorChain<P,C> getProcessorChain(){
-        return myProcessorChain;
+    protected List<ProcessorNode<?,?>> getProcessorChain(){
+        return myProcessors;
     }
     
     protected ConsumerNode<C> getConsumer(){
@@ -107,15 +129,27 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
     }
     
     protected void wire(){
-        Notifier n = myProducer == null ? null : myProducer.getNotifier();
-        for(ProcessorNode proc : myProcessorChain.getProcessorNodes()){
+        Notifier n = null;
+        if(myProducer != null){
+            n = myProducer.getNotifier();
+            if(myProducer instanceof NodeChain){
+                ((NodeChain)myProducer).wire();
+            }
+        }
+        for(ProcessorNode<?,?> proc : myProcessors){
             if(proc == null){
                 continue;
             }
             n = n == null ? proc.getNotifier() : wire(n, proc);
+            if(proc instanceof NodeChain){
+                ((NodeChain)proc).wire();
+            }
         }
         if(myConsumer != null){
             wire(n,myConsumer);
+            if(myConsumer instanceof NodeChain){
+                ((NodeChain)myConsumer).wire();
+            }
         }
         myWiredFlag = true;
     }

@@ -100,15 +100,11 @@ public class NodeChainBuilder<T> {
         }else if(consumer == null){
             return getProducerChain();
         }
-        ProcessorChain chain = myProcessorList == null ? 
-                null : new ProcessorChain(myProcessorList);
-        return new NodeChain(myProducer, chain, consumer);
+        return new NodeChain(myProducer, myProcessorList, consumer);
     }
     
     public NodeChain getNodeChain(){
-        ProcessorChain chain = myProcessorList == null ? 
-                null : new ProcessorChain(myProcessorList);
-        return new NodeChain(myProducer, chain, null);
+        return new NodeChain(myProducer, myProcessorList, null);
     }
     
     public ConsumerChain getConsumerChain(Listener<T> listener){
@@ -117,7 +113,7 @@ public class NodeChainBuilder<T> {
     }
     
     public ConsumerChain getConsumerChain(ConsumerNode<T> node){
-        return new ConsumerChain(new ProcessorChain(myProcessorList), node);
+        return new ConsumerChain(myProcessorList, node);
     }
     
     public ProcessorChain<?,T> getProcessorChain(){
@@ -125,7 +121,6 @@ public class NodeChainBuilder<T> {
     }
     
     public ProducerChain getProducerChain(){
-        return new ProducerChain(
-                myProducer, new ProcessorChain(myProcessorList));
+        return new ProducerChain(myProducer, myProcessorList);
     }
 }
