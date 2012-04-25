@@ -17,8 +17,6 @@ package org.jflux.api.core.node.chain;
 
 import java.util.List;
 import org.jflux.api.core.node.ProcessorNode;
-import org.jflux.api.core.playable.Playable;
-import org.jflux.api.core.playable.PlayableGroup;
 import org.jflux.api.core.util.Listener;
 import org.jflux.api.core.util.Notifier;
 
@@ -27,15 +25,14 @@ import org.jflux.api.core.util.Notifier;
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class ProcessorChain<In,Out> extends 
-        PlayableGroup implements ProcessorNode<In, Out> {
+        NodeChain implements ProcessorNode<In, Out> {
     private ProcessorNode<In,?> myHeadNode;
     private ProcessorNode<?,Out> myTailNode;
     private List<ProcessorNode> myNodes;
 
     ProcessorChain(List<ProcessorNode> nodes) {
-        if(nodes == null){
-            throw new NullPointerException();
-        }else if(nodes.isEmpty()){
+        super(nodes);
+        if(nodes.isEmpty()){
             throw new IllegalArgumentException();
         }
         myHeadNode = nodes.get(0);
@@ -65,10 +62,5 @@ public class ProcessorChain<In,Out> extends
     
     public List<ProcessorNode> getProcessorNodes(){
         return myNodes;
-    }
-
-    @Override
-    protected Iterable<Playable> getPlayables() {
-        return (Iterable)myNodes;
     }
 }

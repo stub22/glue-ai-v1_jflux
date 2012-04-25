@@ -15,6 +15,8 @@
  */
 package org.jflux.api.core.node.chain;
 
+import java.util.List;
+import org.jflux.api.core.node.ProcessorNode;
 import org.jflux.api.core.node.ProducerNode;
 import org.jflux.api.core.util.Notifier;
 
@@ -25,18 +27,30 @@ import org.jflux.api.core.util.Notifier;
 public class ProducerChain<T> extends NodeChain implements ProducerNode<T> {
     
     public <P> ProducerChain(
-            ProducerNode<P> producer, ProcessorChain<P,T> chain){
+            ProducerNode<P> producer, List<ProcessorNode<?,?>> chain){
         super(producer, chain);
     }
     
     @Override
     public Notifier<T> getNotifier() {
-        return getProcessorChain().getNotifier();
+        List<ProcessorNode> nodes = getProcessorChain();
+        if(nodes != null && !nodes.isEmpty()){
+            return nodes.get(nodes.size()-1).getNotifier();
+        }else if(getProducer() != null){
+            return getProducer().getNotifier();
+        }
+        return null;
     }
 
     @Override
     public Class<T> getProducedClass() {
-        return getProcessorChain().getProducedClass();
+        List<ProcessorNode> nodes = getProcessorChain();
+        if(nodes != null && !nodes.isEmpty()){
+            return nodes.get(nodes.size()-1).getProducedClass();
+        }else if(getProducer() != null){
+            return getProducer().getProducedClass();
+        }
+        return null;
     }
     
     @Override
@@ -45,7 +59,7 @@ public class ProducerChain<T> extends NodeChain implements ProducerNode<T> {
     }
     
     @Override
-    public ProcessorChain getProcessorChain(){
+    public List<ProcessorNode> getProcessorChain(){
         return super.getProcessorChain();
     }
 }

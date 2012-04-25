@@ -15,7 +15,9 @@
  */
 package org.jflux.api.core.node.chain;
 
+import java.util.List;
 import org.jflux.api.core.node.ConsumerNode;
+import org.jflux.api.core.node.ProcessorNode;
 import org.jflux.api.core.util.Listener;
 
 /**
@@ -25,18 +27,30 @@ import org.jflux.api.core.util.Listener;
 public class ConsumerChain<T> extends NodeChain implements ConsumerNode<T> {
     
     public <P> ConsumerChain(
-            ProcessorChain<T,P> chain, ConsumerNode<P> consumer){
+            List<ProcessorNode<?,?>> chain, ConsumerNode<P> consumer){
         super(chain, consumer);
     }
 
     @Override
     public Listener<T> getListener() {
-        return getProcessorChain().getListener();
+        List<ProcessorNode> nodes = getProcessorChain();
+        if(nodes != null && !nodes.isEmpty()){
+            return nodes.get(0).getListener();
+        }else if(getConsumer() != null){
+            return getConsumer().getListener();
+        }
+        return null;
     }
 
     @Override
     public Class<T> getConsumedClass() {
-        return getProcessorChain().getConsumedClass();
+        List<ProcessorNode> nodes = getProcessorChain();
+        if(nodes != null && !nodes.isEmpty()){
+            return nodes.get(0).getConsumedClass();
+        }else if(getConsumer() != null){
+            return getConsumer().getConsumedClass();
+        }
+        return null;
     }
     
     @Override
@@ -45,7 +59,7 @@ public class ConsumerChain<T> extends NodeChain implements ConsumerNode<T> {
     }
     
     @Override
-    public ProcessorChain getProcessorChain(){
+    public List<ProcessorNode> getProcessorChain(){
         return super.getProcessorChain();
     }
 }
