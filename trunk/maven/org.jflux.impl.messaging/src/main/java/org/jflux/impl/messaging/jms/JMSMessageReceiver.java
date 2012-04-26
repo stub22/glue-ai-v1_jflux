@@ -21,6 +21,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
+import org.jflux.api.core.node.DefaultProducerNode;
 import org.jflux.api.core.util.DefaultNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,34 +33,31 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class JMSMessageReceiver extends DefaultNotifier<BytesMessage>{
+public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
     private final static Logger theLogger = LoggerFactory.getLogger(JMSMessageReceiver.class);
     private MessageConsumer myMessageConsumer;
-    private boolean myConsumeFlag;
     private Thread myPollingThread;
-    private boolean myPauseFlag;
     
     public JMSMessageReceiver(Session session, Destination dest) 
             throws JMSException{
+        super(BytesMessage.class, new DefaultNotifier<BytesMessage>());
         if(session == null || dest == null){
             throw new NullPointerException();
         }
         myMessageConsumer = session.createConsumer(dest);
-        myConsumeFlag = true;
-        myPauseFlag = false;
     }
     
     /**
      * Creates and starts an Polling Thread to fetch Records over JMS.
      */
-    public void start(){
-        if(myConsumeFlag && 
-                myPollingThread != null && 
+    @Override
+    public boolean start(){
+        if(!super.start()){
+            return false;
+        }
+        if(myPollingThread != null && 
                 myPollingThread.isAlive()){//We are already running
-            if(myPauseFlag){//If we are paused, then we should resume
-                resume();
-            }
-            return;
+            return true;
         }
         myPollingThread = new Thread(new Runnable() {
             @Override
@@ -67,26 +65,14 @@ public class JMSMessageReceiver extends DefaultNotifier<BytesMessage>{
                 eventLoop();
             }
         });
-        myConsumeFlag = true;
-        myPauseFlag = false;
         myPollingThread.start();
+        return true;
     }  
     
-    public void pause(){
-        myPauseFlag = true;
-    }
-    
-    public void resume(){
-        myPauseFlag = false;
-    }
-    
-    public void stop(){
-        myConsumeFlag = false;
-    }
-    
     private void eventLoop(){
-        while(myConsumeFlag){
-            if(myPauseFlag){
+        while(getPlayState() == PlayState.RUNNING 
+                || getPlayState() == PlayState.PAUSED){
+            if(getPlayState() == PlayState.PAUSED){
                 try{
                     Thread.sleep(10);
                 }catch(InterruptedException ex){}
@@ -97,7 +83,7 @@ public class JMSMessageReceiver extends DefaultNotifier<BytesMessage>{
                 if(bytesMsg == null){
                     continue;
                 }
-                notifyListeners(bytesMsg);
+                getNotifier().notifyListeners(bytesMsg);
             }catch(Throwable t){
                 theLogger.warn("Error in Message fetch loop.", t);
                 try{

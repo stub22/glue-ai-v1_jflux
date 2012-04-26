@@ -100,7 +100,7 @@ public class JMSAvroUtils {
             Class<E> eventClass, Class<R> recordClass, Schema schema, 
             Adapter<R,E> recordAdapter, Session session, Destination dest) 
             throws JMSException {
-        return new NodeChainBuilder<BytesMessage>(BytesMessage.class, 
+        return new NodeChainBuilder<BytesMessage>(
                         new JMSMessageReceiver(session, dest))
                 .attach(ByteArrayInputStream.class, new MessageUnpacker())
                 .attach(recordClass, AvroStreamDecoder.buildBinaryDecoder(
@@ -114,7 +114,7 @@ public class JMSAvroUtils {
             Class<T> recordClass, Schema schema, 
             Session session, Destination dest) 
             throws JMSException {
-        return new NodeChainBuilder<BytesMessage>(BytesMessage.class, 
+        return new NodeChainBuilder<BytesMessage>( 
                         new JMSMessageReceiver(session, dest))
                 .attach(ByteArrayInputStream.class, new MessageUnpacker())
                 .attach(recordClass, AvroStreamDecoder.buildBinaryDecoder(
