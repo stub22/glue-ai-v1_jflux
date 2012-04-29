@@ -73,35 +73,49 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         myProcessors = chain;
         myConsumer = consumer;
         myWiredFlag = false;
-        
+        collectPlayables();
+        ensureNodeCompatibility();
+    }
+    
+    private void collectPlayables(){
         int len = myProducer == null ? 0 : 1;
         len = myConsumer == null ? len : len + 1;
-        len = myProcessors == null ? len : len + 1;
+        len = myProcessors == null ? len : len + myProcessors.size();
         
         myPlayables = new ArrayList<Playable>(len);
-        Class inputClass = null;
         if(myProducer != null){
             myPlayables.add(myProducer);
-            inputClass = myProducer.getProducedClass();
         }
         if(myProcessors != null){
+            myPlayables.addAll(myProcessors);
+        }
+        if(myConsumer != null){
+            myPlayables.add(myConsumer);
+        }
+    }
+    
+    private void ensureNodeCompatibility(){
+        if(myProducer == null 
+                && (myProcessors == null || myProcessors.isEmpty())){
+            return;
+        }
+        Class produced = myProducer != null ? myProducer.getProducedClass()
+                : myProcessors.get(0).getConsumedClass();
+        if(myProcessors != null){
             for(ProcessorNode<?,?> proc : myProcessors){
-                if(inputClass != null && 
-                        !proc.getConsumedClass().isAssignableFrom(inputClass)){
-                    throw new IllegalArgumentException(
-                            "Bad processor input class.");
-                }
-                myPlayables.add(proc);
-                inputClass = proc.getProducedClass();
+                verfiyTypes(produced, proc.getConsumedClass());
+                produced = proc.getProducedClass();
             }
         }
         if(myConsumer != null){
-            if(inputClass != null && 
-                    !myConsumer.getConsumedClass().isAssignableFrom(inputClass)){
-                throw new IllegalArgumentException(
-                        "Bad consumer input class.");
-            }
-            myPlayables.add(myConsumer);
+            verfiyTypes(produced, myConsumer.getConsumedClass());
+        }
+    }
+    
+    private static void verfiyTypes(Class<?> input, Class<?> consumed){
+        if(!consumed.isAssignableFrom(input)){
+            throw new IllegalArgumentException(
+                    input + " is not assignable from " + consumed);
         }
     }
     
@@ -119,13 +133,10 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
     
     @Override
     public boolean start(){
-        if(!super.start()){
-            return false;
-        }
         if(!myWiredFlag){
             wire();
         }
-        return true;
+       return super.start();
     }
     
     protected void wire(){

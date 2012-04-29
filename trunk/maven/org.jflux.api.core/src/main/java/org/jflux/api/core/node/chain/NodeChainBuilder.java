@@ -17,12 +17,7 @@ package org.jflux.api.core.node.chain;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jflux.api.core.node.ConsumerNode;
-import org.jflux.api.core.node.DefaultConsumerNode;
-import org.jflux.api.core.node.DefaultProcessorNode;
-import org.jflux.api.core.node.DefaultProducerNode;
-import org.jflux.api.core.node.ProcessorNode;
-import org.jflux.api.core.node.ProducerNode;
+import org.jflux.api.core.node.*;
 import org.jflux.api.core.util.Adapter;
 import org.jflux.api.core.util.Listener;
 import org.jflux.api.core.util.Notifier;
@@ -31,33 +26,39 @@ import org.jflux.api.core.util.Notifier;
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class NodeChainBuilder<T> {
+public class NodeChainBuilder<H,T> {
     private ProducerNode myProducer;
     private List<ProcessorNode> myProcessorList;
     private Class<T> myTailClass;
     
-    public NodeChainBuilder(Class<T> inputClass){
-        if(inputClass == null){
-            throw new NullPointerException();
-        }
-        myProcessorList = new ArrayList<ProcessorNode>();
-        myTailClass = inputClass;
+    public static <C> NodeChainBuilder<C,C> build(Class<C> head){
+        return new NodeChainBuilder<C, C>(head,head);
     }
     
-    public NodeChainBuilder(Class<T> outputClass, Notifier<T> producer){
-        this(new DefaultProducerNode<T>(outputClass, producer));
+    public static <C> NodeChainBuilder<C,C> build(
+            Class<C> head, Notifier<C> producer){
+        return build(new DefaultProducerNode<C>(head, producer));
     }
     
-    public NodeChainBuilder(ProducerNode<T> producer){
+    public static <C> NodeChainBuilder<C,C> build(ProducerNode<C> producer){
         if(producer == null){
             throw new NullPointerException();
         }
-        myProducer = producer;
-        myTailClass = myProducer.getProducedClass();
-        myProcessorList = new ArrayList<ProcessorNode>();
+        Class<C> c = producer.getProducedClass();
+        NodeChainBuilder<C, C> builder = new NodeChainBuilder<C, C>(c,c);
+        builder.myProducer = producer;
+        return builder;
     }
     
-    public <N> NodeChainBuilder<N> attach(
+    private NodeChainBuilder(Class<H> head, Class<T> tail){
+        if(head == null || tail == null){
+            throw new NullPointerException();
+        }
+        myProcessorList = new ArrayList<ProcessorNode>();
+        myTailClass = tail;
+    }
+    
+    public <N> NodeChainBuilder<H,N> attach(
             Class<N> outputClass, Adapter<T,N> adapter){
         if(outputClass == null || adapter == null){
             throw new NullPointerException();
@@ -66,7 +67,7 @@ public class NodeChainBuilder<T> {
                 myTailClass, outputClass, adapter));
     }
     
-    public <N> NodeChainBuilder<N> attach(ProcessorNode<T,N> proc){
+    public <N> NodeChainBuilder<H,N> attach(ProcessorNode<T,N> proc){
         if(proc == null){
             throw new NullPointerException();
         }else if(!proc.getConsumedClass().isAssignableFrom(myTailClass)){
@@ -75,7 +76,7 @@ public class NodeChainBuilder<T> {
                     + ", found class: " + proc.getConsumedClass());
         }
         myProcessorList.add(proc);
-        NodeChainBuilder<N> newChainBuilder = (NodeChainBuilder<N>)this;
+        NodeChainBuilder<H,N> newChainBuilder = (NodeChainBuilder<H,N>)this;
         newChainBuilder.myTailClass = proc.getProducedClass();
         return newChainBuilder;
     }
@@ -107,20 +108,20 @@ public class NodeChainBuilder<T> {
         return new NodeChain(myProducer, myProcessorList, null);
     }
     
-    public ConsumerChain getConsumerChain(Listener<T> listener){
+    public ConsumerChain<H> getConsumerChain(Listener<T> listener){
         return getConsumerChain(
                 new DefaultConsumerNode<T>(myTailClass, listener));
     }
     
-    public ConsumerChain getConsumerChain(ConsumerNode<T> node){
+    public ConsumerChain<H> getConsumerChain(ConsumerNode<T> node){
         return new ConsumerChain(myProcessorList, node);
     }
     
-    public ProcessorChain<?,T> getProcessorChain(){
+    public ProcessorChain<H,T> getProcessorChain(){
         return new ProcessorChain(myProcessorList);
     }
     
-    public ProducerChain getProducerChain(){
+    public ProducerChain<T> getProducerChain(){
         return new ProducerChain(myProducer, myProcessorList);
     }
 }

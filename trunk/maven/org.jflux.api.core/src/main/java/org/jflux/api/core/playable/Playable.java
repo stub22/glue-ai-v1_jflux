@@ -22,6 +22,7 @@ package org.jflux.api.core.playable;
 public interface Playable {
     
     public static enum PlayState{
+        UNAVAILABLE,
         INITIALIZING,
         PENDING,
         RUNNING,
