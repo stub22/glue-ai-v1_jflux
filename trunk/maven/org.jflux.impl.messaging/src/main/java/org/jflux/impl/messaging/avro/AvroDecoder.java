@@ -34,41 +34,41 @@ import org.jflux.api.core.util.Adapter;
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class AvroStreamDecoder<S extends InputStream, T extends IndexedRecord> 
+public class AvroDecoder<S extends InputStream, T extends IndexedRecord> 
         implements Adapter<S,T>{
     private final static Logger theLogger = 
-            Logger.getLogger(AvroStreamDecoder.class.getName());
+            Logger.getLogger(AvroDecoder.class.getName());
     private DatumReader<T> myReader;
     private DecoderFactory myDecoderFactory;
     private boolean myJsonFlag;
     private Schema mySchema;
     
     public static <R extends SpecificRecordBase> 
-            AvroStreamDecoder<ByteArrayInputStream,R> 
+            AvroDecoder<ByteArrayInputStream,R> 
             buildByteStreamDecoder(Class<R> outputClass){
-        return new AvroStreamDecoder<ByteArrayInputStream,R>(
+        return new AvroDecoder<ByteArrayInputStream,R>(
                 outputClass, null, false);
     }
     
     public static <S extends InputStream, R extends SpecificRecordBase> 
-            AvroStreamDecoder<S,R> buildSpecificBinaryDecoder(
+            AvroDecoder<S,R> buildSpecificBinaryDecoder(
                     Class<S> inputClass, Class<R> outputClass){
-        return new AvroStreamDecoder<S,R>(outputClass, null, false);
+        return new AvroDecoder<S,R>(outputClass, null, false);
     }
     
     public static <S extends InputStream, R extends IndexedRecord> 
-            AvroStreamDecoder<S,R> buildBinaryDecoder(
+            AvroDecoder<S,R> buildBinaryDecoder(
                     Class<S> inputClass, Class<R> outputClass, Schema schema){
-        return new AvroStreamDecoder<S,R>(outputClass, schema, false);
+        return new AvroDecoder<S,R>(outputClass, schema, false);
     }
     
     public static <S extends InputStream, R extends IndexedRecord> 
-            AvroStreamDecoder<S,R> buildJsonDecoder(
+            AvroDecoder<S,R> buildJsonDecoder(
                     Class<S> inputClass, Class<R> outputClass, Schema schema){
-        return new AvroStreamDecoder<S,R>(outputClass, schema, true);
+        return new AvroDecoder<S,R>(outputClass, schema, true);
     }
     
-    AvroStreamDecoder(Class<T> clazz, Schema schema, boolean json){
+    AvroDecoder(Class<T> clazz, Schema schema, boolean json){
         if(clazz == null && schema == null){
             throw new NullPointerException();
         }else if(json && schema == null){
