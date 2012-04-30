@@ -35,10 +35,10 @@ import org.jflux.api.core.util.Factory;
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class AvroStreamEncoder<T extends IndexedRecord, S extends OutputStream> 
+public class AvroEncoder<T extends IndexedRecord, S extends OutputStream> 
         implements  Adapter<T,S>{
     private final static Logger theLogger = 
-            Logger.getLogger(AvroStreamEncoder.class.getName());
+            Logger.getLogger(AvroEncoder.class.getName());
     private Factory<S> myStreamFactory;
     private DatumWriter<T> myWriter;
     private EncoderFactory myEncoderFactory;
@@ -46,25 +46,25 @@ public class AvroStreamEncoder<T extends IndexedRecord, S extends OutputStream>
     private Schema mySchema;
 
     public static <R extends SpecificRecordBase> 
-            AvroStreamEncoder<R,ByteArrayOutputStream> 
+            AvroEncoder<R,ByteArrayOutputStream> 
             buildByteStreamEncoder(Class<R> clazz){
-        return new AvroStreamEncoder<R,ByteArrayOutputStream>(
+        return new AvroEncoder<R,ByteArrayOutputStream>(
                 clazz, null, new ByteOutputStreamFactory(), false);
     }
     
     public static <R extends IndexedRecord, S extends OutputStream> 
-            AvroStreamEncoder<R,S> buildBinaryEncoder(
+            AvroEncoder<R,S> buildBinaryEncoder(
                     Class<R> clazz, Schema schema, Factory<S> streamFact){
-        return new AvroStreamEncoder<R,S>(clazz, schema, streamFact, false);
+        return new AvroEncoder<R,S>(clazz, schema, streamFact, false);
     }
     
     public static <R extends IndexedRecord, S extends OutputStream> 
-            AvroStreamEncoder<R,S> buildJsonEncoder(
+            AvroEncoder<R,S> buildJsonEncoder(
                     Class<R> clazz, Schema schema, Factory<S> streamFact){
-        return new AvroStreamEncoder<R,S>(clazz, schema, streamFact, true);
+        return new AvroEncoder<R,S>(clazz, schema, streamFact, true);
     }
     
-    public AvroStreamEncoder(Class<T> clazz, Schema schema, 
+    public AvroEncoder(Class<T> clazz, Schema schema, 
             Factory<S> streamFact, boolean json){
         if(streamFact == null 
                 || (clazz == null && schema == null)
