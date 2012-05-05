@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 by The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,26 +17,8 @@ package org.jflux.api.core.util;
 
 /**
  *
- * @author Matthew Stevenson <www.jflux.org>
+ * @author Matthew Stevenson <www.robokind.org>
  */
-public interface Factory<T> {
-    public T build();
-    
-    public static class RepeaterFactory<T> implements Factory<T> {
-        private T myT;
-
-        public RepeaterFactory(T t){
-            if(t == null){
-                throw new NullPointerException();
-            }
-            myT = t;
-        }
-        
-        @Override
-        public T build() {
-            return myT;
-        }
-        
-        
-    }
+public interface Source<E> {
+    public E getValue();
 }
