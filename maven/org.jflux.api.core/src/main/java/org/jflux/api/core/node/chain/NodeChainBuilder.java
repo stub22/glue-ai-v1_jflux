@@ -105,7 +105,7 @@ public class NodeChainBuilder<H,T> {
     }
     
     public NodeChain getNodeChain(){
-        return new NodeChain(myProducer, myProcessorList, null);
+        return new NodeChain(myProducer, myProcessorList);
     }
     
     public ConsumerChain<H> getConsumerChain(Listener<T> listener){
