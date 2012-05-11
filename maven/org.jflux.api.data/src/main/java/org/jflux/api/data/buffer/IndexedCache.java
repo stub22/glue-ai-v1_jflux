@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Hanson Robokind LLC.
+ * Copyright 2012 by The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,12 @@
  */
 package org.jflux.api.data.buffer;
 
+import org.jflux.api.core.util.Adapter;
+
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
-public interface IndexedCache<K,V> extends Cache<V> {
-    public V getData(K key);
+public interface IndexedCache<K,V> extends Cache<V>, Adapter<K,V> {
+    
 }

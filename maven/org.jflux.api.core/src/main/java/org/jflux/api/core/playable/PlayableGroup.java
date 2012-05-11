@@ -17,7 +17,7 @@ package org.jflux.api.core.playable;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public abstract class PlayableGroup implements Playable{
     private PlayState myPlayState;

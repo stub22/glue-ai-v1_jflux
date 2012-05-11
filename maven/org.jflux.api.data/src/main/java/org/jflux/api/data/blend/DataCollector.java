@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Hanson Robokind LLC.
+ * Copyright 2012 by The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.jflux.api.core.util.Adapter;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface DataCollector<M,D,L> extends Adapter<M,L>  {
     public static class DefaultCollector<M,D> implements 

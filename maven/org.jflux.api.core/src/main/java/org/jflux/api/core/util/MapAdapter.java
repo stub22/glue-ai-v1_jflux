@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class MapAdapter<K,V> implements Adapter<K,V>{
     private Map<K,V> myMap;
