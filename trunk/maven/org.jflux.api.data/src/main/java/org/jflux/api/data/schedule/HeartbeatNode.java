@@ -22,9 +22,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.node.DefaultProducerNode;
-import org.jflux.api.core.util.Factory;
 import org.jflux.api.core.playable.Playable.PlayState;
 import org.jflux.api.core.util.DefaultNotifier;
+import org.jflux.api.core.util.Factory;
 import org.jflux.api.core.util.Notifier;
 
 /**
