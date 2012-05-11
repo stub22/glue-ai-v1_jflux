@@ -16,6 +16,7 @@
 package org.jflux.impl.messaging.avro;
 
 import org.apache.avro.generic.IndexedRecord;
+import org.jflux.api.core.util.Adapter;
 
 /**
  *
@@ -23,4 +24,14 @@ import org.apache.avro.generic.IndexedRecord;
  */
 public interface PortableEvent<T extends IndexedRecord> {
     public T getRecord();
+    
+    public static class PortableAdapter<T extends PortableEvent<R>, R extends IndexedRecord> 
+            implements Adapter<T, R> {
+
+        @Override
+        public R adapt(T a) {
+            return a.getRecord();
+        }
+
+    }
 }
