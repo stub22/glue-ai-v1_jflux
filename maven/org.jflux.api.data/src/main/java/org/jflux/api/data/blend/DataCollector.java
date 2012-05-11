@@ -15,10 +15,39 @@
  */
 package org.jflux.api.data.blend;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.jflux.api.core.util.Adapter;
+
 /**
  *
  * @author Matthew Stevenson <www.robokind.org>
  */
-public class DataCollector {
-    
+public interface DataCollector<M,D,L> extends Adapter<M,L>  {
+    public static class DefaultCollector<M,D> implements 
+            DataCollector<M, D, List<D>> {
+        private List<Adapter<M,D>> myDataSources;
+
+        public DefaultCollector(){
+            myDataSources = new ArrayList<Adapter<M, D>>();
+        }
+        
+        @Override
+        public List<D> adapt(M msg) {
+            List<D> list = new ArrayList<D>(myDataSources.size());
+            for(Adapter<M,D> source : myDataSources){
+                D data = source.adapt(msg);
+                list.add(data);
+            }
+            return list;
+        }
+        
+        public void addSource(Adapter<M,D> source){
+            if(source == null){
+                throw new NullPointerException();
+            }
+            myDataSources.add(source);
+        }
+        
+    }
 }
