@@ -23,7 +23,7 @@ import org.jflux.api.core.util.Listener;
 
 /**
  *
- * @author Matthew Stevenson <www.robokind.org>
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Router<E> extends Listener<E> {
     final static Logger theLogger = Logger.getLogger(Router.class.getName());
