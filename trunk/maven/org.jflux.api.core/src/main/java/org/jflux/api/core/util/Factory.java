@@ -20,7 +20,7 @@ package org.jflux.api.core.util;
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Factory<T> {
-    public T build();
+    public T create();
     
     public static class RepeaterFactory<T> implements Factory<T> {
         private T myT;
@@ -33,7 +33,7 @@ public interface Factory<T> {
         }
         
         @Override
-        public T build() {
+        public T create() {
             return myT;
         }
         

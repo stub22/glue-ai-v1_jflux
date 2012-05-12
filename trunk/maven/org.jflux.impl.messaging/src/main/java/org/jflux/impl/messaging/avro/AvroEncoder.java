@@ -85,7 +85,7 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
     @Override
     public S adapt(T a) {
         try{
-            S out = myStreamFactory.build();
+            S out = myStreamFactory.create();
             if(out == null){
                 theLogger.warning("Error encoding Avro record.  "
                         + "Unable to create OutputStream.");
@@ -107,7 +107,7 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
     public static class ByteOutputStreamFactory implements 
             Factory<ByteArrayOutputStream>{
         @Override
-        public ByteArrayOutputStream build() {
+        public ByteArrayOutputStream create() {
             return new ByteArrayOutputStream();
         }
         

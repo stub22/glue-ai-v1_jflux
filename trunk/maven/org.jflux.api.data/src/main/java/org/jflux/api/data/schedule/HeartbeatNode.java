@@ -115,7 +115,7 @@ public class HeartbeatNode<M> extends
             if(myFactory == null || getPlayState() != PlayState.RUNNING){
                 return;
             }
-            M t = myFactory.build();
+            M t = myFactory.create();
             Notifier<M> n = getNotifier();
             if(n == null || t == null){
                 return;
