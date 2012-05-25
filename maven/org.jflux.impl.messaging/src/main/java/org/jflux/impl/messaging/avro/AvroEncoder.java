@@ -28,8 +28,8 @@ import org.apache.avro.io.Encoder;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
-import org.jflux.api.core.util.Adapter;
-import org.jflux.api.core.util.Factory;
+import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Source;
 
 /**
  *
@@ -39,7 +39,7 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
         implements  Adapter<T,S>{
     private final static Logger theLogger = 
             Logger.getLogger(AvroEncoder.class.getName());
-    private Factory<S> myStreamFactory;
+    private Source<S> myStreamFactory;
     private DatumWriter<T> myWriter;
     private EncoderFactory myEncoderFactory;
     private boolean myJsonFlag;
@@ -54,18 +54,18 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
     
     public static <R extends IndexedRecord, S extends OutputStream> 
             AvroEncoder<R,S> buildBinaryEncoder(
-                    Class<R> clazz, Schema schema, Factory<S> streamFact){
+                    Class<R> clazz, Schema schema, Source<S> streamFact){
         return new AvroEncoder<R,S>(clazz, schema, streamFact, false);
     }
     
     public static <R extends IndexedRecord, S extends OutputStream> 
             AvroEncoder<R,S> buildJsonEncoder(
-                    Class<R> clazz, Schema schema, Factory<S> streamFact){
+                    Class<R> clazz, Schema schema, Source<S> streamFact){
         return new AvroEncoder<R,S>(clazz, schema, streamFact, true);
     }
     
     public AvroEncoder(Class<T> clazz, Schema schema, 
-            Factory<S> streamFact, boolean json){
+            Source<S> streamFact, boolean json){
         if(streamFact == null 
                 || (clazz == null && schema == null)
                 || (json && schema == null)){
@@ -85,7 +85,7 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
     @Override
     public S adapt(T a) {
         try{
-            S out = myStreamFactory.create();
+            S out = myStreamFactory.getValue();
             if(out == null){
                 theLogger.warning("Error encoding Avro record.  "
                         + "Unable to create OutputStream.");
@@ -105,9 +105,9 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
     }
     
     public static class ByteOutputStreamFactory implements 
-            Factory<ByteArrayOutputStream>{
+            Source<ByteArrayOutputStream>{
         @Override
-        public ByteArrayOutputStream create() {
+        public ByteArrayOutputStream getValue() {
             return new ByteArrayOutputStream();
         }
         

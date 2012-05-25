@@ -15,6 +15,8 @@
  */
 package org.jflux.api.core.util;
 
+import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 import java.util.ArrayList;
 import java.util.List;
 

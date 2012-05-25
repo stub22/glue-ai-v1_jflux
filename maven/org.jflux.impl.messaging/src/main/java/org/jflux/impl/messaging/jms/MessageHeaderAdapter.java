@@ -17,7 +17,7 @@ package org.jflux.impl.messaging.jms;
 
 import javax.jms.BytesMessage;
 import org.apache.qpid.client.message.JMSBytesMessage;
-import org.jflux.api.core.util.Adapter;
+import org.jflux.api.core.Adapter;
 
 /**
  *

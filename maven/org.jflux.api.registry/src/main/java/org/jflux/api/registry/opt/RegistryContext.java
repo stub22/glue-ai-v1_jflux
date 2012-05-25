@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.command;
+package org.jflux.api.registry.opt;
+
+import org.jflux.api.registry.Registry;
 
 /**
- *
- * @author Matthew Stevenson <www.jflux.org>
+ * Provides user information and access rights for working with a Registry.
+ * 
+ * @author Matthew Stevenson
  */
-public interface Command {
-    public String getCommandName();
+public interface RegistryContext<R extends Registry,K,V> {
+    public R getRegistry();
+    public V getProperty(K key);
 }

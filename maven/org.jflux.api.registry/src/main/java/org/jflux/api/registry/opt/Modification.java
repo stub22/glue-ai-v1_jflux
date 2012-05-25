@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.command;
+package org.jflux.api.registry.opt;
+
+import java.util.Map;
 
 /**
- *
- * @author Matthew Stevenson <www.jflux.org>
+ * Describes a change to a registration.
+ * 
+ * @author Matthew Stevenson
  */
-public class BasicCommand implements Command{
-    private String myCommandName;
+public interface Modification<Cert,K,V> {
+    public Cert getCertificate();
+    public Map<K,V> getProperties();
     
-    public BasicCommand(String cmdName){
-        if(cmdName == null){
-            throw new NullPointerException();
-        }
-        myCommandName = cmdName;
-    }
-    
-    @Override
-    public String getCommandName() {
-        return myCommandName;
-    }
-    
+    public static interface BasicModification<K,V> extends 
+            Modification<Certificate<Reference<K,V>>,K,V> {}
 }

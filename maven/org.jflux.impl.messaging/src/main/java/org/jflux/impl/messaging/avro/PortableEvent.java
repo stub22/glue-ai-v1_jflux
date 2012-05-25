@@ -16,7 +16,7 @@
 package org.jflux.impl.messaging.avro;
 
 import org.apache.avro.generic.IndexedRecord;
-import org.jflux.api.core.util.Adapter;
+import org.jflux.api.core.Adapter;
 
 /**
  *

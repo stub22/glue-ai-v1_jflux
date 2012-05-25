@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import javax.jms.Session;
-import org.jflux.api.core.util.Adapter;
+import org.jflux.api.core.Adapter;
 
 /**
  *

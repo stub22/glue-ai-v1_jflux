@@ -13,11 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.util;
+package org.jflux.api.core.event;
+
+import java.util.Properties;
 
 /**
+ *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface Listener<E> {
-    public void handleEvent(E event);
+public interface Header<SourceRef, Time> {
+    public SourceRef getSourceReference();
+    public Time getTimeStamp();
+    public String getEventType();
+    public Properties getHeaderProperties();
 }

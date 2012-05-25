@@ -18,7 +18,7 @@ package org.jflux.impl.messaging.jms;
 import java.io.ByteArrayInputStream;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
-import org.jflux.api.core.util.Adapter;
+import org.jflux.api.core.Adapter;
 
 /**
  *

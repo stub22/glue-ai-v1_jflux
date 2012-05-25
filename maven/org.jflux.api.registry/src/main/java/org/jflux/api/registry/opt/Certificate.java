@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.service;
-
-import org.jflux.api.core.node.Node;
-import org.jflux.api.core.util.Listener;
-import org.jflux.api.core.util.Notifier;
+package org.jflux.api.registry.opt;
 
 /**
- *
- * @author Matthew Stevenson <www.jflux.org>
+ * A Certificate is produced when an item is added to a Registry.
+ * A Certificate provides permissions for modifying or removing the 
+ * registration.
+ * 
+ * @author Matthew Stevenson
  */
-public interface Service<Cmd, Status, Ident, N extends Node> {
-    public Ident getIdentifier();
-    public Listener<Cmd> getCommandListener();
-    public Notifier<Status> getStatusNotifier();
-    public N getNode();
+public interface Certificate<Ref> {
+    public Ref getReference();
+    
+    public static interface BasicCertificate<K,V> extends 
+            Certificate<Reference<K,V>> {}
 }

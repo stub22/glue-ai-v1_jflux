@@ -15,7 +15,7 @@
  */
 package org.jflux.api.core.node;
 
-import org.jflux.api.core.util.Listener;
+import org.jflux.api.core.Listener;
 
 /**
  *

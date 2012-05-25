@@ -15,6 +15,8 @@
  */
 package org.jflux.api.core.util;
 
+import org.jflux.api.core.Listener;
+
 /**
  * Repeats an event to a set of listeners.  Useful for aggregating listeners 
  * for a Notifier which may change.
