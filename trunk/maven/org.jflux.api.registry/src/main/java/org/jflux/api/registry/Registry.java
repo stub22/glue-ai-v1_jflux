@@ -33,7 +33,8 @@ import org.jflux.api.registry.opt.RegistryContext;
  * @param <ModReq> Requests a registration be modified
  * @param <RefEvt> Reference Event type used by the registry
  * @param <Ref> Reference to an item
- * @param <Cert> Provides permissions for modifying or removing a registration
+ * @param <Cert> Certificate providing permissions for modifying or removing a 
+ * registration
  * 
  * @author Matthew Stevenson
  */
