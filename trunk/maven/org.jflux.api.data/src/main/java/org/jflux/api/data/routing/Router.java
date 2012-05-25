@@ -17,9 +17,9 @@ package org.jflux.api.data.routing;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Listener;
 import org.jflux.api.core.event.Event;
-import org.jflux.api.core.util.Adapter;
-import org.jflux.api.core.util.Listener;
 
 /**
  *

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.util;
+package org.jflux.api.registry.opt;
 
 /**
- *
- * @author Matthew Stevenson <www.jflux.org>
+ * A Reference points to an item in a registry and provides registration 
+ * details.
+ * 
+ * @author Matthew Stevenson
  */
-public interface Factory<T> {
-    public T create();
-    
-    public static class RepeaterFactory<T> implements Factory<T> {
-        private T myT;
-
-        public RepeaterFactory(T t){
-            if(t == null){
-                throw new NullPointerException();
-            }
-            myT = t;
-        }
-        
-        @Override
-        public T create() {
-            return myT;
-        }
-        
-        
-    }
+public interface Reference<K,V> {
+    public String getName();
+    public V getProperty(K key);
+    public K[] getPropertyKeys();
+    public String[] getClassNames();
 }

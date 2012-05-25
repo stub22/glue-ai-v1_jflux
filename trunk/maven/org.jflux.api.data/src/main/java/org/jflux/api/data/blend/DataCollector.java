@@ -17,7 +17,7 @@ package org.jflux.api.data.blend;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jflux.api.core.util.Adapter;
+import org.jflux.api.core.Adapter;
 
 /**
  *

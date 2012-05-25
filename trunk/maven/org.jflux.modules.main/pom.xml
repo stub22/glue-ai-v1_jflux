@@ -18,6 +18,7 @@
 	<modules>
 		<module>../org.jflux.api.core</module>
 		<module>../org.jflux.api.data</module>
+		<module>../org.jflux.api.registry</module>
 		<module>../org.jflux.impl.messaging</module>
 	</modules>
 	<properties>

@@ -17,8 +17,8 @@ package org.jflux.api.core.playable;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.core.util.Listener;
-import org.jflux.api.core.util.Notifier;
+import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 
 /**
  *

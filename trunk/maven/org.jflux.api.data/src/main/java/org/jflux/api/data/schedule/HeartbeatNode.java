@@ -21,11 +21,11 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jflux.api.core.Notifier;
+import org.jflux.api.core.Source;
 import org.jflux.api.core.node.DefaultProducerNode;
 import org.jflux.api.core.playable.Playable.PlayState;
 import org.jflux.api.core.util.DefaultNotifier;
-import org.jflux.api.core.util.Factory;
-import org.jflux.api.core.util.Notifier;
 
 /**
  *
@@ -35,14 +35,14 @@ public class HeartbeatNode<M> extends
         DefaultProducerNode<M> implements ScheduleNode<M,TimeUnit> {
     private final static Logger theLogger = Logger.getLogger(HeartbeatNode.class.getName());
     
-    private Factory<M> myFactory;
+    private Source<M> myFactory;
     private ScheduledExecutorService myExecutor;
     private long myInitialDelay;
     private long myPeriod;
     private TimeUnit myTimeUnit;
     private ScheduledFuture<?> myFuture;
     
-    public HeartbeatNode(Class<M> msgClass, Factory<M> factory,
+    public HeartbeatNode(Class<M> msgClass, Source<M> factory,
             long initialDelay, long period, TimeUnit timeUnit){
         super(msgClass, new DefaultNotifier<M>());
         if(factory == null || timeUnit == null){
@@ -115,7 +115,7 @@ public class HeartbeatNode<M> extends
             if(myFactory == null || getPlayState() != PlayState.RUNNING){
                 return;
             }
-            M t = myFactory.create();
+            M t = myFactory.getValue();
             Notifier<M> n = getNotifier();
             if(n == null || t == null){
                 return;

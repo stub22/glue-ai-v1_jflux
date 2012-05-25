@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.command;
+package org.jflux.api.core;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface CommandInterpreter<Cmd> {
-    public boolean validateCommand(Cmd command);
-    
-    public boolean handleCommand(Cmd command);
+public interface Adapter<A,B> {
+    public B adapt(A a);
 }

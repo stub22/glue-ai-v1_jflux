@@ -15,8 +15,8 @@
  */
 package org.jflux.api.data.buffer;
 
-import org.jflux.api.core.util.Listener;
-import org.jflux.api.core.util.Source;
+import org.jflux.api.core.Listener;
+import org.jflux.api.core.Source;
 
 /**
  *

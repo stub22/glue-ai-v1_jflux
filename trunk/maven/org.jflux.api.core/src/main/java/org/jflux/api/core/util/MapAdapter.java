@@ -15,6 +15,7 @@
  */
 package org.jflux.api.core.util;
 
+import org.jflux.api.core.Adapter;
 import java.util.HashMap;
 import java.util.Map;
 

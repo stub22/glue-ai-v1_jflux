@@ -15,16 +15,16 @@
  */
 package org.jflux.api.core.event;
 
-import org.jflux.api.core.util.Adapter;
+import org.jflux.api.core.Adapter;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface Event<Header, Data> {
-    public Header getHeader();
+public interface Event<H, D> {
+    public H getHeader();
     
-    public Data getData();
+    public D getData();
     
     public static class EventHeaderAdapter<H> implements Adapter<Event<H,?>,H> {
         @Override

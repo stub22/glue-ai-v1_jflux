@@ -18,7 +18,7 @@ package org.jflux.api.core.node.chain;
 import java.util.List;
 import org.jflux.api.core.node.ConsumerNode;
 import org.jflux.api.core.node.ProcessorNode;
-import org.jflux.api.core.util.Listener;
+import org.jflux.api.core.Listener;
 
 /**
  *

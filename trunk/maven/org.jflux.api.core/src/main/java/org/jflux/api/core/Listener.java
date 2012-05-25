@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.util;
+package org.jflux.api.core;
 
 /**
- *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface Adapter<A,B> {
-    public B adapt(A a);
+public interface Listener<E> {
+    public void handleEvent(E event);
 }

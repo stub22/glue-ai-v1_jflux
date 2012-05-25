@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.util;
+package org.jflux.api.registry.opt;
 
 /**
- *
+ * A Descriptor describes one or more items in the registry.
+ * Descriptors are used to retrieve references and filter reference events.
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface Source<E> {
-    public E getValue();
+public interface Descriptor<K,V> {
+    public String getName();
+    public V getProperty(K key);
+    public K[] getPropertyKeys();
+    public String getClassName();
 }

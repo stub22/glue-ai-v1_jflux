@@ -18,10 +18,10 @@ package org.jflux.api.core.node;
 import org.jflux.api.core.playable.BasicPlayable;
 import org.jflux.api.core.playable.PlayableListener;
 import org.jflux.api.core.playable.PlayableNotifier;
-import org.jflux.api.core.util.Adapter;
+import org.jflux.api.core.Adapter;
 import org.jflux.api.core.util.DefaultNotifier;
-import org.jflux.api.core.util.Listener;
-import org.jflux.api.core.util.Notifier;
+import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 
 /**
  *

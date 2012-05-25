@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.command;
-
-import org.jflux.api.core.util.Listener;
+package org.jflux.api.core;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface CommandInterpreterFactory<Cmd> {
-    public CommandInterpreter<Cmd> buildInterpreter(
-            String cmdName, Listener<Cmd> cmdHandler);
+public interface Notifier<E> {
+    public void addListener(Listener<E> listener);
+    public void removeListener(Listener<E> listener);
+    
+    public void notifyListeners(E e);
 }

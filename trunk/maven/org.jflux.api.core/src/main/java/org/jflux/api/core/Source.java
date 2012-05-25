@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 by The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.command;
-
-import org.jflux.api.core.util.Listener;
+package org.jflux.api.core;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface CommandSet<Cmd> extends Listener<Cmd> {    
-    public CommandInterpreter<Cmd> getInterpreter(Cmd cmd);
-    
-    public void addInterpreter(String cmdName, CommandInterpreter<Cmd> inter);
-    
-    public void removeInterpreter(String cmdName);
+public interface Source<E> {
+    public E getValue();
 }

@@ -20,7 +20,7 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
-import org.jflux.api.core.util.Listener;
+import org.jflux.api.core.Listener;
 
 /**
  *

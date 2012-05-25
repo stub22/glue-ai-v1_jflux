@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.util;
+package org.jflux.api.registry.opt;
+
+import java.util.Map;
 
 /**
- *
- * @author Matthew Stevenson <www.jflux.org>
+ * Provides details for adding an item to a Registry.
+ * 
+ * @author Matthew Stevenson
  */
-public interface Notifier<E> {
-    public void addListener(Listener<E> listener);
-    public void removeListener(Listener<E> listener);
-    
-    public void notifyListeners(E e);
+public interface RegistrationRequest<T,K,V> {
+    public String getName();
+    public T getItem();
+    public Map<K,V> getProperties();
+    public String[] getClassNames();
 }
