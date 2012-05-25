@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jflux.impl.registry.osgi;
+package org.jflux.impl.registry.osgi.wrapped;
 
 import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.opt.RegistryContext;
@@ -12,8 +12,8 @@ import org.osgi.framework.BundleContext;
  *
  * @author Matthew Stevenson
  */
-public class OSGiContext<R extends Registry> implements 
-        RegistryContext<R, String, String> {
+public class OSGiContext<R extends Registry<? extends OSGiContext<R>,?,?,?,?>> 
+        implements RegistryContext<R, String, String> {
     private R myRegistry;
     private BundleContext myContext;
 

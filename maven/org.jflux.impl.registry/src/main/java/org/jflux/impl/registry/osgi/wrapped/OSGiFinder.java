@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jflux.impl.registry.osgi;
+package org.jflux.impl.registry.osgi.wrapped;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,7 +22,7 @@ import org.osgi.framework.ServiceReference;
  * @author Matthew Stevenson
  */
 public class OSGiFinder implements 
-        Finder<Descriptor<String,String>, ServiceReference> {
+        Finder<Descriptor<String,String>, OSGiReference> {
     private final static Logger theLogger = Logger.getLogger(OSGiFinder.class.getName());
     private BundleContext myContext;
     private FinderBase myFinderBase;
@@ -39,25 +40,36 @@ public class OSGiFinder implements
     }
     
     @Override
-    public Adapter<Descriptor<String, String>, ServiceReference> findSingle() {
-        return new Adapter<Descriptor<String, String>, ServiceReference>() {
+    public Adapter<Descriptor<String, String>, OSGiReference> findSingle() {
+        return new Adapter<Descriptor<String, String>, OSGiReference>() {
             @Override
-            public ServiceReference adapt(Descriptor<String, String> a) {
+            public OSGiReference adapt(Descriptor<String, String> a) {
                 ServiceReference[] refs = myFinderBase.adapt(a);
-                return refs == null ? null : refs[0];
+                if(refs == null){
+                    return null;
+                }
+                return new OSGiReference(refs[0]);
             }
         };
     }
 
     @Override
     public Adapter<
-            Descriptor<String, String>, List<ServiceReference>> findAll() {
+            Descriptor<String, String>, List<OSGiReference>> findAll() {
         return new Adapter<
-                Descriptor<String, String>, List<ServiceReference>>() {
+                Descriptor<String, String>, List<OSGiReference>>() {
             @Override
-            public List<ServiceReference> adapt(Descriptor<String, String> a) {
+            public List<OSGiReference> adapt(Descriptor<String, String> a) {
                 ServiceReference[] refs = myFinderBase.adapt(a);
-                return refs == null ? null : Arrays.asList(refs);
+                if(refs == null){
+                    return null;
+                }
+                List<OSGiReference> list = 
+                        new ArrayList<OSGiReference>(refs.length);
+                for(ServiceReference ref : refs){
+                    list.add(new OSGiReference(ref));
+                }
+                return list;
             }
         };
     }
