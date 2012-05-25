@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.registry;
+package org.jflux.api.core.util;
 
-import org.jflux.api.core.Listener;
-import org.jflux.api.core.Notifier;
+import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Source;
 
 /**
- * Provides notifications of registry changes.
  *
- * @param <Desc> Descriptor for filtering events
- * @param <Evt> Event type used
- * 
  * @author Matthew Stevenson
  */
-public interface Monitor<Desc, Evt> {
-    /**
-     * Returns a Notifier which filters registry events.
-     * @param desc event filter
-     * @return Notifier which filters registry events
-     */
-    public Notifier<Evt> getNotifier(Desc desc);
-    /**
-     * Returns a Listener for stopping notifiers matching given descriptors.
-     * @param desc event filter
-     */
-    public Listener<Desc> releaseNotifier();
+public class SourceAdapter<A, B> implements Adapter<A, B> {
+    private Source<B> mySource;
+
+    public SourceAdapter(Source<B> source){
+        if(source == null){
+            throw new NullPointerException();
+        }
+        mySource = source;
+    }
+    
+    @Override
+    public B adapt(A a) {
+        return mySource.getValue();
+    }
+    
 }
