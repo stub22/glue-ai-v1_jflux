@@ -9,11 +9,11 @@
 		<relativePath>../org.jflux.modules.main/pom.xml</relativePath>
 	</parent>
     
-    <artifactId>org.jflux.api.registry</artifactId>
+    <artifactId>org.jflux.impl.registry</artifactId>
     <packaging>bundle</packaging>
 
     <name>${project.artifactId} OSGi Bundle</name>
-
+    
     <dependencies>
         <dependency>
             <groupId>org.apache.felix</groupId>
@@ -24,6 +24,11 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>org.jflux.api.core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>org.jflux.api.registry</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -37,8 +42,17 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.jflux.api.registry.*</Export-Package>
+                        <Export-Package>org.jflux.impl.registry.*</Export-Package>
                     </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>

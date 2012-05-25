@@ -15,6 +15,8 @@
  */
 package org.jflux.api.registry.opt;
 
+import java.util.Set;
+
 /**
  * A Descriptor describes one or more items in the registry.
  * Descriptors are used to retrieve references and filter reference events.
@@ -23,6 +25,6 @@ package org.jflux.api.registry.opt;
 public interface Descriptor<K,V> {
     public String getName();
     public V getProperty(K key);
-    public K[] getPropertyKeys();
+    public Set<K> getPropertyKeys();
     public String getClassName();
 }

@@ -15,6 +15,8 @@
  */
 package org.jflux.api.registry.opt;
 
+import java.util.Set;
+
 /**
  * A Reference points to an item in a registry and provides registration 
  * details.
@@ -24,6 +26,5 @@ package org.jflux.api.registry.opt;
 public interface Reference<K,V> {
     public String getName();
     public V getProperty(K key);
-    public K[] getPropertyKeys();
-    public String[] getClassNames();
+    public Set<K> getPropertyKeys();
 }

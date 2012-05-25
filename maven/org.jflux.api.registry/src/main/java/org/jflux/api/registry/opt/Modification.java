@@ -25,7 +25,4 @@ import java.util.Map;
 public interface Modification<Cert,K,V> {
     public Cert getCertificate();
     public Map<K,V> getProperties();
-    
-    public static interface BasicModification<K,V> extends 
-            Modification<Certificate<Reference<K,V>>,K,V> {}
 }

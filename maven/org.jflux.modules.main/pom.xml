@@ -20,6 +20,7 @@
 		<module>../org.jflux.api.data</module>
 		<module>../org.jflux.api.registry</module>
 		<module>../org.jflux.impl.messaging</module>
+		<module>../org.jflux.impl.registry</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
