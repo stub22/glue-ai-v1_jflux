@@ -2,21 +2,25 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jflux.impl.registry.osgi;
+package org.jflux.impl.registry.osgi.wrapped;
 
 import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 import org.jflux.api.core.event.Event;
+import org.jflux.api.core.event.Header;
 import org.jflux.api.registry.Monitor;
-import org.jflux.impl.registry.basic.opt.BasicDescriptor;
+import org.jflux.api.registry.Registry;
+import org.jflux.api.registry.opt.Descriptor;
 import org.osgi.framework.BundleContext;
 
 /**
  *
  * @author Matthew Stevenson
  */
-public class OSGiMonitor implements 
-        Monitor<BasicDescriptor<String,String>, Event> {
+public class OSGiMonitor<
+        R extends Registry<?,?,?,?,OSGiMonitor<R,Time,Evt>>, Time, 
+        Evt extends Event<? extends Header<R, Time>, OSGiReference>> 
+        implements Monitor<Descriptor<String,String>, Evt> {
     private BundleContext myContext;
     
     OSGiMonitor(BundleContext context){
@@ -31,12 +35,12 @@ public class OSGiMonitor implements
     }
     
     @Override
-    public Notifier<Event> getNotifier(BasicDescriptor<String, String> desc) {
+    public Notifier<Evt> getNotifier(Descriptor<String, String> desc) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Listener<BasicDescriptor<String, String>> releaseNotifier() {
+    public Listener<Descriptor<String, String>> releaseNotifier() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     

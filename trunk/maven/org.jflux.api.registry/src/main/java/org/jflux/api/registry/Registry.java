@@ -86,7 +86,7 @@ public interface Registry<
             Cert extends Certificate<Ref>,
             ModReq extends Modification<Cert,K,V>,
             RefEvt extends Event<
-                    ? extends Header<? extends Registry<Cxt,F,A,R,M>,Time>,Ref>,
+                    ? extends Header<? extends Registry,Time>,Ref>,
             F extends Finder<Desc,Ref>,
             A extends Accessor<Req,Cert,ModReq>, 
             R extends Retriever<Ref>,

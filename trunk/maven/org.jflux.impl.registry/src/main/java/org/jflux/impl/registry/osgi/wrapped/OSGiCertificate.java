@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jflux.impl.registry.osgi;
+package org.jflux.impl.registry.osgi.wrapped;
 
 import org.jflux.api.registry.opt.Certificate;
 import org.osgi.framework.ServiceRegistration;
