@@ -38,39 +38,36 @@ import org.jflux.api.registry.opt.RegistryContext;
  * 
  * @author Matthew Stevenson
  */
-public interface Registry<Context,Desc,RegReq,ModReq,Cert,Ref,RefEvt> {
+public interface Registry<
+        Context,
+        F extends Finder, 
+        A extends Accessor, 
+        R extends Retriever,
+        M extends Monitor> {
     /**
      * Returns a registry Finder matching the context permissions.
      * @param context
      * @return Finder matching the context permissions
      */
-    public Finder<Desc,Ref> getFinder(Context context);
+    public F getFinder(Context context);
     /**
      * Returns a registry Monitor matching the context permissions.
      * @param context
      * @return
      */
-    public Monitor<Desc,RefEvt> getMonitor(Context context);
+    public M getMonitor(Context context);
     /**
      * Returns a registry Accessor matching the context permissions.
      * @param context
      * @return
      */
-    public Accessor<RegReq,Cert,ModReq> getAccessor(Context context);
+    public A getAccessor(Context context);
     /**
-     * Returns a typed registry Retriever matching the context permissions.
-     * @param <T> Item type retrieved
+     * Returns a registry Retriever matching the context permissions.
      * @param context
-     * @param clazz item class
-     * @return typed registry Retriever matching the context permissions
+     * @return registry Retriever matching the context permissions
      */
-    public <T> Retriever<Ref,T> getRetriever(Context context, Class<T> clazz);
-    /**
-     * Returns an untyped registry Retriever matching the context permissions.
-     * @param context
-     * @return untyped registry Retriever matching the context permissions
-     */
-    public Retriever<Ref,Object> getRetriever(Context context);
+    public R getRetriever(Context context);
     
     /**
      * Registry using the message interfaces from org.jflux.api.regstry.opt.
@@ -80,13 +77,32 @@ public interface Registry<Context,Desc,RegReq,ModReq,Cert,Ref,RefEvt> {
      * @param <K> property key
      * @param <V> property value
      */
+    public static interface RegistryTemplate<CxtK, CxtV, Time, K, V,
+            Cxt extends RegistryContext<
+                    ? extends Registry<Cxt,F,A,R,M>,CxtK,CxtV>,
+            Desc extends Descriptor<K,V>,
+            Ref extends Reference<K,V>,
+            Req extends RegistrationRequest<?,K,V>,
+            Cert extends Certificate<Ref>,
+            ModReq extends Modification<Cert,K,V>,
+            RefEvt extends Event<
+                    ? extends Header<? extends Registry<Cxt,F,A,R,M>,Time>,Ref>,
+            F extends Finder<Desc,Ref>,
+            A extends Accessor<Req,Cert,ModReq>, 
+            R extends Retriever<Ref>,
+            M extends Monitor<Desc,RefEvt>> extends Registry<Cxt,F,A,R,M>{
+    }
+    
     public static interface BasicRegistry<CxtK,CxtV,Time,K,V> extends Registry<
             RegistryContext<BasicRegistry<CxtK,CxtV,Time,K,V>,CxtK,CxtV>,
-            Descriptor<K,V>,
-            RegistrationRequest<?,K,V>,
-            Modification<Certificate<Reference<K,V>>,K,V>,
-            Certificate<Reference<K,V>>,
-            Reference<K,V>,
-            Event<Header<BasicRegistry<CxtK,CxtV,Time,K,V>,Time>,Reference<K,V>>>{
+            Finder<Descriptor<K,V>,Reference<K,V>>,
+            Accessor<
+                    RegistrationRequest<?,K,V>,
+                    Certificate<Reference<K,V>>,
+                    Modification<Certificate<Reference<K,V>>,K,V>>,
+            Retriever<Reference<K,V>>,
+            Monitor<Descriptor<K,V>,Event<
+                    Header<BasicRegistry<CxtK,CxtV,Time,K,V>,Time>, 
+                    Reference<K,V>>>> {
     }
 }

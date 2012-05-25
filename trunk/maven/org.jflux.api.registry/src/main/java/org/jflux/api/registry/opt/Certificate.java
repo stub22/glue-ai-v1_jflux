@@ -24,7 +24,4 @@ package org.jflux.api.registry.opt;
  */
 public interface Certificate<Ref> {
     public Ref getReference();
-    
-    public static interface BasicCertificate<K,V> extends 
-            Certificate<Reference<K,V>> {}
 }

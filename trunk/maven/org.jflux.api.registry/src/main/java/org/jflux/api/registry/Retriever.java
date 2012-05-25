@@ -22,16 +22,20 @@ import org.jflux.api.core.Listener;
  * Retrieves items using a Reference.
  * 
  * @param <Ref> Registry reference type
- * @param <T> Item type
  * 
  * @author Matthew Stevenson
  */
-public interface Retriever<Ref,T> {
+public interface Retriever<Ref> {
     /**
      * Returns an Adapter for retrieving an item.
      * @return Adapter for retrieving an item
      */
-    public Adapter<Ref,T> retrieve();
+    public <T> Adapter<Ref,T> retrieve(Class<T> clazz);
+    /**
+     * Returns an Adapter for retrieving an untyped item.
+     * @return Adapter for retrieving an untyped item
+     */
+    public Adapter<Ref,?> retrieve();
     /**
      * Returns a Listener for releasing an item which was retrieved.
      * @return Listener for releasing an item which was retrieved

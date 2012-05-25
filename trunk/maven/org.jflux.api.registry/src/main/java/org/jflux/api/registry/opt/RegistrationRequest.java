@@ -16,6 +16,7 @@
 package org.jflux.api.registry.opt;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides details for adding an item to a Registry.
@@ -26,5 +27,5 @@ public interface RegistrationRequest<T,K,V> {
     public String getName();
     public T getItem();
     public Map<K,V> getProperties();
-    public String[] getClassNames();
+    public Set<String> getClassNames();
 }
