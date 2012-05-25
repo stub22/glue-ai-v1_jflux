@@ -6,8 +6,7 @@ package org.jflux.impl.registry.osgi.wrapped;
 
 import org.jflux.api.core.event.Event;
 import org.jflux.api.core.event.Header;
-import org.jflux.api.registry.Registry.RegistryTemplate;
-import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
 
@@ -15,22 +14,13 @@ import org.jflux.api.registry.opt.RegistrationRequest;
  *
  * @author Matthew Stevenson
  */
-public class OSGiRegistry<Time> implements RegistryTemplate<
-        String, String, Time, String, String, 
+public class OSGiRegistry<Time> implements Registry<
         OSGiContext<OSGiRegistry<Time>>, 
-        Descriptor<String, String>, 
-        OSGiReference, 
-        RegistrationRequest<?, String, String>, 
-        OSGiCertificate, 
-        Modification<OSGiCertificate, String, String>, 
-        Event<? extends Header<OSGiRegistry<Time>, Time>, OSGiReference>,
         OSGiFinder, 
-        OSGiAccessor<
-                RegistrationRequest<?, String, String>,
+        OSGiAccessor<RegistrationRequest<?, String, String>,
                 Modification<OSGiCertificate, String ,String>>, 
         OSGiRetriever<OSGiReference>, 
-        OSGiMonitor<
-                OSGiRegistry<Time>, Time, Event<
+        OSGiMonitor<OSGiRegistry<Time>, Time, Event<
                 ? extends Header<OSGiRegistry<Time>, Time>, OSGiReference>>> {
 
     @Override
