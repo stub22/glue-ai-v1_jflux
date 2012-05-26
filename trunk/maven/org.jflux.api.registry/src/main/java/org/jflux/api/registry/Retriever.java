@@ -17,6 +17,7 @@ package org.jflux.api.registry;
 
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 
 /**
  * Retrieves items using a Reference.
@@ -41,4 +42,8 @@ public interface Retriever<Ref> {
      * @return Listener for releasing an item which was retrieved
      */
     public Listener<Ref> release();
+    
+    public <T> Adapter<Ref,Notifier<T>> retrieveAsync(Class<T> clazz);
+    
+    public Adapter<Ref,Notifier<?>> retrieveAsync();
 }

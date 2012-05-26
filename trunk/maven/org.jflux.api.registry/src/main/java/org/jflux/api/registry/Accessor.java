@@ -17,6 +17,7 @@ package org.jflux.api.registry;
 
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 
 /**
  * Provides registration access for a Registry.
@@ -42,4 +43,7 @@ public interface Accessor<Req,Cert,ModReq> {
      * @return Adapter for modifying a registration
      */
     public Adapter<ModReq,Cert> modify();
+    
+    public Adapter<Req,Notifier<Cert>> registerAsync();
+    public Adapter<ModReq,Notifier<Cert>> modifyAsync();
 }

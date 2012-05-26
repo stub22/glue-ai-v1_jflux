@@ -20,6 +20,7 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Accessor;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
@@ -91,5 +92,15 @@ public class DirectAccessor implements Accessor<
                 return reg;
             }
         };
+    }
+
+    @Override
+    public Adapter<RegistrationRequest<?, String, String>, Notifier<ServiceRegistration>> registerAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Modification<ServiceRegistration, String, String>, Notifier<ServiceRegistration>> modifyAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -15,17 +15,15 @@
  */
 package org.jflux.impl.registry.osgi.direct;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Notifier;
+import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.api.registry.Finder;
 import org.jflux.api.registry.opt.Descriptor;
-import org.jflux.impl.registry.osgi.wrapped.OSGiContext;
-import org.jflux.impl.registry.osgi.wrapped.OSGiFinder;
-import org.jflux.impl.registry.osgi.wrapped.OSGiReference;
 import org.jflux.impl.registry.osgi.util.OSGiRegistryUtil;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -77,6 +75,72 @@ public class DirectFinder implements
                 return Arrays.asList(refs);
             }
         };
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, List<ServiceReference>> 
+            findCount(final int max) {
+        
+        final Adapter<Descriptor<String, String>, 
+                List<ServiceReference>> find = findAll();
+        
+        return new Adapter<
+                Descriptor<String, String>, List<ServiceReference>>() {
+            @Override
+            public List<ServiceReference> adapt(Descriptor<String, String> a) {
+                List<ServiceReference> list = find.adapt(a);
+                if(list == null || list.size() <= max){
+                    return list;
+                }
+                return list.subList(0, max);
+            }
+        };
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<ServiceReference>> findSingleAsync() {
+        return new Adapter<Descriptor<String, String>, Notifier<ServiceReference>>() {
+
+            @Override
+            public Notifier<ServiceReference> adapt(final Descriptor<String, String> a) {
+                final Adapter<Descriptor<String, String>, 
+                        ServiceReference> find = findSingle();
+                if(find == null){
+                    return null;
+                }
+                final Notifier<ServiceReference> notifier = 
+                        new DefaultNotifier<ServiceReference>();
+                
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ServiceReference ref = find.adapt(a);
+                        notifier.notifyListeners(ref);
+                    }
+                }).start();
+                return notifier;
+            }
+        };
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<ServiceReference>> findContinuousAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<ServiceReference>> findContinuousAsync(int max) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<List<ServiceReference>>> findAllAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<List<ServiceReference>>> findCountAsync(int max) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     private class FinderBase implements 
