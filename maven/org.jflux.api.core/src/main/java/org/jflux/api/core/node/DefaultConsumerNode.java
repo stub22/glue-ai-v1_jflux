@@ -16,7 +16,7 @@
 package org.jflux.api.core.node;
 
 import org.jflux.api.core.playable.BasicPlayable;
-import org.jflux.api.core.playable.PlayableListener;
+import org.jflux.api.core.playable.ConditionalListener;
 import org.jflux.api.core.Listener;
 
 /**
@@ -33,7 +33,7 @@ public class DefaultConsumerNode<In> extends
             throw new NullPointerException();
         }
         myInputClass = inputClass;
-        myListener = new PlayableListener<In>(this, proc);
+        myListener = new ConditionalListener<In>(this, proc);
     }
     
     @Override

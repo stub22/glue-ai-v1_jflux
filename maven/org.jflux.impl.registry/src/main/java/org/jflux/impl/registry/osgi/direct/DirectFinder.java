@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Notifier;
-import org.jflux.api.core.util.DefaultNotifier;
+import org.jflux.api.core.playable.PlayableNotifier;
 import org.jflux.api.registry.Finder;
 import org.jflux.api.registry.opt.Descriptor;
 import org.jflux.impl.registry.osgi.util.OSGiRegistryUtil;
@@ -78,69 +77,39 @@ public class DirectFinder implements
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, List<ServiceReference>> 
-            findCount(final int max) {
-        
-        final Adapter<Descriptor<String, String>, 
-                List<ServiceReference>> find = findAll();
-        
-        return new Adapter<
-                Descriptor<String, String>, List<ServiceReference>>() {
-            @Override
-            public List<ServiceReference> adapt(Descriptor<String, String> a) {
-                List<ServiceReference> list = find.adapt(a);
-                if(list == null || list.size() <= max){
-                    return list;
-                }
-                return list.subList(0, max);
-            }
-        };
+    public Adapter<Descriptor<String, String>, 
+            List<ServiceReference>> findCount(final int max) {
+        return DefaultFinderProvider.findCount(this, max);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<ServiceReference>> findSingleAsync() {
-        return new Adapter<Descriptor<String, String>, Notifier<ServiceReference>>() {
-
-            @Override
-            public Notifier<ServiceReference> adapt(final Descriptor<String, String> a) {
-                final Adapter<Descriptor<String, String>, 
-                        ServiceReference> find = findSingle();
-                if(find == null){
-                    return null;
-                }
-                final Notifier<ServiceReference> notifier = 
-                        new DefaultNotifier<ServiceReference>();
-                
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ServiceReference ref = find.adapt(a);
-                        notifier.notifyListeners(ref);
-                    }
-                }).start();
-                return notifier;
-            }
-        };
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<ServiceReference>> findSingleAsync() {
+        return DefaultFinderProvider.findSingleAsync(this);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<ServiceReference>> findContinuousAsync() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<ServiceReference>> findContinuousAsync() {
+        return DefaultFinderProvider.findContinuousAsync(this);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<ServiceReference>> findContinuousAsync(int max) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<ServiceReference>> findContinuousAsync(int max) {
+        return DefaultFinderProvider.findContinuousAsync(this, max);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<List<ServiceReference>>> findAllAsync() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<List<ServiceReference>>> findAllAsync() {
+        return DefaultFinderProvider.findAllAsync(this);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<List<ServiceReference>>> findCountAsync(int max) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<List<ServiceReference>>> findCountAsync(int max) {
+        return DefaultFinderProvider.findCountAsync(this, max);
     }
     
     private class FinderBase implements 

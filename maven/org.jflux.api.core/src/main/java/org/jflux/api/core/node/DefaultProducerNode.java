@@ -16,7 +16,7 @@
 package org.jflux.api.core.node;
 
 import org.jflux.api.core.playable.BasicPlayable;
-import org.jflux.api.core.playable.PlayableNotifier;
+import org.jflux.api.core.playable.ConditionalNotifier;
 import org.jflux.api.core.Notifier;
 
 /**
@@ -33,7 +33,7 @@ public class DefaultProducerNode<Out> extends
             throw new NullPointerException();
         }
         myOutputClass = outputClass;
-        myNotifier = new PlayableNotifier<Out>(this, producer);
+        myNotifier = new ConditionalNotifier<Out>(this, producer);
     }
 
     @Override

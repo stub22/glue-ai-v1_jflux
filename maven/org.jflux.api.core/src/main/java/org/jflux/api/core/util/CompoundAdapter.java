@@ -13,13 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.playable;
+package org.jflux.api.core.util;
 
-import org.jflux.api.core.Notifier;
+import org.jflux.api.core.Adapter;
 
 /**
  *
  * @author Matthew Stevenson
  */
-public interface PlayableNotifier<T> extends Notifier<T>, Playable{
+public class CompoundAdapter<A,B,C> implements Adapter<A, C> {
+    private Adapter<A,B> myFirst;
+    private Adapter<B,C> mySecond;
+
+    public CompoundAdapter(Adapter<A, B> first, Adapter<B, C> second) {
+        if(first == null || second == null){
+            throw new NullPointerException();
+        }
+        myFirst = first;
+        mySecond = second;
+    }
+
+    @Override
+    public C adapt(A a) {
+        B b = myFirst.adapt(a);
+        return mySecond.adapt(b);
+    }
 }
