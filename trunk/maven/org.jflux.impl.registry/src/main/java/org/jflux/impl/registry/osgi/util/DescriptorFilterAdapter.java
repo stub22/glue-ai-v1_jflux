@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.registry.opt.Descriptor;
+import org.osgi.framework.Constants;
 
 /**
  *
@@ -17,7 +18,7 @@ import org.jflux.api.registry.opt.Descriptor;
 public class DescriptorFilterAdapter implements 
         Adapter<Descriptor<String,String>, String> {
 
-    public static String getFilter(Descriptor<String, String> a) {
+    public static String getPropertiesFilter(Descriptor<String, String> a) {
         Set<String> keys = a.getPropertyKeys();
         List<String> conditions = new ArrayList<String>(keys.size());
         for(String key : a.getPropertyKeys()){
@@ -25,6 +26,18 @@ public class DescriptorFilterAdapter implements
             String condition = format(key, val);
             conditions.add(condition);
         }
+        String filter = combine(conditions);
+        return filter;
+    }
+    public static String getFullFilter(Descriptor<String, String> a) {
+        Set<String> keys = a.getPropertyKeys();
+        List<String> conditions = new ArrayList<String>(keys.size());
+        for(String key : a.getPropertyKeys()){
+            String val = a.getProperty(key);
+            String condition = format(key, val);
+            conditions.add(condition);
+        }
+        conditions.add(format(Constants.OBJECTCLASS, a.getClassName()));
         String filter = combine(conditions);
         return filter;
     }
@@ -44,6 +57,6 @@ public class DescriptorFilterAdapter implements
 
     @Override
     public String adapt(Descriptor<String, String> a) {
-        return getFilter(a);
+        return getPropertiesFilter(a);
     }
 }

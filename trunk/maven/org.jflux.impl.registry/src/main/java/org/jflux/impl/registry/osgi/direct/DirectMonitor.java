@@ -15,21 +15,26 @@
  */
 package org.jflux.impl.registry.osgi.direct;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
-import org.jflux.api.core.event.Event;
-import org.jflux.api.core.event.Header;
+import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.api.registry.Monitor;
+import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.impl.registry.osgi.util.OSGiRegistryUtil;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
 
 /**
  *
  * @author Matthew Stevenson
  */
 public class DirectMonitor<Time> implements Monitor<
-        OSGiDirectRegistry<Time>, 
-        Event<Header<OSGiDirectRegistry<Time>, Time>, ServiceReference>> {
+        Descriptor<String,String>, ServiceEvent> {
+    private final static Logger theLogger = Logger.getLogger(DirectMonitor.class.getName());
     private BundleContext myContext;
     
     DirectMonitor(BundleContext context){
@@ -40,14 +45,29 @@ public class DirectMonitor<Time> implements Monitor<
     }
 
     @Override
-    public Notifier<
-            Event<Header<OSGiDirectRegistry<Time>, Time>, ServiceReference>> 
-            getNotifier(OSGiDirectRegistry<Time> desc) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Notifier<ServiceEvent> getNotifier(Descriptor<String,String> desc) {
+        String filter = OSGiRegistryUtil.getFullFilter(desc);
+        ServiceEventNotifier notifier = new ServiceEventNotifier();
+        try{
+            myContext.addServiceListener(notifier, filter);
+            return notifier;
+        }catch(InvalidSyntaxException ex){
+            theLogger.log(Level.SEVERE, "Invalid LDAP filter: " + filter, ex);
+            return null;
+        }
     }
 
     @Override
-    public Listener<OSGiDirectRegistry<Time>> releaseNotifier() {
+    public Listener<Descriptor<String,String>> releaseNotifier() {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+    private class ServiceEventNotifier extends 
+            DefaultNotifier<ServiceEvent> implements ServiceListener{
+        @Override
+        public void serviceChanged(ServiceEvent event) {
+            notifyListeners(event);
+        }
+        
     }
 }
