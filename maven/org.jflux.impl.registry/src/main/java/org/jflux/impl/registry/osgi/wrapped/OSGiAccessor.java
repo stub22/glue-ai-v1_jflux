@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Accessor;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
@@ -79,6 +80,16 @@ public class OSGiAccessor<
                 return cert;
             }
         };
+    }
+
+    @Override
+    public Adapter<R, Notifier<OSGiCertificate>> registerAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<M, Notifier<OSGiCertificate>> modifyAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     

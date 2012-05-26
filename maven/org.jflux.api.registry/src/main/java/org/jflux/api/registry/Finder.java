@@ -17,6 +17,7 @@ package org.jflux.api.registry;
 
 import java.util.List;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Notifier;
 
 /**
  * Finds references from a registry.
@@ -38,4 +39,20 @@ public interface Finder<Desc,Ref> {
      * @return Adapter for finding all references matching a description.
      */
     public Adapter<Desc,List<Ref>> findAll();
+    
+    /**
+     * Returns an Adapter for finding all references matching a description.
+     * @return Adapter for finding all references matching a description.
+     */
+    public Adapter<Desc,List<Ref>> findCount(int max);
+    
+    public Adapter<Desc,Notifier<Ref>> findSingleAsync();
+    
+    public Adapter<Desc,Notifier<Ref>> findContinuousAsync();
+    
+    public Adapter<Desc,Notifier<Ref>> findContinuousAsync(int max);
+    
+    public Adapter<Desc,Notifier<List<Ref>>> findAllAsync();
+    
+    public Adapter<Desc,Notifier<List<Ref>>> findCountAsync(int max);
 }

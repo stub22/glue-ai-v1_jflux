@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Finder;
 import org.jflux.api.registry.opt.Descriptor;
 import org.jflux.impl.registry.osgi.util.OSGiRegistryUtil;
@@ -72,6 +73,36 @@ public class OSGiFinder implements
                 return list;
             }
         };
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, List<OSGiReference>> findCount(int max) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<OSGiReference>> findSingleAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<OSGiReference>> findContinuousAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<OSGiReference>> findContinuousAsync(int max) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<List<OSGiReference>>> findAllAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Descriptor<String, String>, Notifier<List<OSGiReference>>> findCountAsync(int max) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
     private class FinderBase implements 

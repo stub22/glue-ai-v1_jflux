@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Retriever;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -76,6 +77,16 @@ public class OSGiRetriever<Ref extends OSGiReference> implements
                 myContext.ungetService(ref);
             }
         };
+    }
+
+    @Override
+    public <T> Adapter<Ref, Notifier<T>> retrieveAsync(Class<T> clazz) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Adapter<Ref, Notifier<?>> retrieveAsync() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
     
 }
