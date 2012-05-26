@@ -13,13 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.playable;
+package org.jflux.api.core.util;
 
-import org.jflux.api.core.Notifier;
+import org.jflux.api.core.Listener;
 
 /**
  *
  * @author Matthew Stevenson
  */
-public interface PlayableNotifier<T> extends Notifier<T>, Playable{
+public class IteratingArrayNotifier<T> extends 
+        DefaultNotifier<T> implements Listener<T[]>{
+
+    @Override
+    public void handleEvent(T[] event) {
+        for(T t : event){
+            notifyListeners(t);
+        }
+    }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 by The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,43 @@ package org.jflux.api.core.playable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class PlayableListener<E> implements Listener<E> {
-    private final static Logger theLogger = Logger.getLogger(PlayableListener.class.getName());
+public class ConditionalNotifier<E> implements Notifier<E> {
+    private final static Logger theLogger = Logger.getLogger(ConditionalListener.class.getName());
     private Playable myPlayable;
-    private Listener<E> myListener;
+    private Notifier<E> myNotifier;
     
-    public PlayableListener(Playable p, Listener<E> l){
-        if(p == null || l == null){
+    public ConditionalNotifier(Playable p, Notifier<E> n){
+        if(p == null || n == null){
             throw new NullPointerException();
         }
         myPlayable = p;
-        myListener = l;
+        myNotifier = n;
     }
 
     @Override
-    public void handleEvent(E event) {
+    public void notifyListeners(E e) {
         if(myPlayable.getPlayState() == Playable.PlayState.RUNNING){
-            myListener.handleEvent(event);
+            myNotifier.notifyListeners(e);
         }else{
             theLogger.log(Level.INFO, 
                     "PlayState is: {0}, ignoring event: {1}", 
-                    new Object[]{myPlayable.getPlayState(), event});
+                    new Object[]{myPlayable.getPlayState(), e});
         }
+    }
+
+    @Override
+    public void addListener(Listener<E> listener) {
+        myNotifier.addListener(listener);
+    }
+
+    @Override
+    public void removeListener(Listener<E> listener) {
+        myNotifier.removeListener(listener);
     }
 }

@@ -5,12 +5,11 @@
 package org.jflux.impl.registry.osgi.wrapped;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Notifier;
+import org.jflux.api.core.playable.PlayableNotifier;
 import org.jflux.api.registry.Finder;
 import org.jflux.api.registry.opt.Descriptor;
 import org.jflux.impl.registry.osgi.util.OSGiRegistryUtil;
@@ -76,33 +75,55 @@ public class OSGiFinder implements
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, List<OSGiReference>> findCount(int max) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            List<OSGiReference>> findCount(final int max) {
+        return new Adapter<
+                Descriptor<String, String>, List<OSGiReference>>() {
+            @Override
+            public List<OSGiReference> adapt(Descriptor<String, String> a) {
+                ServiceReference[] refs = myFinderBase.adapt(a);
+                if(refs == null){
+                    return null;
+                }
+                int c = Math.min(max, refs.length);
+                List<OSGiReference> list = 
+                        new ArrayList<OSGiReference>(c);
+                for(int i = 0; i < c; i++){
+                    list.add(new OSGiReference(refs[i]));
+                }
+                return list;
+            }
+        };
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<OSGiReference>> findSingleAsync() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<OSGiReference>> findSingleAsync() {
+        return DefaultFinderProvider.findSingleAsync(this);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<OSGiReference>> findContinuousAsync() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<OSGiReference>> findContinuousAsync() {
+        return DefaultFinderProvider.findContinuousAsync(this);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<OSGiReference>> findContinuousAsync(int max) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<OSGiReference>> findContinuousAsync(int max) {
+        return DefaultFinderProvider.findContinuousAsync(this, max);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<List<OSGiReference>>> findAllAsync() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<List<OSGiReference>>> findAllAsync() {
+        return DefaultFinderProvider.findAllAsync(this);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, Notifier<List<OSGiReference>>> findCountAsync(int max) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Adapter<Descriptor<String, String>, 
+            PlayableNotifier<List<OSGiReference>>> findCountAsync(int max) {
+        return DefaultFinderProvider.findCountAsync(this, max);
     }
     
     private class FinderBase implements 
@@ -115,7 +136,8 @@ public class OSGiFinder implements
             try{
                 return myContext.getServiceReferences(className, filter);
             }catch(InvalidSyntaxException ex){
-                theLogger.log(Level.SEVERE, "Invalid LDAP filter: " + filter, ex);
+                theLogger.log(Level.SEVERE, 
+                        "Invalid LDAP filter: " + filter, ex);
                 return null;
             }
         }

@@ -49,6 +49,11 @@ public class BasicPlayable implements Playable{
         myPlayState = PlayState.ABORTED;
         return true;
     }
+    
+    protected boolean complete() {
+        myPlayState = PlayState.COMPLETED;
+        return true;
+    }
 
     @Override
     public PlayState getPlayState() {

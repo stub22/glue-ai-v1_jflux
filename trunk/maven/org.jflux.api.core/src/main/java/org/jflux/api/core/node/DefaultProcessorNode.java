@@ -16,8 +16,8 @@
 package org.jflux.api.core.node;
 
 import org.jflux.api.core.playable.BasicPlayable;
-import org.jflux.api.core.playable.PlayableListener;
-import org.jflux.api.core.playable.PlayableNotifier;
+import org.jflux.api.core.playable.ConditionalListener;
+import org.jflux.api.core.playable.ConditionalNotifier;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.api.core.Listener;
@@ -43,9 +43,9 @@ public class DefaultProcessorNode<In, Out> extends
         myInputClass = inputClass;
         myOutputClass = outputClass;
         myInputListener = 
-                new PlayableListener<In>(this, new DefaultInputListener());
+                new ConditionalListener<In>(this, new DefaultInputListener());
         myOutputNotifier = 
-                new PlayableNotifier<Out>(this, new DefaultNotifier<Out>());
+                new ConditionalNotifier<Out>(this, new DefaultNotifier<Out>());
         myProcessor = proc;
     }
     
