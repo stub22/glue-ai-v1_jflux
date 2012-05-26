@@ -11,7 +11,10 @@ import org.jflux.api.registry.opt.Descriptor;
  * @author Matthew Stevenson
  */
 public class OSGiRegistryUtil {
-    public static String getFilter(Descriptor<String,String> desc){
-        return DescriptorFilterAdapter.getFilter(desc);
+    public static String getPropertiesFilter(Descriptor<String,String> desc){
+        return DescriptorFilterAdapter.getPropertiesFilter(desc);
+    }
+    public static String getFullFilter(Descriptor<String,String> desc){
+        return DescriptorFilterAdapter.getFullFilter(desc);
     }
 }

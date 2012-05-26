@@ -118,7 +118,7 @@ public class DirectFinder implements
         @Override
         public ServiceReference[] adapt(Descriptor<String, String> a) {
             String className = a.getClassName();
-            String filter = OSGiRegistryUtil.getFilter(a);
+            String filter = OSGiRegistryUtil.getPropertiesFilter(a);
             try{
                 return myContext.getServiceReferences(className, filter);
             }catch(InvalidSyntaxException ex){

@@ -26,6 +26,7 @@ import org.jflux.api.registry.opt.Descriptor;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
@@ -40,8 +41,7 @@ public class OSGiDirectRegistry<Time> implements Registry<
                 ServiceRegistration,
                 Modification<ServiceRegistration, String ,String>>, 
         Retriever<ServiceReference>, 
-        Monitor<OSGiDirectRegistry<Time>, Event<
-                Header<OSGiDirectRegistry<Time>, Time>, ServiceReference>>> {
+        Monitor<OSGiDirectRegistry<Time>, ServiceEvent>> {
 
     @Override
     public Finder<Descriptor<String, String>, ServiceReference> 
@@ -64,8 +64,7 @@ public class OSGiDirectRegistry<Time> implements Registry<
     }
 
     @Override
-    public Monitor<OSGiDirectRegistry<Time>, 
-            Event<Header<OSGiDirectRegistry<Time>, Time>,  ServiceReference>> 
+    public Monitor<OSGiDirectRegistry<Time>, ServiceEvent> 
             getMonitor(BundleContext context) {
         return new DirectMonitor<Time>(context);
     }
