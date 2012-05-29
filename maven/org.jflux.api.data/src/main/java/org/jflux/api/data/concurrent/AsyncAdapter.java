@@ -16,9 +16,8 @@
 package org.jflux.api.data.concurrent;
 
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Listener;
-import org.jflux.api.core.playable.BasicPlayable;
 import org.jflux.api.core.playable.PlayableNotifier;
+import org.jflux.api.core.playable.PlayableNotifier.DefaultPlayableNotifier;
 
 /**
  *
@@ -39,65 +38,65 @@ public class AsyncAdapter<A,B> implements Adapter<A,PlayableNotifier<B>>{
     }
     
     private class FutureAdapt<A,B> extends 
-            BasicPlayable implements PlayableNotifier<B> {
+            DefaultPlayableNotifier<B> implements PlayableNotifier<B> {
         private final A myInput;
         private final Adapter<A,B> myAdapter;
-        private Listener<B> myListener;
-
+        private final Thread myThread;
+        
+        //TODO: Replace Thread with ScheduledFuture
         public FutureAdapt(A input, Adapter<A, B> adapter) {
             myInput = input;
             myAdapter = adapter;
-        }
-        
-        @Override
-        public boolean start() {
-            new Thread(new Runnable() {
+            myThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     B b = myAdapter.adapt(myInput);
                     notifyListeners(b);
                     complete();
                 }
-            }).start();
+            });
+        }
+        
+        @Override
+        public boolean start() {
+            if(Thread.State.NEW != myThread.getState() || !super.start()){
+                return false;
+            }
+            myThread.start();
             return true;
         }
 
         @Override
-        public synchronized void addListener(Listener<B> listener) {
-            if(myListener != null){
-                throw new IllegalStateException("Only one Listener allowed.");
-            }
-            myListener = listener;
-        }
-
-        @Override
-        public synchronized void removeListener(Listener<B> listener) {
-            if(myListener == listener){
-                myListener = null;
-            }
-        }
-
-        @Override
-        public void notifyListeners(B e) {
-            Listener<B> l = myListener;
-            if(l != null){
-                l.handleEvent(e);
-            }
-        }
-
-        @Override
         public boolean pause() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(PlayState.PAUSED == getPlayState()){
+                return true;
+            }else if(PlayState.RUNNING != getPlayState()){
+                return false;
+            }else if(!super.pause()){
+                return false;
+            }
+            myThread.setPriority(Thread.MIN_PRIORITY);
+            return true;
         }
 
         @Override
         public boolean resume() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(PlayState.PAUSED != getPlayState() || !super.pause()){
+                return false;
+            }
+            myThread.setPriority(Thread.NORM_PRIORITY);
+            return true;
         }
 
         @Override
         public boolean stop() {
-            throw new UnsupportedOperationException("Not supported yet.");
+            if(Thread.State.TERMINATED == myThread.getState()){
+                return true;
+            }else if(!super.stop()){
+                return false;
+            }
+            myThread.interrupt();
+            return true;
         }
         
         @Override

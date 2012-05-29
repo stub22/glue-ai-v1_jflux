@@ -18,10 +18,10 @@ package org.jflux.impl.registry.osgi.direct;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
-import org.jflux.api.core.Notifier;
-import org.jflux.api.core.util.DefaultNotifier;
+import org.jflux.api.core.playable.PlayableNotifier.DefaultPlayableNotifier;
 import org.jflux.api.registry.Monitor;
 import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.impl.registry.osgi.direct.DirectMonitor.ServiceEventNotifier;
 import org.jflux.impl.registry.osgi.util.OSGiRegistryUtil;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
@@ -33,7 +33,7 @@ import org.osgi.framework.ServiceListener;
  * @author Matthew Stevenson
  */
 public class DirectMonitor<Time> implements Monitor<
-        Descriptor<String,String>, ServiceEvent> {
+        Descriptor<String,String>, ServiceEvent, ServiceEventNotifier> {
     private final static Logger theLogger = Logger.getLogger(DirectMonitor.class.getName());
     private BundleContext myContext;
     
@@ -45,29 +45,93 @@ public class DirectMonitor<Time> implements Monitor<
     }
 
     @Override
-    public Notifier<ServiceEvent> getNotifier(Descriptor<String,String> desc) {
+    public ServiceEventNotifier getNotifier(
+            Descriptor<String,String> desc) {
         String filter = OSGiRegistryUtil.getFullFilter(desc);
-        ServiceEventNotifier notifier = new ServiceEventNotifier();
-        try{
-            myContext.addServiceListener(notifier, filter);
-            return notifier;
-        }catch(InvalidSyntaxException ex){
-            theLogger.log(Level.SEVERE, "Invalid LDAP filter: " + filter, ex);
-            return null;
-        }
+        return new ServiceEventNotifier(myContext, filter);
     }
 
     @Override
-    public Listener<Descriptor<String,String>> releaseNotifier() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Listener<ServiceEventNotifier> releaseNotifier() {
+        return new Listener<ServiceEventNotifier>() {
+
+            @Override
+            public void handleEvent(ServiceEventNotifier event) {
+                if(event == null){
+                    return;
+                }
+                if(!event.stop()){
+                    theLogger.warning("Unable to stop notifier");
+                    return;
+                }
+                event.myContext = null;
+            }
+        };
     }
     
-    private class ServiceEventNotifier extends 
-            DefaultNotifier<ServiceEvent> implements ServiceListener{
+    public static class ServiceEventNotifier extends 
+            DefaultPlayableNotifier<ServiceEvent> implements ServiceListener{
+        private BundleContext myContext;
+        private String myFilter;
+        
+        private ServiceEventNotifier(BundleContext context, String filter){
+            if(context == null){
+                throw new NullPointerException();
+            }
+            myContext = context;
+            myFilter = filter;
+        }
+        
         @Override
         public void serviceChanged(ServiceEvent event) {
             notifyListeners(event);
         }
         
+        @Override
+        public boolean start(){
+            if(myContext == null || !super.start()){
+                return false;
+            }
+            return listen();
+        }
+        
+        @Override
+        public boolean pause(){
+            if(myContext == null || 
+                    PlayState.RUNNING != getPlayState() || !super.pause()){
+                return false;
+            }
+            myContext.removeServiceListener(this);
+            return true;
+        }
+        
+        @Override
+        public boolean resume(){
+            if(myContext == null || 
+                    PlayState.PAUSED != getPlayState() || !super.resume()){
+                return false;
+            }
+            return listen();
+        }
+        
+        @Override
+        public boolean stop(){
+            if(myContext == null || !super.stop()){
+                return false;
+            }
+            myContext.removeServiceListener(this);
+            return true;
+        }
+        
+        private boolean listen(){
+            try{
+                myContext.addServiceListener(this, myFilter);
+                return true;
+            }catch(InvalidSyntaxException ex){
+                theLogger.log(Level.SEVERE, 
+                        "Invalid LDAP filter: " + myFilter, ex);
+                return false;
+            }
+        }
     }
 }
