@@ -15,11 +15,56 @@
  */
 package org.jflux.api.core.playable;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
+import org.jflux.api.core.util.DefaultNotifier;
 
 /**
  *
  * @author Matthew Stevenson
  */
 public interface PlayableNotifier<T> extends Notifier<T>, Playable{
+        
+    public static class DefaultPlayableNotifier<T> extends
+            BasicPlayable implements PlayableNotifier<T> {
+        private final static Logger theLogger = 
+                Logger.getLogger(DefaultPlayableNotifier.class.getName());
+        
+        private Notifier<T> myNotifier;
+        
+        public DefaultPlayableNotifier(Notifier<T> notifier){
+            if(notifier == null){
+                throw new NullPointerException();
+            }
+            myNotifier = notifier;
+        }
+        
+        public DefaultPlayableNotifier(){
+            myNotifier = new DefaultNotifier<T>();
+        }
+        
+        @Override
+        public void addListener(Listener<T> listener) {
+            myNotifier.addListener(listener);
+        }
+
+        @Override
+        public void removeListener(Listener<T> listener) {
+            myNotifier.removeListener(listener);
+        }
+
+        @Override
+        public void notifyListeners(T e) {
+            if(getPlayState() == Playable.PlayState.RUNNING){
+                myNotifier.notifyListeners(e);
+            }else{
+                theLogger.log(Level.INFO, 
+                        "PlayState is: {0}, ignoring event: {1}", 
+                        new Object[]{getPlayState(), e});
+            }
+            myNotifier.notifyListeners(e);
+        }        
+    }
 }
