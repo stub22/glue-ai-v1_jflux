@@ -27,14 +27,15 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
     private SourceRef mySourceRef;
     private Time myTimestamp;
     private String myEventType;
+    private String myEventName;
     private Properties myProperties;
     
-    public BasicHeader(
-            SourceRef sourceRef, Time timestamp, 
-            String eventType, Properties props){
+    public BasicHeader(SourceRef sourceRef, Time timestamp, 
+            String eventType, String eventName, Properties props){
         mySourceRef = sourceRef;
         myTimestamp = timestamp;
         myEventType = eventType;
+        myEventName =  eventName;
         myProperties = props;
     }
     
@@ -52,67 +53,79 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
     public String getEventType() {
         return myEventType;
     }
+
+    @Override
+    public String getEventName() {
+        return myEventName;
+    }
     
     @Override
     public Properties getHeaderProperties(){
         return myProperties;
     }
     
-    public static class BasicHeaderFactory<Data,SourceRef,Time> implements 
-            Adapter<Data,BasicHeader<SourceRef,Time>> {
+    public static class HeaderFactory<Data,SourceRef,Time> implements 
+            Adapter<Data,Header<SourceRef,Time>> {
         private Adapter<Data,SourceRef> mySourceRefAdapter;
         private Source<Time> myTimestampSource;
         private Adapter<Data,String> myEventTypeAdapter;
+        private Adapter<Data,String> myEventNameAdapter;
         private Adapter<Data,Properties> myPropertiesAdapter;
         
-        public BasicHeaderFactory(
+        public HeaderFactory(
                 Adapter<Data,SourceRef> sourceRefAdapter, 
                 Source<Time> timestampSource, 
                 Adapter<Data,String> eventTypeAdapter, 
+                Adapter<Data,String> eventNameAdapter, 
                 Adapter<Data,Properties> propsAdapter){
-            if(sourceRefAdapter == null || timestampSource == null
-                    || eventTypeAdapter == null || propsAdapter == null){
+            if(sourceRefAdapter == null 
+                    || timestampSource == null || eventTypeAdapter == null 
+                    || eventNameAdapter == null || propsAdapter == null){
                 throw new NullPointerException();
             }
             mySourceRefAdapter = sourceRefAdapter;
             myTimestampSource = timestampSource;
             myEventTypeAdapter = eventTypeAdapter;
+            myEventNameAdapter = eventNameAdapter;
             myPropertiesAdapter = propsAdapter;
         }
 
         @Override
-        public BasicHeader<SourceRef, Time> adapt(Data a) {
+        public Header<SourceRef, Time> adapt(Data a) {
             SourceRef ref = mySourceRefAdapter.adapt(a);
             Time time = myTimestampSource.getValue();
             String type = myEventTypeAdapter.adapt(a);
+            String name = myEventNameAdapter.adapt(a);
             Properties props = myPropertiesAdapter.adapt(a);
-            return new BasicHeader<SourceRef, Time>(ref, time, type, props);
+            return new BasicHeader<SourceRef, Time>(ref, time, type, name, props);
         }
     }
     
-    public static class BasicHeaderSource<SourceRef,Time> implements 
-            Source<BasicHeader<SourceRef,Time>> {
+    public static class HeaderSource<SourceRef,Time> implements 
+            Source<Header<SourceRef,Time>> {
         private SourceRef mySourceRef;
         private Source<Time> myTimestampSource;
         private String myEventType;
+        private String myEventName;
         private Properties myProperties;
         
-        public BasicHeaderSource(
+        public HeaderSource(
                 SourceRef sourceRef, Source<Time> timestampSource, 
-                String eventType, Properties props){
+                String eventType, String eventName, Properties props){
             if(timestampSource == null){
                 throw new NullPointerException();
             }
             mySourceRef = sourceRef;
             myEventType = eventType;
+            myEventName = eventName;
             myProperties = props;
         }
         
         @Override
-        public BasicHeader<SourceRef, Time> getValue() {
+        public Header<SourceRef, Time> getValue() {
             return new BasicHeader<SourceRef, Time>(
                     mySourceRef, myTimestampSource.getValue(), 
-                    myEventType, myProperties);
+                    myEventType, myEventName, myProperties);
         }
     }
 }

@@ -4,8 +4,6 @@
  */
 package org.jflux.impl.registry.osgi.wrapped;
 
-import org.jflux.api.core.event.Event;
-import org.jflux.api.core.event.Header;
 import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
@@ -20,8 +18,7 @@ public class OSGiRegistry<Time> implements Registry<
         OSGiAccessor<RegistrationRequest<?, String, String>,
                 Modification<OSGiCertificate, String ,String>>, 
         OSGiRetriever<OSGiReference>, 
-        OSGiMonitor<OSGiRegistry<Time>, Time, Event<
-                ? extends Header<OSGiRegistry<Time>, Time>, OSGiReference>>> {
+        OSGiMonitor<OSGiRegistry<Time>, Time>> {
 
     @Override
     public OSGiFinder getFinder(OSGiContext<OSGiRegistry<Time>> context) {
@@ -29,15 +26,9 @@ public class OSGiRegistry<Time> implements Registry<
     }
 
     @Override
-    public OSGiMonitor<
-            OSGiRegistry<Time>, Time, 
-            Event<? extends Header<OSGiRegistry<Time>, Time>, 
-            OSGiReference>> getMonitor(
+    public OSGiMonitor<OSGiRegistry<Time>, Time> getMonitor(
                     OSGiContext<OSGiRegistry<Time>> context) {
-        return new OSGiMonitor<
-                OSGiRegistry<Time>, Time, 
-                Event<? extends Header<OSGiRegistry<Time>, Time>, 
-                OSGiReference>>(context);
+        return new OSGiMonitor<OSGiRegistry<Time>, Time>(context);
     }
 
     @Override
