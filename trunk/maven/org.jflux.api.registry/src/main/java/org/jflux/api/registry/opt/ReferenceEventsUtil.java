@@ -18,7 +18,7 @@ package org.jflux.api.registry.opt;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Source;
 import org.jflux.api.core.event.BasicEvent.BasicEventFactory;
-import org.jflux.api.core.event.BasicHeader.BasicHeaderSource;
+import org.jflux.api.core.event.BasicHeader.HeaderSource;
 import org.jflux.api.core.event.Event;
 import org.jflux.api.core.event.Header;
 
@@ -28,6 +28,7 @@ import org.jflux.api.core.event.Header;
  * @author Matthew Stevenson
  */
 public class ReferenceEventsUtil {
+    public final static String PROP_REFERENCE_EVENT = "referenceEvent";
     public final static String REFERENCE_ADDED = "referenceAdded";
     public final static String REFERENCE_MODIFIED = "referenceModified";
     public final static String REFERENCE_REMOVED = "referenceRemoved";
@@ -35,23 +36,27 @@ public class ReferenceEventsUtil {
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> addedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){
-        return referenceEventFactory(sourceRef, timestamp, REFERENCE_ADDED);
+        return referenceEventFactory(sourceRef, timestamp, 
+                REFERENCE_ADDED, PROP_REFERENCE_EVENT);
     }
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> modifiedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){
-        return referenceEventFactory(sourceRef, timestamp, REFERENCE_ADDED);
+        return referenceEventFactory(sourceRef, timestamp, 
+                REFERENCE_ADDED, PROP_REFERENCE_EVENT);
     }
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> removedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){
-        return referenceEventFactory(sourceRef, timestamp, REFERENCE_REMOVED);
+        return referenceEventFactory(sourceRef, timestamp, 
+                REFERENCE_REMOVED, PROP_REFERENCE_EVENT);
     }
     
     private static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> referenceEventFactory(
-                    SourceRef sourceRef, Source<Time> timestamp, String type){                
+                    SourceRef sourceRef, Source<Time> timestamp, 
+                    String type, String name){                
         return new BasicEventFactory<Header<SourceRef,Time>, Ref>(
-                new BasicHeaderSource(sourceRef, timestamp, type, null));
+                new HeaderSource(sourceRef, timestamp, type, name, null));
     }
 }

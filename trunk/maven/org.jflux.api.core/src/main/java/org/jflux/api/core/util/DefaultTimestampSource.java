@@ -1,5 +1,5 @@
 /*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.event;
+package org.jflux.api.core.util;
 
-import java.util.Properties;
+import org.jflux.api.core.Source;
 
 /**
  *
- * @author Matthew Stevenson <www.jflux.org>
+ * @author Matthew Stevenson
  */
-public interface Header<SourceRef, Time> {
-    public SourceRef getSourceReference();
-    public Time getTimeStamp();
-    public String getEventType();
-    public String getEventName();
-    public Properties getHeaderProperties();
+public class DefaultTimestampSource implements Source<Long> {
+    @Override
+    public Long getValue() {
+        return System.currentTimeMillis();
+    }
 }
