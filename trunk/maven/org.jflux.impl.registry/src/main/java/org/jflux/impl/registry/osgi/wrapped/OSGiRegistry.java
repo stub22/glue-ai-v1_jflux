@@ -7,6 +7,8 @@ package org.jflux.impl.registry.osgi.wrapped;
 import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
+import org.jflux.impl.registry.osgi.direct.OSGiDirectRegistry;
+import org.osgi.framework.BundleContext;
 
 /**
  *
@@ -19,6 +21,18 @@ public class OSGiRegistry<Time> implements Registry<
                 Modification<OSGiCertificate, String ,String>>, 
         OSGiRetriever<OSGiReference>, 
         OSGiMonitor<OSGiRegistry<Time>, Time>> {
+    private OSGiDirectRegistry<Time> myDirectRegistry;
+    
+    public OSGiRegistry(){
+        
+    }
+    
+    public OSGiRegistry(OSGiDirectRegistry<Time> directRegistry){
+        if(directRegistry == null){
+            throw new NullPointerException();
+        }
+        myDirectRegistry = directRegistry;
+    }
 
     @Override
     public OSGiFinder getFinder(OSGiContext<OSGiRegistry<Time>> context) {
@@ -45,5 +59,17 @@ public class OSGiRegistry<Time> implements Registry<
     public OSGiRetriever<OSGiReference> getRetriever(
             OSGiContext<OSGiRegistry<Time>> context) {
         return new OSGiRetriever<OSGiReference>(context);
+    }
+    
+    public OSGiDirectRegistry getDirectRegistry(){
+        return myDirectRegistry;
+    }
+    
+    protected BundleContext getBundleContext(
+            OSGiContext<OSGiRegistry<Time>> context){
+        if(context == null || this != context.getRegistry()){
+            return null;
+        }
+        return context.getBundleContext();
     }
 }

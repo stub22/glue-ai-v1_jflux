@@ -27,12 +27,12 @@ import org.jflux.api.core.Source;
 public interface Configuration<K> {
     public Set<K> getKeySet();
     
-    public Source<?> getPropertySource(K key);
+    public Source getPropertySource(K key);
     public <T> Source<T> getPropertySource(Class<T> propertyClass, K key);
     
-    public Notifier<?> getPropertyNotifier(K key);
+    public Notifier getPropertyNotifier(K key);
     public <T> Notifier<T> getPropertyNotifier(Class<T> propertyClass, K key);
     
-    public Listener<?> getPropertySetter(K key);
+    public Listener getPropertySetter(K key);
     public <T> Listener<T> getPropertySetter(Class<T> propertyClass, K key);
 }
