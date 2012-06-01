@@ -78,21 +78,22 @@ public interface Registry<
      * @param <K> property key
      * @param <V> property value
      */
-//    public static interface RegistryTemplate<CxtK, CxtV, Time, K, V,
-//            Cxt extends RegistryContext<
-//                    ? extends Registry<Cxt,F,A,R,M>,CxtK,CxtV>,
-//            Desc extends Descriptor<K,V>,
-//            Ref extends Reference<K,V>,
-//            Req extends RegistrationRequest<?,K,V>,
-//            Cert extends Certificate<Ref>,
-//            ModReq extends Modification<Cert,K,V>,
-//            RefEvt extends Event<
-//                    ? extends Header<? extends Registry,Time>,Ref>,
-//            F extends Finder<Desc,Ref>,
-//            A extends Accessor<Req,Cert,ModReq>, 
-//            R extends Retriever<Ref>,
-//            M extends Monitor<Desc,RefEvt>> extends Registry<Cxt,F,A,R,M>{
-//    }
+    public static interface RegistryTemplate<CxtK, CxtV, Time, K, V,
+            Cxt extends RegistryContext<
+                    ? extends Registry<Cxt,F,A,R,M>,CxtK,CxtV>,
+            Desc extends Descriptor<K,V>,
+            Ref extends Reference<K,V>,
+            Req extends RegistrationRequest<?,K,V>,
+            Cert extends Certificate<Ref>,
+            ModReq extends Modification<Cert,K,V>,
+            RefEvt extends Event<
+                    ? extends Header<? extends Registry,Time>,Ref>,
+            N extends PlayableNotifier<RefEvt>,
+            F extends Finder<Desc,Ref>,
+            A extends Accessor<Req,Cert,ModReq>, 
+            R extends Retriever<Ref>,
+            M extends Monitor<Desc,RefEvt,N>> extends Registry<Cxt,F,A,R,M>{
+    }
     
     public static interface BasicRegistry<CxtK,CxtV,Time,K,V> extends Registry<
             RegistryContext<BasicRegistry<CxtK,CxtV,Time,K,V>,CxtK,CxtV>,
@@ -104,10 +105,10 @@ public interface Registry<
             Retriever<Reference<K,V>>,
             Monitor<Descriptor<K,V>,
                     Event<
-                        Header<BasicRegistry<CxtK,CxtV,Time,K,V>,Time>, 
+                        Header<? extends BasicRegistry<CxtK,CxtV,Time,K,V>,Time>, 
                         Reference<K,V>>,
                     PlayableNotifier<Event<
-                            Header<BasicRegistry<CxtK,CxtV,Time,K,V>,Time>, 
-                            Reference<K,V>>>>> {
+                        Header<? extends BasicRegistry<CxtK,CxtV,Time,K,V>,Time>, 
+                        Reference<K,V>>>>> {
     }
 }
