@@ -45,5 +45,27 @@ public class MapAdapter<K,V> implements Adapter<K,V>{
     public Map<K,V> getMap(){
         return myMap;
     }
-
+    
+    public static class MapValueAdapter<K,V,T> implements Adapter<Map<K,V>,T> {
+        private K myKey;
+        private Adapter<V,T> myAdapter;
+        
+        public MapValueAdapter(K key, Adapter<V,T> adapter){
+            if(key == null || adapter == null){
+                throw new NullPointerException();
+            }
+            myKey = key;
+            myAdapter = adapter;
+        }
+        
+        @Override
+        public T adapt(Map<K, V> a) {
+            if(a == null){
+                return null;
+            }
+            V val = a.get(myKey);
+            return myAdapter.adapt(val);
+        }
+        
+    }
 }

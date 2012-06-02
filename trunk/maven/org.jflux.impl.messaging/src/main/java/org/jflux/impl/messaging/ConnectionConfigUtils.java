@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.impl.messaging.jms;
+package org.jflux.impl.messaging;
 
 import org.jflux.api.core.Source;
 import org.jflux.api.core.config.Configuration;
@@ -24,7 +24,7 @@ import org.jflux.api.core.util.DefaultTimestampSource;
  *
  * @author Matthew Stevenson
  */
-public class JMSConfigUtils {    
+public class ConnectionConfigUtils {    
     public final static String CONF_BROKER_IP = "msgBrokerIp";
     public final static String CONF_BROKER_PORT = "msgBrokerPort";
     public final static String CONF_BROKER_USERNAME = "msgBrokerUser";

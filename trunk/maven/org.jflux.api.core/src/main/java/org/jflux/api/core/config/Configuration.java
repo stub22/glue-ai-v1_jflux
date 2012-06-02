@@ -35,6 +35,45 @@ public interface Configuration<K> {
     public Set<K> getKeySet();
     
     /**
+     * Returns true if the Configuration contains a property for the given key.  
+     *   The property value may still be null.
+     * @param key property key
+     * @return true if the Configuration contains a property for the given key
+     */
+    public boolean containsKey(K key);
+    
+    /**
+     * Returns true if the Configuration contains a property for the given key 
+     * and class.  The property value may still be null.
+     * @param key property key
+     * @return true if the Configuration contains a property for the given key 
+     * and class
+     */
+    public boolean containsKey(Class clazz, K key);
+    
+    /**
+     * Returns an untyped property value.
+     * A null return value can mean either the key is not present or the value 
+     * of the property is null.  Use getPropertySource(key).getValue() to 
+     * distinguish.
+     * @param key property key
+     * @return untyped property value, returns null if the property is not 
+     * available
+     */
+    public Object getPropertyValue(K key);
+    /**
+     * Returns a property value.
+     * A null return value can mean either the key is not present or the value 
+     * of the property is null.  Use getPropertySource(key).getValue() to 
+     * distinguish.
+     * @param <T> type of the property value
+     * @param propertyClass class of the property value
+     * @param key property key
+     * @return a property value, returns null if the property is not available
+     */
+    public <T> T getPropertyValue(Class<T> propertyClass, K key);
+    
+    /**
      * Returns an untyped Source for retrieving a property value.
      * @param key property key
      * @return untyped Source for retrieving a property value, returns null if 
@@ -85,4 +124,14 @@ public interface Configuration<K> {
      * property is not available
      */
     public <T> Listener<T> getPropertySetter(Class<T> propertyClass, K key);
+    
+    /**
+     * Returns the class of the property.
+     * @param key property key
+     * @return class of the property, returns null if the property is not 
+     * available
+     */
+    public Class getPropertyClass(K key);
+    
+    //Listener<IndexedValue<K, ConfigProperty>> getPropertyAdder();
 }
