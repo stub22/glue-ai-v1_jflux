@@ -18,16 +18,13 @@ package org.jflux.api.core.config;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.jflux.api.core.Listener;
-import org.jflux.api.core.Notifier;
-import org.jflux.api.core.Source;
-import org.jflux.api.core.event.ValueChange;
+import org.jflux.api.core.util.IndexedValue;
 
 /**
  *
  * @author Matthew Stevenson
  */
-public class DefaultConfiguration<K> implements Configuration<K> {
+public class DefaultConfiguration<K> extends AbstractConfiguration<K> {
     private Map<K,ConfigProperty<?>> myPropertyMap;
     
     public DefaultConfiguration(){
@@ -45,82 +42,31 @@ public class DefaultConfiguration<K> implements Configuration<K> {
         myPropertyMap.put(key, prop);
     }
     
+    public void addProperty(IndexedValue<K,ConfigProperty> indexedProperty){
+        if(indexedProperty == null){
+            throw new NullPointerException();
+        }
+        K key = indexedProperty.getIndex();
+        ConfigProperty prop = indexedProperty.getValue();
+        if(key == null || prop == null){
+            throw new NullPointerException();
+        }if(myPropertyMap.containsKey(key)){
+            throw new IllegalStateException("Unable to add property.  "
+                    + "Key (" + key + ") already in use.");
+        }
+        myPropertyMap.put(key, prop);
+    }
+    
     @Override
     public Set<K> getKeySet() {
         return myPropertyMap.keySet();
     }
-
-    @Override
-    public Source getPropertySource(K key) {
-        ConfigProperty prop = getConfigProperty(key);
-        if(prop == null){
-            return null;
-        }
-        return prop.getSource();
-    }
-
-    @Override
-    public <T> Source<T> getPropertySource(Class<T> propClass, K key) {
-        ConfigProperty prop = getConfigProperty(key);
-        if(prop == null){
-            return null;
-        }
-        return prop.getSource();
-    }
-
-    @Override
-    public Notifier<ValueChange> getPropertyNotifier(K key) {
-        ConfigProperty prop = getConfigProperty(key);
-        if(prop == null){
-            return null;
-        }
-        return prop.getNotifier();
-    }
-
-    @Override
-    public <T> Notifier<ValueChange<T>> getPropertyNotifier(
-            Class<T> propClass, K key) {
-        ConfigProperty prop = getConfigProperty(propClass, key);
-        if(prop == null){
-            return null;
-        }
-        return prop.getNotifier();
-    }
-
-    @Override
-    public Listener getPropertySetter(K key) {
-        ConfigProperty prop = getConfigProperty(key);
-        if(prop == null){
-            return null;
-        }
-        return prop.getSetter();
-    }
-
-    @Override
-    public <T> Listener<T> getPropertySetter(Class<T> propClass, K key) {
-        ConfigProperty prop = getConfigProperty(propClass, key);
-        if(prop == null){
-            return null;
-        }
-        return prop.getSetter();
-    }
     
-    private ConfigProperty getConfigProperty(K key){
+    @Override
+    protected ConfigProperty getConfigProperty(K key){
         if(!myPropertyMap.containsKey(key)){
             return null;
         }
         return myPropertyMap.get(key);
-    }
-    
-    private <T> ConfigProperty<T> getConfigProperty(Class<T> propClass, K key){
-        ConfigProperty prop = myPropertyMap.get(key);
-        if(prop == null){
-            return null;
-        }
-        Class actualClass = prop.getPropertyClass();
-        if(actualClass == null || !propClass.isAssignableFrom(actualClass)){
-            return null;
-        }
-        return prop;
     }
 }
