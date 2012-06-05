@@ -28,8 +28,8 @@ import org.jflux.api.core.config.DefaultConfiguration;
 public class SerializationConfigUtils {
     public final static String CONF_MESSAGE_CLASS = "serializationMessageClass";
     public final static String CONF_RECORD_CLASS = "serializationRecordClass";
-    public final static String CONF_ENCODING_ADAPTER = "serializationSenderMsgRecAdapter";
-    public final static String CONF_DECODING_ADAPTER = "serializationReceiverRecMsgAdapter";
+    public final static String CONF_ENCODING_ADAPTER = "serializationSenderEncoderAdapter";
+    public final static String CONF_DECODING_ADAPTER = "serializationReceiverDecoderAdapter";
     public final static String CONF_CONTENT_TYPE = "serializationContentType";
     
     public final static String CONF_AVRO_RECORD_SCHEMA = "avroRecordSchema";

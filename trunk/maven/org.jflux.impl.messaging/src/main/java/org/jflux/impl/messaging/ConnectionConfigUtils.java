@@ -15,10 +15,8 @@
  */
 package org.jflux.impl.messaging;
 
-import org.jflux.api.core.Source;
 import org.jflux.api.core.config.Configuration;
 import org.jflux.api.core.config.DefaultConfiguration;
-import org.jflux.api.core.util.DefaultTimestampSource;
 
 /**
  *
@@ -75,7 +73,6 @@ public class ConnectionConfigUtils {
         if(ip == null){
             throw new NullPointerException();
         }
-        Source<Long> ts = new DefaultTimestampSource();
         Configuration<String> conf = buildConnectionConfig();
         if(ip != null){
             set(conf, CONF_BROKER_IP, ip);
