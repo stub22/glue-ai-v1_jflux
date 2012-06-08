@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.impl.messaging.avro;
+package org.jflux.impl.messaging.encode.avro;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
@@ -29,50 +28,56 @@ import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.specific.SpecificDatumWriter;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Source;
+import org.jflux.api.messaging.encode.EncodeRequest;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class AvroEncoder<T extends IndexedRecord, S extends OutputStream> 
-        implements  Adapter<T,S>{
+        implements Adapter<EncodeRequest<T,S>,S>{
     private final static Logger theLogger = 
             Logger.getLogger(AvroEncoder.class.getName());
-    private Source<S> myStreamFactory;
     private DatumWriter<T> myWriter;
     private EncoderFactory myEncoderFactory;
     private boolean myJsonFlag;
     private Schema mySchema;
-
-    public static <R extends SpecificRecordBase> 
-            AvroEncoder<R,ByteArrayOutputStream> 
-            buildByteStreamEncoder(Class<R> clazz){
-        return new AvroEncoder<R,ByteArrayOutputStream>(
-                clazz, null, new ByteOutputStreamFactory(), false);
+    
+    public static <R extends SpecificRecordBase, S extends OutputStream> 
+            Adapter<EncodeRequest<R,S>,S> buildSpecificBinaryEncoder(Class<R> clazz){
+        return new AvroEncoder<R,S>(clazz, null, false);
+    }
+    public static <R extends IndexedRecord, S extends OutputStream> 
+            Adapter<EncodeRequest<R,S>,S> buildBinaryEncoder(
+                    Class<R> clazz, Schema schema){
+        return new AvroEncoder<R,S>(clazz, schema, false);
+    }
+    /**
+     * Used when the Stream type needs to be specified.
+     * @param <R>
+     * @param <S>
+     * @param streamType
+     * @param clazz
+     * @param schema
+     * @return 
+     */
+    public static <R extends IndexedRecord, S extends OutputStream> 
+            Adapter<EncodeRequest<R,S>,S> buildBinaryEncoder(
+                    Class<S> streamType, Class<R> clazz, Schema schema){
+        return new AvroEncoder<R,S>(clazz, schema, false);
     }
     
     public static <R extends IndexedRecord, S extends OutputStream> 
-            AvroEncoder<R,S> buildBinaryEncoder(
-                    Class<R> clazz, Schema schema, Source<S> streamFact){
-        return new AvroEncoder<R,S>(clazz, schema, streamFact, false);
+            Adapter<EncodeRequest<R,S>,S> buildJsonEncoder(
+                    Class<R> clazz, Schema schema){
+        return new AvroEncoder<R,S>(clazz, schema, true);
     }
     
-    public static <R extends IndexedRecord, S extends OutputStream> 
-            AvroEncoder<R,S> buildJsonEncoder(
-                    Class<R> clazz, Schema schema, Source<S> streamFact){
-        return new AvroEncoder<R,S>(clazz, schema, streamFact, true);
-    }
-    
-    public AvroEncoder(Class<T> clazz, Schema schema, 
-            Source<S> streamFact, boolean json){
-        if(streamFact == null 
-                || (clazz == null && schema == null)
-                || (json && schema == null)){
+    public AvroEncoder(Class<T> clazz, Schema schema, boolean json){
+        if((clazz == null && schema == null) || (json && schema == null)){
             throw new NullPointerException();
         }
         myEncoderFactory = EncoderFactory.get();
-        myStreamFactory = streamFact;
         if(clazz != null && SpecificRecordBase.class.isAssignableFrom(clazz)){
             myWriter = new SpecificDatumWriter<T>(clazz);
         }else{
@@ -82,19 +87,25 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
         mySchema = schema;
     }
     
+    public AvroEncoder(Schema schema, boolean specific, boolean json){
+        if(schema == null){
+            throw new NullPointerException();
+        }
+        myEncoderFactory = EncoderFactory.get();
+        myWriter = specific ? new SpecificDatumWriter<T>(schema) 
+                : new GenericDatumWriter<T>(schema);
+        myJsonFlag = json;
+        mySchema = schema;
+    }
+    
     @Override
-    public S adapt(T a) {
+    public S adapt(EncodeRequest<T, S> a) {
         try{
-            S out = myStreamFactory.getValue();
-            if(out == null){
-                theLogger.warning("Error encoding Avro record.  "
-                        + "Unable to create OutputStream.");
-                return null;
-            }
+            S out = a.getStream();
             Encoder e = (myJsonFlag ? 
                     myEncoderFactory.jsonEncoder(mySchema, out) : 
                     myEncoderFactory.binaryEncoder(out, null));
-            myWriter.write(a, e);
+            myWriter.write(a.getValue(), e);
             e.flush();
             return out;
         }catch(IOException ex){
@@ -102,14 +113,5 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
                     "Error writing Avro record to OutputStream.", ex);
             return null;
         }
-    }
-    
-    public static class ByteOutputStreamFactory implements 
-            Source<ByteArrayOutputStream>{
-        @Override
-        public ByteArrayOutputStream getValue() {
-            return new ByteArrayOutputStream();
-        }
-        
     }
 }

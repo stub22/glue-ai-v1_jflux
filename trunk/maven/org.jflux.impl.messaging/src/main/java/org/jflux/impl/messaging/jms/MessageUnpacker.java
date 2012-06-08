@@ -16,6 +16,7 @@
 package org.jflux.impl.messaging.jms;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import javax.jms.BytesMessage;
 import javax.jms.JMSException;
 import org.jflux.api.core.Adapter;
@@ -24,8 +25,7 @@ import org.jflux.api.core.Adapter;
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class MessageUnpacker implements 
-        Adapter<BytesMessage,ByteArrayInputStream> {
+public class MessageUnpacker implements Adapter<BytesMessage,InputStream> {
 
     @Override
     public ByteArrayInputStream adapt(BytesMessage a) {

@@ -23,6 +23,4 @@ import org.jflux.api.core.Notifier;
  */
 public interface ProducerNode<E> extends Node{
     public Notifier<E> getNotifier();
-    
-    public Class<E> getProducedClass();
 }

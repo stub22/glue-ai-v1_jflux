@@ -32,16 +32,11 @@ public class DefaultProcessorNode<In, Out> extends
     private Adapter<In, Out> myProcessor;
     private Listener<In> myInputListener;
     private Notifier<Out> myOutputNotifier;
-    private Class<In> myInputClass;
-    private Class<Out> myOutputClass;
 
-    public DefaultProcessorNode(Class<In> inputClass, 
-            Class<Out> outputClass, Adapter<In,Out> proc){
-        if(inputClass == null || outputClass == null || proc == null){
+    public DefaultProcessorNode(Adapter<In,Out> proc){
+        if(proc == null){
             throw new NullPointerException();
         }
-        myInputClass = inputClass;
-        myOutputClass = outputClass;
         myInputListener = 
                 new ConditionalListener<In>(this, new DefaultInputListener());
         myOutputNotifier = 
@@ -57,15 +52,6 @@ public class DefaultProcessorNode<In, Out> extends
     @Override
     public Notifier<Out> getNotifier() {
         return myOutputNotifier;
-    }
-    @Override
-    public Class<In> getConsumedClass() {
-        return myInputClass;
-    }
-
-    @Override
-    public Class<Out> getProducedClass() {
-        return myOutputClass;
     }
     
     class DefaultInputListener implements Listener<In>{

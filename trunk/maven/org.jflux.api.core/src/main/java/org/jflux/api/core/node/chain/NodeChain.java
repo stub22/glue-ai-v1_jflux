@@ -95,21 +95,21 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
     }
     
     private void ensureNodeCompatibility(){
-        if(myProducer == null 
-                && (myProcessors == null || myProcessors.isEmpty())){
-            return;
-        }
-        Class produced = myProducer != null ? myProducer.getProducedClass()
-                : myProcessors.get(0).getConsumedClass();
-        if(myProcessors != null){
-            for(ProcessorNode<?,?> proc : myProcessors){
-                verfiyTypes(produced, proc.getConsumedClass());
-                produced = proc.getProducedClass();
-            }
-        }
-        if(myConsumer != null){
-            verfiyTypes(produced, myConsumer.getConsumedClass());
-        }
+//        if(myProducer == null 
+//                && (myProcessors == null || myProcessors.isEmpty())){
+//            return;
+//        }
+//        Class produced = myProducer != null ? myProducer.getProducedClass()
+//                : myProcessors.get(0).getConsumedClass();
+//        if(myProcessors != null){
+//            for(ProcessorNode<?,?> proc : myProcessors){
+//                verfiyTypes(produced, proc.getConsumedClass());
+//                produced = proc.getProducedClass();
+//            }
+//        }
+//        if(myConsumer != null){
+//            verfiyTypes(produced, myConsumer.getConsumedClass());
+//        }
     }
     
     private static void verfiyTypes(Class<?> input, Class<?> consumed){

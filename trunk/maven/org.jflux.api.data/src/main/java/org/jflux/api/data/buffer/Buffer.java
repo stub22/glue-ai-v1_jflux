@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 The JFlux Project (www.jflux.org).
+ * Copyright 2012 by The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,16 @@
 package org.jflux.api.data.buffer;
 
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Listener;
 import org.jflux.api.core.Source;
 
 /**
  *
- * @author Matthew Stevenson
+ * @author Matthew Stevenson <www.jflux.org>
  */
-public class AdapterCache<A,B> implements Listener<A>, Source<B> {
-    private Cache<B> myCache;
-    private Adapter<A,B> myAdapter;
-
-    public AdapterCache(Adapter<A,B> adapter, Cache<B> cache){
-        if(adapter == null || cache == null){
-            throw new NullPointerException();
-        }
-    }
+public interface Buffer<I,V> {
+    public Source<V> getHead();
+    public Source<V> getTail();
+    public Adapter<I,V> getIndexAdapter(I index);
     
-    @Override
-    public void handleEvent(A event) {
-        B b = myAdapter.adapt(event);
-        myCache.handleEvent(b);
-    }
-
-    @Override
-    public B getValue() {
-        return myCache.getValue();
-    }
-    
+    public Source<? extends Iterable<V>> getValues();
 }

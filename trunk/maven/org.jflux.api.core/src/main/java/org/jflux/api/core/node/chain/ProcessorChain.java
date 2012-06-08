@@ -49,16 +49,6 @@ public class ProcessorChain<In,Out> extends
     public Notifier<Out> getNotifier() {
         return myTailNode.getNotifier();
     }
-
-    @Override
-    public Class<In> getConsumedClass() {
-        return myHeadNode.getConsumedClass();
-    }
-
-    @Override
-    public Class<Out> getProducedClass() {
-        return myTailNode.getProducedClass();
-    }
     
     public List<ProcessorNode> getProcessorNodes(){
         return myNodes;

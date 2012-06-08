@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.impl.messaging.avro;
+package org.jflux.impl.messaging.encode.avro;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -51,14 +51,13 @@ public class AvroDecoder<S extends InputStream, T extends IndexedRecord>
     }
     
     public static <S extends InputStream, R extends SpecificRecordBase> 
-            AvroDecoder<S,R> buildSpecificBinaryDecoder(
-                    Class<S> inputClass, Class<R> outputClass){
+            AvroDecoder<S,R> buildSpecificBinaryDecoder(Class<R> outputClass){
         return new AvroDecoder<S,R>(outputClass, null, false);
     }
     
     public static <S extends InputStream, R extends IndexedRecord> 
             AvroDecoder<S,R> buildBinaryDecoder(
-                    Class<S> inputClass, Class<R> outputClass, Schema schema){
+                    Class<R> outputClass, Schema schema){
         return new AvroDecoder<S,R>(outputClass, schema, false);
     }
     
