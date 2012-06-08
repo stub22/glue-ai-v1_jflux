@@ -15,7 +15,6 @@
  */
 package org.jflux.impl.messaging;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import javax.jms.BytesMessage;
 import javax.jms.Destination;
@@ -24,14 +23,14 @@ import javax.jms.Session;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.IndexedRecord;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Source;
 import org.jflux.api.core.node.chain.ConsumerChain;
 import org.jflux.api.core.node.chain.NodeChainBuilder;
 import org.jflux.api.core.node.chain.ProducerChain;
-import org.jflux.impl.messaging.avro.AvroDecoder;
-import org.jflux.impl.messaging.avro.AvroEncoder;
-import org.jflux.impl.messaging.avro.AvroEncoder.ByteOutputStreamFactory;
-import org.jflux.impl.messaging.avro.PortableEvent;
-import org.jflux.impl.messaging.avro.PortableEvent.PortableAdapter;
+import org.jflux.api.messaging.encode.EncodeRequest;
+import org.jflux.api.messaging.encode.EncodeRequest.InnerAdapter;
+import org.jflux.impl.messaging.encode.avro.AvroDecoder;
+import org.jflux.impl.messaging.encode.avro.AvroEncoder;
 import org.jflux.impl.messaging.jms.JMSMessageReceiver;
 import org.jflux.impl.messaging.jms.JMSMessageSender;
 import org.jflux.impl.messaging.jms.MessagePacker;
@@ -44,40 +43,26 @@ import org.jflux.impl.messaging.jms.MessageUnpacker;
 public class JMSAvroUtils {
     
     public static <T, R extends IndexedRecord> 
-            ConsumerChain<T> buildEventSenderChain(
-            Class<T> eventClass, Class<R> recordClass, Schema schema, 
+            ConsumerChain<EncodeRequest<T,ByteArrayOutputStream>> buildEventSenderChain(
+            Class<R> recordClass, Schema schema, 
             Adapter<T,R> eventAdapter, Session session, Destination dest, 
             Adapter<BytesMessage,BytesMessage> optionalProc)
             throws JMSException{
-        return NodeChainBuilder.build(eventClass)
-                .attach(recordClass, eventAdapter)
-                .attach(ByteArrayOutputStream.class, 
-                        AvroEncoder.buildBinaryEncoder(recordClass, 
-                                schema, new ByteOutputStreamFactory()))
+        return NodeChainBuilder.build(new InnerAdapter(eventAdapter))
+                .attach(AvroEncoder.buildBinaryEncoder(recordClass, schema))
                 .getConsumerChain(
                         buildJMSSenderChain(session, dest, optionalProc));
     }
     
-    public static <T extends PortableEvent<R>, R extends IndexedRecord> 
-            ConsumerChain<T> buildPortableEventSenderChain(
-            Class<T> eventClass, Class<R> recordClass, Schema schema, 
+    public static <R extends IndexedRecord> 
+            ConsumerChain<EncodeRequest<R,ByteArrayOutputStream>> buildJMSAvroSenderChain(
+            Class<R> recordClass, Schema schema, 
             Session session, Destination dest, 
             Adapter<BytesMessage,BytesMessage> optionalProc)
             throws Exception{
-        return buildEventSenderChain(eventClass, recordClass, schema, 
-                new PortableAdapter<T, R>(), session, dest, optionalProc);
-    }
-    
-    public static <T extends IndexedRecord> 
-            ConsumerChain<T> buildJMSAvroSenderChain(
-            Class<T> recordClass, Schema schema, 
-            Session session, Destination dest, 
-            Adapter<BytesMessage,BytesMessage> optionalProc)
-            throws Exception{
-        return NodeChainBuilder.build(recordClass)
-                .attach(ByteArrayOutputStream.class, 
-                        AvroEncoder.buildBinaryEncoder(recordClass, 
-                                schema, new ByteOutputStreamFactory()))
+        
+        return NodeChainBuilder.build(AvroEncoder.buildBinaryEncoder(
+                        ByteArrayOutputStream.class, recordClass, schema))
                 .getConsumerChain(
                         buildJMSSenderChain(session, dest, optionalProc));
     }
@@ -86,25 +71,24 @@ public class JMSAvroUtils {
             Session session, Destination dest, 
             Adapter<BytesMessage,BytesMessage> optionalProc)
             throws JMSException {
-        NodeChainBuilder<ByteArrayOutputStream,BytesMessage> builder = 
-                NodeChainBuilder.build(ByteArrayOutputStream.class)
-                    .attach(BytesMessage.class, new MessagePacker(session));
-        if(optionalProc != null){
-            builder.attach(BytesMessage.class, optionalProc);
+        if(optionalProc == null){
+            return NodeChainBuilder.build(new MessagePacker(session))
+                    .getConsumerChain(new JMSMessageSender(session, dest));
         }
-        return builder.getConsumerChain(new JMSMessageSender(session, dest));
+        return NodeChainBuilder.build(new MessagePacker(session))
+                .attach(optionalProc)
+                .getConsumerChain(new JMSMessageSender(session, dest));
     }
     
     public static <E, R extends IndexedRecord> 
             ProducerChain<E> buildEventReceiverChain(
-            Class<E> eventClass, Class<R> recordClass, Schema schema, 
+            Class<R> recordClass, Schema schema, 
             Adapter<R,E> recordAdapter, Session session, Destination dest) 
             throws JMSException {
         return NodeChainBuilder.build(new JMSMessageReceiver(session, dest))
-                .attach(ByteArrayInputStream.class, new MessageUnpacker())
-                .attach(recordClass, AvroDecoder.buildBinaryDecoder(
-                        ByteArrayInputStream.class, recordClass, schema))
-                .attach(eventClass, recordAdapter)
+                .attach(new MessageUnpacker())
+                .attach(AvroDecoder.buildBinaryDecoder(recordClass, schema))
+                .attach(recordAdapter)
                 .getProducerChain();
     }
     
@@ -114,9 +98,25 @@ public class JMSAvroUtils {
             Session session, Destination dest) 
             throws JMSException {
         return NodeChainBuilder.build(new JMSMessageReceiver(session, dest))
-                .attach(ByteArrayInputStream.class, new MessageUnpacker())
-                .attach(recordClass, AvroDecoder.buildBinaryDecoder(
-                        ByteArrayInputStream.class, recordClass, schema))
+                .attach(new MessageUnpacker())
+                .attach(AvroDecoder.buildBinaryDecoder(recordClass, schema))
                 .getProducerChain();
+    }
+    
+    public static <T> Adapter<T, EncodeRequest<
+            T,ByteArrayOutputStream>> byteStreamRequestFactory(){
+        return EncodeRequest.factory(new ByteOutputStreamFactory());
+    }
+    public static <T> Adapter<T,EncodeRequest<
+            T,ByteArrayOutputStream>> byteStreamRequestFactory(Class<T> clazz){
+        return EncodeRequest.factory(new ByteOutputStreamFactory());
+    }
+    
+    public static class ByteOutputStreamFactory implements 
+            Source<ByteArrayOutputStream>{
+        @Override
+        public ByteArrayOutputStream getValue() {
+            return new ByteArrayOutputStream();
+        }
     }
 }

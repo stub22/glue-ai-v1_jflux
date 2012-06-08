@@ -41,17 +41,6 @@ public class ProducerChain<T> extends NodeChain implements ProducerNode<T> {
         }
         return null;
     }
-
-    @Override
-    public Class<T> getProducedClass() {
-        List<ProcessorNode> nodes = getProcessorChain();
-        if(nodes != null && !nodes.isEmpty()){
-            return nodes.get(nodes.size()-1).getProducedClass();
-        }else if(getProducer() != null){
-            return getProducer().getProducedClass();
-        }
-        return null;
-    }
     
     @Override
     public ProducerNode getProducer(){

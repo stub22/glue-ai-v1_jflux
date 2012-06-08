@@ -40,7 +40,7 @@ public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
     
     public JMSMessageReceiver(Session session, Destination dest) 
             throws JMSException{
-        super(BytesMessage.class, new DefaultNotifier<BytesMessage>());
+        super(new DefaultNotifier<BytesMessage>());
         if(session == null || dest == null){
             throw new NullPointerException();
         }

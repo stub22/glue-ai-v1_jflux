@@ -42,9 +42,9 @@ public class HeartbeatNode<M> extends
     private TimeUnit myTimeUnit;
     private ScheduledFuture<?> myFuture;
     
-    public HeartbeatNode(Class<M> msgClass, Source<M> factory,
+    public HeartbeatNode(Source<M> factory, 
             long initialDelay, long period, TimeUnit timeUnit){
-        super(msgClass, new DefaultNotifier<M>());
+        super(new DefaultNotifier<M>());
         if(factory == null || timeUnit == null){
             throw new NullPointerException();
         }

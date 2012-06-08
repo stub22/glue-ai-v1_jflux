@@ -41,17 +41,6 @@ public class ConsumerChain<T> extends NodeChain implements ConsumerNode<T> {
         }
         return null;
     }
-
-    @Override
-    public Class<T> getConsumedClass() {
-        List<ProcessorNode> nodes = getProcessorChain();
-        if(nodes != null && !nodes.isEmpty()){
-            return nodes.get(0).getConsumedClass();
-        }else if(getConsumer() != null){
-            return getConsumer().getConsumedClass();
-        }
-        return null;
-    }
     
     @Override
     public ConsumerNode getConsumer(){

@@ -17,7 +17,10 @@
 package org.jflux.api.data.buffer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Source;
 
 
 /**
@@ -25,27 +28,28 @@ import java.util.List;
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class CircularBufferCache<V> implements IndexedCache<Integer, V>{
+public class CircularBuffer<V> implements Buffer<Integer, V>{
     private List<V> myElements;
-    private int next;
-    private int head;
-    private int tail;
-    private int capacity;
+    private int myNextIndex;
+    private int myHead;
+    private int myTail;
+    private int myCapacity;
 
     /**
      * Creates a new CircularBufferCache with the given capacity.
      * @param capacity capacity of the buffer, must be greater than 0
      * @throws IllegalArgumentException if capacity is not greater than 0
      */
-    public CircularBufferCache(int capacity){
+    public CircularBuffer(int capacity){
         if(capacity <= 0){
             throw new IllegalArgumentException(
                     "Capacity must be greater than 0.");
         }
-        myElements = new ArrayList<V>(capacity);
-        next = 0;
-        head = 0;
-        tail = 0;
+        myCapacity = capacity;
+        myElements = new ArrayList<V>(myCapacity);
+        myNextIndex = 0;
+        myHead = 0;
+        myTail = 0;
     }
     /**
     * Returns the nth item from the head of the buffer.
@@ -56,15 +60,14 @@ public class CircularBufferCache<V> implements IndexedCache<Integer, V>{
     * @throws IllegalArgumentException if n less than 0 or n is greater than or
     * equal to the number of elements.
     */
-    @Override
-    public V adapt(Integer n){
+    public V get(Integer n){
         if(n < 0 || n >= myElements.size()){
             throw new IllegalArgumentException(
                     "Index: " + n + " out of bounds.  "
-                    + "Buffer capacity is " + capacity + ".  "
+                    + "Buffer capacity is " + myCapacity + ".  "
                     + "Number of elements is " + myElements.size() + ".");
         }
-        int index = (head-n)%capacity;
+        int index = (myHead-n)%myCapacity;
         return myElements.get(index);
     }
     /**
@@ -72,17 +75,16 @@ public class CircularBufferCache<V> implements IndexedCache<Integer, V>{
     * If the buffer is at its capacity, the oldest element is removed.
     * @param value data to add to the buffer
     */
-    @Override
-    public void handleEvent(V value){
-        if(next < capacity && next >= myElements.size()){
+    public void add(V value){
+        if(myNextIndex < myCapacity && myNextIndex >= myElements.size()){
             myElements.add(value);
         }else{
-            myElements.set(next, value);
+            myElements.set(myNextIndex, value);
         }
-        head = next;
-        next = (next+1)%capacity;
-        if(head == tail && myElements.size() > 1){
-            tail = next;
+        myHead = myNextIndex;
+        myNextIndex = (myNextIndex+1)%myCapacity;
+        if(myHead == myTail && myElements.size() > 1){
+            myTail = myNextIndex;
         }
     }
     /**
@@ -90,12 +92,32 @@ public class CircularBufferCache<V> implements IndexedCache<Integer, V>{
     * The head element is the most recently added element.
     * @return head element of the buffer, returns null if the buffer is empty
     */
-    @Override
-    public V getValue(){
+    public V getHeadValue(){
         if(myElements.isEmpty()){
             return null;
         }
-        return myElements.get(head);
+        return myElements.get(myHead);
+    }
+    
+    public V getTailValue(){
+        if(myElements.isEmpty()){
+            return null;
+        }
+        return myElements.get(myHead);
+    }
+    
+    public List<V> getValueList(){
+        if(myElements.isEmpty()){
+            return Collections.EMPTY_LIST;
+        }
+        List<V> vals = new ArrayList<V>(myElements.size());
+        if(myHead > myTail){
+            vals.addAll(myElements.subList(myTail, myHead+1));
+        }else{
+            vals.addAll(myElements.subList(myTail, myElements.size()));
+            vals.addAll(myElements.subList(0, myHead+1));
+        }
+        return vals;
     }
     /**
      * Returns the number of elements in the buffer.
@@ -103,5 +125,45 @@ public class CircularBufferCache<V> implements IndexedCache<Integer, V>{
      */
     public int getSize(){
         return myElements.size();
+    }
+
+    @Override
+    public Source<V> getHead() {
+        return new Source<V>() {
+            @Override
+            public V getValue() {
+                return getHeadValue();
+            }
+        };
+    }
+
+    @Override
+    public Source<V> getTail() {
+        return new Source<V>() {
+            @Override
+            public V getValue() {
+                return getTailValue();
+            }
+        };
+    }
+
+    @Override
+    public Adapter<Integer, V> getIndexAdapter(Integer index) {
+        return new Adapter<Integer, V>() {
+            @Override
+            public V adapt(Integer a) {
+                return get(a);
+            }
+        };
+    }
+
+    @Override
+    public Source<List<V>> getValues() {
+        return new Source<List<V>>() {
+            @Override
+            public List<V> getValue() {
+                return getValueList();
+            }
+        };
     }
 }

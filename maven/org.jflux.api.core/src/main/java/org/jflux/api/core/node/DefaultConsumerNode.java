@@ -26,23 +26,16 @@ import org.jflux.api.core.Listener;
 public class DefaultConsumerNode<In> extends 
         BasicPlayable implements ConsumerNode<In> {
     private Listener<In> myListener;
-    private Class<In> myInputClass;
 
-    public DefaultConsumerNode(Class<In> inputClass, Listener<In> proc){
-        if(inputClass == null || proc == null){
+    public DefaultConsumerNode(Listener<In> proc){
+        if(proc == null){
             throw new NullPointerException();
         }
-        myInputClass = inputClass;
         myListener = new ConditionalListener<In>(this, proc);
     }
     
     @Override
     public Listener<In> getListener() {
         return myListener;
-    }
-
-    @Override
-    public Class<In> getConsumedClass() {
-        return myInputClass;
     }
 }

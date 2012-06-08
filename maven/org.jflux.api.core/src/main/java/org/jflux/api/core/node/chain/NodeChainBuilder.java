@@ -29,72 +29,66 @@ import org.jflux.api.core.Notifier;
 public class NodeChainBuilder<H,T> {
     private ProducerNode myProducer;
     private List<ProcessorNode> myProcessorList;
-    private Class<T> myTailClass;
     
-    public static <C> NodeChainBuilder<C,C> build(Class<C> head){
-        return new NodeChainBuilder<C, C>(head,head);
+    public static <H,T> NodeChainBuilder<H,T> build(Adapter<H,T> adapter){
+        if(adapter == null){
+            throw new NullPointerException();
+        }
+        return build(new DefaultProcessorNode(adapter));
     }
     
-    public static <C> NodeChainBuilder<C,C> build(
-            Class<C> head, Notifier<C> producer){
-        return build(new DefaultProducerNode<C>(head, producer));
+    public static <H,T> NodeChainBuilder<H,T> build(ProcessorNode<H,T> proc){
+        if(proc == null){
+            throw new NullPointerException();
+        }
+        return new NodeChainBuilder<H, H>().attach(proc);
+    }
+    
+    public static <C> NodeChainBuilder<C,C> build(Notifier<C> producer){
+        if(producer == null){
+            throw new NullPointerException();
+        }
+        return build(new DefaultProducerNode<C>(producer));
     }
     
     public static <C> NodeChainBuilder<C,C> build(ProducerNode<C> producer){
         if(producer == null){
             throw new NullPointerException();
         }
-        Class<C> c = producer.getProducedClass();
-        NodeChainBuilder<C, C> builder = new NodeChainBuilder<C, C>(c,c);
+        NodeChainBuilder<C, C> builder = new NodeChainBuilder<C, C>();
         builder.myProducer = producer;
         return builder;
     }
     
-    private NodeChainBuilder(Class<H> head, Class<T> tail){
-        if(head == null || tail == null){
-            throw new NullPointerException();
-        }
+    private NodeChainBuilder(){
         myProcessorList = new ArrayList<ProcessorNode>();
-        myTailClass = tail;
     }
     
-    public <N> NodeChainBuilder<H,N> attach(
-            Class<N> outputClass, Adapter<T,N> adapter){
-        if(outputClass == null || adapter == null){
+    public <N> NodeChainBuilder<H,N> attach(Adapter<T,N> adapter){
+        if(adapter == null){
             throw new NullPointerException();
         }
-        return attach(new DefaultProcessorNode<T, N>(
-                myTailClass, outputClass, adapter));
+        return attach(new DefaultProcessorNode<T, N>(adapter));
     }
     
     public <N> NodeChainBuilder<H,N> attach(ProcessorNode<T,N> proc){
         if(proc == null){
             throw new NullPointerException();
-        }else if(!proc.getConsumedClass().isAssignableFrom(myTailClass)){
-            throw new IllegalArgumentException(
-                    "Expected class: " + myTailClass 
-                    + ", found class: " + proc.getConsumedClass());
         }
         myProcessorList.add(proc);
-        NodeChainBuilder<H,N> newChainBuilder = (NodeChainBuilder<H,N>)this;
-        newChainBuilder.myTailClass = proc.getProducedClass();
-        return newChainBuilder;
+        return (NodeChainBuilder<H,N>)this;
     }
     
     public NodeChain attach(Listener<T> consumer){
         if(consumer == null){
             throw new NullPointerException();
         }
-        return attach(new DefaultConsumerNode<T>(myTailClass, consumer));
+        return attach(new DefaultConsumerNode<T>(consumer));
     }
     
     public NodeChain attach(ConsumerNode<T> consumer){
         if(consumer == null){
             throw new NullPointerException();
-        }else if(!consumer.getConsumedClass().isAssignableFrom(myTailClass)){
-            throw new IllegalArgumentException(
-                    "Expected class: " + myTailClass 
-                    + ", found class: " + consumer.getConsumedClass());
         }
         if(myProducer == null){
             return getConsumerChain(consumer);
@@ -109,8 +103,7 @@ public class NodeChainBuilder<H,T> {
     }
     
     public ConsumerChain<H> getConsumerChain(Listener<T> listener){
-        return getConsumerChain(
-                new DefaultConsumerNode<T>(myTailClass, listener));
+        return getConsumerChain(new DefaultConsumerNode<T>(listener));
     }
     
     public ConsumerChain<H> getConsumerChain(ConsumerNode<T> node){

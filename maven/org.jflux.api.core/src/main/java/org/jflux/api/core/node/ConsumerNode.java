@@ -23,6 +23,4 @@ import org.jflux.api.core.Listener;
  */
 public interface ConsumerNode<E> extends Node{
     public Listener<E> getListener();
-    
-    public Class<E> getConsumedClass();
 }

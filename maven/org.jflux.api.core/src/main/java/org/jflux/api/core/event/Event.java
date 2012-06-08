@@ -26,16 +26,16 @@ public interface Event<H, D> {
     
     public D getData();
     
-    public static class EventHeaderAdapter<H> implements Adapter<Event<H,?>,H> {
+    public static class EventHeaderAdapter<H,D> implements Adapter<Event<H,D>,H> {
         @Override
-        public H adapt(Event<H, ?> a) {
+        public H adapt(Event<H, D> a) {
             return a.getHeader();
         }
     }
     
-    public static class EventDataAdapter<D> implements Adapter<Event<?,D>,D> {
+    public static class EventDataAdapter<H,D> implements Adapter<Event<H,D>,D> {
         @Override
-        public D adapt(Event<?, D> a) {
+        public D adapt(Event<H, D> a) {
             return a.getData();
         }
     }

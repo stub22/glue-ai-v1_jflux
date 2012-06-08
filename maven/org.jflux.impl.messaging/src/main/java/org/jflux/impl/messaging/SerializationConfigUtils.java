@@ -27,10 +27,10 @@ import org.jflux.api.core.config.DefaultConfiguration;
  */
 public class SerializationConfigUtils {
     public final static String CONF_MESSAGE_CLASS = "serializationMessageClass";
-    public final static String CONF_RECORD_CLASS = "serializationRecordClass";
+    public final static String CONF_OUTPUT_CLASS = "serializationRecordClass";
+    public final static String CONF_CONTENT_TYPE = "serializationContentType";
     public final static String CONF_ENCODING_ADAPTER = "serializationSenderEncoderAdapter";
     public final static String CONF_DECODING_ADAPTER = "serializationReceiverDecoderAdapter";
-    public final static String CONF_CONTENT_TYPE = "serializationContentType";
     
     public final static String CONF_AVRO_RECORD_SCHEMA = "avroRecordSchema";
     public final static String CONF_AVRO_ENCODING_TYPE = "avroEncodingType";
@@ -46,7 +46,7 @@ public class SerializationConfigUtils {
             String contentType){
         DefaultConfiguration<String> conf = new DefaultConfiguration<String>();
         conf.addProperty(Class.class, CONF_MESSAGE_CLASS, messageClass);
-        conf.addProperty(Class.class, CONF_RECORD_CLASS, recordClass);
+        conf.addProperty(Class.class, CONF_OUTPUT_CLASS, recordClass);
         conf.addProperty(Adapter.class, CONF_ENCODING_ADAPTER, encoder);
         conf.addProperty(Adapter.class, CONF_DECODING_ADAPTER, decoder);
         conf.addProperty(String.class, CONF_CONTENT_TYPE, contentType);

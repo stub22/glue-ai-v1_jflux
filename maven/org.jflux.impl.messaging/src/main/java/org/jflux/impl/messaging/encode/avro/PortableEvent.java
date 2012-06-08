@@ -13,14 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.data.buffer;
+package org.jflux.impl.messaging.encode.avro;
 
+import org.apache.avro.generic.IndexedRecord;
 import org.jflux.api.core.Adapter;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface IndexedCache<K,V> extends Cache<V>, Adapter<K,V> {
+public interface PortableEvent<T extends IndexedRecord> {
+    public T getRecord();
     
+    public static class PortableAdapter<T extends PortableEvent<R>, R extends IndexedRecord> 
+            implements Adapter<T, R> {
+
+        @Override
+        public R adapt(T a) {
+            return a.getRecord();
+        }
+
+    }
 }

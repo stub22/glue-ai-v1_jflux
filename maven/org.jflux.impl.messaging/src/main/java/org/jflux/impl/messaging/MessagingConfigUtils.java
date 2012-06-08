@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 by The JFlux Project (www.jflux.org).
+ * Copyright 2012 The JFlux Project (www.jflux.org).
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,25 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.impl.messaging.avro;
-
-import org.apache.avro.generic.IndexedRecord;
-import org.jflux.api.core.Adapter;
+package org.jflux.impl.messaging;
 
 /**
  *
- * @author Matthew Stevenson <www.jflux.org>
+ * @author Matthew Stevenson
  */
-public interface PortableEvent<T extends IndexedRecord> {
-    public T getRecord();
-    
-    public static class PortableAdapter<T extends PortableEvent<R>, R extends IndexedRecord> 
-            implements Adapter<T, R> {
-
-        @Override
-        public R adapt(T a) {
-            return a.getRecord();
-        }
-
-    }
+public class MessagingConfigUtils {
 }

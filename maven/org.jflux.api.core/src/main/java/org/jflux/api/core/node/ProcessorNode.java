@@ -25,7 +25,4 @@ import org.jflux.api.core.Notifier;
 public interface ProcessorNode<In, Out> extends Node {
     public Listener<In> getListener();
     public Notifier<Out> getNotifier();
-    
-    public Class<In> getConsumedClass();
-    public Class<Out> getProducedClass();
 }
