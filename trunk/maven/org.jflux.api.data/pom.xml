@@ -36,7 +36,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.jflux.api.data.*</Export-Package>
+                        <Export-Package>org.jflux.api.data.*, org.jflux.api.encode, org.jflux.api.schedule, org.jflux.api.transport</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
