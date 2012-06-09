@@ -19,8 +19,9 @@
 		<module>../org.jflux.api.core</module>
 		<module>../org.jflux.api.data</module>
 		<module>../org.jflux.api.registry</module>
-		<module>../org.jflux.impl.messaging</module>
-		<module>../org.jflux.impl.registry</module>
+		<module>../org.jflux.impl.encode.avro</module>
+		<module>../org.jflux.impl.transport.qpid</module>
+		<module>../org.jflux.impl.registry.osgi</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
