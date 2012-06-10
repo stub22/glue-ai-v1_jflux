@@ -15,7 +15,7 @@
  */
 package org.jflux.api.core.event;
 
-import java.util.Properties;
+import java.util.Map;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Source;
 
@@ -27,10 +27,10 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
     private SourceRef mySourceRef;
     private Time myTimestamp;
     private String myEventType;
-    private Properties myProperties;
+    private Map<String,String> myProperties;
     
     public BasicHeader(SourceRef sourceRef, Time timestamp, 
-            String eventType, Properties props){
+            String eventType, Map<String,String> props){
         mySourceRef = sourceRef;
         myTimestamp = timestamp;
         myEventType = eventType;
@@ -43,7 +43,7 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
     }
     
     @Override
-    public Time getTimeStamp(){
+    public Time getTimestamp(){
         return myTimestamp;
     }
 
@@ -53,7 +53,7 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
     }
     
     @Override
-    public Properties getHeaderProperties(){
+    public Map<String,String> getHeaderProperties(){
         return myProperties;
     }
     
@@ -62,13 +62,13 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         private Adapter<Data,SourceRef> mySourceRefAdapter;
         private Source<Time> myTimestampSource;
         private Adapter<Data,String> myEventTypeAdapter;
-        private Adapter<Data,Properties> myPropertiesAdapter;
+        private Adapter<Data,Map<String,String>> myPropertiesAdapter;
         
         public HeaderFactory(
                 Adapter<Data,SourceRef> sourceRefAdapter, 
                 Source<Time> timestampSource, 
                 Adapter<Data,String> eventTypeAdapter, 
-                Adapter<Data,Properties> propsAdapter){
+                Adapter<Data,Map<String,String>> propsAdapter){
             if(sourceRefAdapter == null || timestampSource == null 
                     || eventTypeAdapter == null || propsAdapter == null){
                 throw new NullPointerException();
@@ -84,7 +84,7 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
             SourceRef ref = mySourceRefAdapter.adapt(a);
             Time time = myTimestampSource.getValue();
             String type = myEventTypeAdapter.adapt(a);
-            Properties props = myPropertiesAdapter.adapt(a);
+            Map<String,String> props = myPropertiesAdapter.adapt(a);
             return new BasicHeader<SourceRef, Time>(ref, time, type, props);
         }
     }
@@ -94,11 +94,11 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         private SourceRef mySourceRef;
         private Source<Time> myTimestampSource;
         private String myEventType;
-        private Properties myProperties;
+        private Map<String,String> myProperties;
         
         public HeaderSource(
                 SourceRef sourceRef, Source<Time> timestampSource, 
-                String eventType, Properties props){
+                String eventType, Map<String,String> props){
             if(timestampSource == null){
                 throw new NullPointerException();
             }

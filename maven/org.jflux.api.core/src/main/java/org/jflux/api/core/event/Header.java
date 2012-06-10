@@ -15,7 +15,7 @@
  */
 package org.jflux.api.core.event;
 
-import java.util.Properties;
+import java.util.Map;
 
 /**
  *
@@ -23,7 +23,7 @@ import java.util.Properties;
  */
 public interface Header<SourceRef, Time> {
     public SourceRef getSourceReference();
-    public Time getTimeStamp();
+    public Time getTimestamp();
     public String getEventType();
-    public Properties getHeaderProperties();
+    public Map<String,String> getHeaderProperties();
 }
