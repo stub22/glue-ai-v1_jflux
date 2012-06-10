@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.impl.messaging;
+package org.jflux.impl.encode.avro;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.IndexedRecord;
