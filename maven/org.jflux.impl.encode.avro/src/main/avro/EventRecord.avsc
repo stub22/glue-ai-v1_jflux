@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-{"name": "MessageList", "type": "record", "namespace":"org.jflux.avrogen",
+{"name": "EventRecord", "type": "record", "namespace":"org.jflux.avrogen",
     "fields": [
         {"name": "header", "type": "bytes"},
         {"name": "messages", "type" : {"type":"array", "items":"bytes"}}
