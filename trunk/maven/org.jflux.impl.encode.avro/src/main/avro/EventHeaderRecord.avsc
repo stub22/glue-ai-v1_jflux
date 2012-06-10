@@ -1,5 +1,5 @@
-/*
- *  Copyright 2012 by The JFlux Project (www.jflux.org).
+/* 
+ * Copyright 2012 Hanson Robokind LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.event;
 
-import java.util.Properties;
-
-/**
- *
- * @author Matthew Stevenson <www.jflux.org>
- */
-public interface Header<SourceRef, Time> {
-    public SourceRef getSourceReference();
-    public Time getTimeStamp();
-    public String getEventType();
-    public Properties getHeaderProperties();
+{"name": "EventHeaderRecord", "type": "record", "namespace":"org.jflux.avrogen",
+    "fields": [
+        {"name": "source", "type": "string"},
+        {"name": "eventType", "type": "string"},
+        {"name": "timestampMillisecUTC", "type": "long"},
+        {"name": "properties", "type" : {"type":"map", "values":"string"}}
+    ]
 }

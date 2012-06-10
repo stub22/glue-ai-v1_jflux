@@ -28,7 +28,6 @@ import org.jflux.api.core.event.Header;
  * @author Matthew Stevenson
  */
 public class ReferenceEventsUtil {
-    public final static String PROP_REFERENCE_EVENT = "referenceEvent";
     public final static String REFERENCE_ADDED = "referenceAdded";
     public final static String REFERENCE_MODIFIED = "referenceModified";
     public final static String REFERENCE_REMOVED = "referenceRemoved";
@@ -36,27 +35,23 @@ public class ReferenceEventsUtil {
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> addedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){
-        return referenceEventFactory(sourceRef, timestamp, 
-                REFERENCE_ADDED, PROP_REFERENCE_EVENT);
+        return referenceEventFactory(sourceRef, timestamp, REFERENCE_ADDED);
     }
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> modifiedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){
-        return referenceEventFactory(sourceRef, timestamp, 
-                REFERENCE_ADDED, PROP_REFERENCE_EVENT);
+        return referenceEventFactory(sourceRef, timestamp, REFERENCE_MODIFIED);
     }
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> removedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){
-        return referenceEventFactory(sourceRef, timestamp, 
-                REFERENCE_REMOVED, PROP_REFERENCE_EVENT);
+        return referenceEventFactory(sourceRef, timestamp, REFERENCE_REMOVED);
     }
     
     private static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> referenceEventFactory(
-                    SourceRef sourceRef, Source<Time> timestamp, 
-                    String type, String name){                
+                    SourceRef sourceRef, Source<Time> timestamp, String type){                
         return new BasicEventFactory<Header<SourceRef,Time>, Ref>(
-                new HeaderSource(sourceRef, timestamp, type, name, null));
+                new HeaderSource(sourceRef, timestamp, type, null));
     }
 }

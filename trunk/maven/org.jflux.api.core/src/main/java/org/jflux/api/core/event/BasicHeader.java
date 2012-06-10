@@ -27,15 +27,13 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
     private SourceRef mySourceRef;
     private Time myTimestamp;
     private String myEventType;
-    private String myEventName;
     private Properties myProperties;
     
     public BasicHeader(SourceRef sourceRef, Time timestamp, 
-            String eventType, String eventName, Properties props){
+            String eventType, Properties props){
         mySourceRef = sourceRef;
         myTimestamp = timestamp;
         myEventType = eventType;
-        myEventName =  eventName;
         myProperties = props;
     }
     
@@ -53,11 +51,6 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
     public String getEventType() {
         return myEventType;
     }
-
-    @Override
-    public String getEventName() {
-        return myEventName;
-    }
     
     @Override
     public Properties getHeaderProperties(){
@@ -69,24 +62,20 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         private Adapter<Data,SourceRef> mySourceRefAdapter;
         private Source<Time> myTimestampSource;
         private Adapter<Data,String> myEventTypeAdapter;
-        private Adapter<Data,String> myEventNameAdapter;
         private Adapter<Data,Properties> myPropertiesAdapter;
         
         public HeaderFactory(
                 Adapter<Data,SourceRef> sourceRefAdapter, 
                 Source<Time> timestampSource, 
                 Adapter<Data,String> eventTypeAdapter, 
-                Adapter<Data,String> eventNameAdapter, 
                 Adapter<Data,Properties> propsAdapter){
-            if(sourceRefAdapter == null 
-                    || timestampSource == null || eventTypeAdapter == null 
-                    || eventNameAdapter == null || propsAdapter == null){
+            if(sourceRefAdapter == null || timestampSource == null 
+                    || eventTypeAdapter == null || propsAdapter == null){
                 throw new NullPointerException();
             }
             mySourceRefAdapter = sourceRefAdapter;
             myTimestampSource = timestampSource;
             myEventTypeAdapter = eventTypeAdapter;
-            myEventNameAdapter = eventNameAdapter;
             myPropertiesAdapter = propsAdapter;
         }
 
@@ -95,9 +84,8 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
             SourceRef ref = mySourceRefAdapter.adapt(a);
             Time time = myTimestampSource.getValue();
             String type = myEventTypeAdapter.adapt(a);
-            String name = myEventNameAdapter.adapt(a);
             Properties props = myPropertiesAdapter.adapt(a);
-            return new BasicHeader<SourceRef, Time>(ref, time, type, name, props);
+            return new BasicHeader<SourceRef, Time>(ref, time, type, props);
         }
     }
     
@@ -106,18 +94,16 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         private SourceRef mySourceRef;
         private Source<Time> myTimestampSource;
         private String myEventType;
-        private String myEventName;
         private Properties myProperties;
         
         public HeaderSource(
                 SourceRef sourceRef, Source<Time> timestampSource, 
-                String eventType, String eventName, Properties props){
+                String eventType, Properties props){
             if(timestampSource == null){
                 throw new NullPointerException();
             }
             mySourceRef = sourceRef;
             myEventType = eventType;
-            myEventName = eventName;
             myProperties = props;
         }
         
@@ -125,7 +111,7 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         public Header<SourceRef, Time> getValue() {
             return new BasicHeader<SourceRef, Time>(
                     mySourceRef, myTimestampSource.getValue(), 
-                    myEventType, myEventName, myProperties);
+                    myEventType, myProperties);
         }
     }
 }
