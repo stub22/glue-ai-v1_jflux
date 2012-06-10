@@ -13,8 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.impl.messaging;
+package org.jflux.impl.transport.jms;
 
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.jms.Connection;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import org.apache.qpid.client.AMQAnyDestination;
+import org.apache.qpid.client.AMQConnectionFactory;
+import org.apache.qpid.client.AMQQueue;
+import org.apache.qpid.client.AMQTopic;
+import org.apache.qpid.url.URLSyntaxException;
+import org.jflux.api.core.Adapter;
 import org.jflux.api.core.config.Configuration;
 import org.jflux.api.core.config.DefaultConfiguration;
 
@@ -22,7 +35,9 @@ import org.jflux.api.core.config.DefaultConfiguration;
  *
  * @author Matthew Stevenson
  */
-public class ConnectionConfigUtils {    
+public class ConnectionConfigUtils {
+    private final static Logger theLogger = Logger.getLogger(ConnectionConfigUtils.class.getName());
+    private final static String theAMQPFormatString = "amqp://%s:%s@%s/%s?brokerlist='%s'";
     public final static String CONF_BROKER_IP = "msgBrokerIp";
     public final static String CONF_BROKER_PORT = "msgBrokerPort";
     public final static String CONF_BROKER_USERNAME = "msgBrokerUser";
@@ -139,6 +154,102 @@ public class ConnectionConfigUtils {
             set(conf, CONF_DESTINATION_NODE_OPTIONS, nodeOptions);
         }
         return conf;
+    }
+    
+    static Connection createConnection(Configuration<String> conf) 
+            throws JMSException, URLSyntaxException {
+        String ip = conf.getPropertyValue(String.class, CONF_BROKER_IP);
+        String port = conf.getPropertyValue(String.class, CONF_BROKER_PORT);
+        String username = conf.getPropertyValue(String.class, CONF_BROKER_USERNAME);
+        String password = conf.getPropertyValue(String.class, CONF_BROKER_PASSWORD);
+        String clientName = conf.getPropertyValue(String.class, CONF_BROKER_CLIENT_NAME);
+        String virtualHost = conf.getPropertyValue(String.class, CONF_BROKER_VIRTUAL_HOST);
+        String addr = "tcp://" + ip + ":" + port;
+        String amqpURL = String.format(theAMQPFormatString, 
+                username, password, clientName, virtualHost, addr);
+        AMQConnectionFactory cf = new AMQConnectionFactory(amqpURL);
+        return cf.createConnection();
+    }
+    
+    static Destination createDestination(Configuration<String> conf) 
+            throws URISyntaxException{
+        String destStr = conf.getPropertyValue(String.class, CONF_DESTINATION_NAME);
+        String type = conf.getPropertyValue(String.class, CONF_DESTINATION_NODE_TYPE);
+        String create = conf.getPropertyValue(String.class, CONF_DESTINATION_CREATE);
+        String opts = conf.getPropertyValue(String.class, CONF_DESTINATION_OPTIONS);
+        String nodeOpts = conf.getPropertyValue(String.class, CONF_DESTINATION_NODE_OPTIONS);
+        if(destStr == null){
+            throw new NullPointerException();
+        }
+        if(type == null || NODE_UNKNOWN.equals(type)){
+            type = null;
+            create = null;
+        }
+        nodeOpts = addOpts(nodeOpts, "type", type);
+        if(nodeOpts != null && !nodeOpts.isEmpty()){
+            nodeOpts = "{" + nodeOpts + "}";
+        }
+        opts = addOpts(opts, "create", create);
+        opts = addOpts(opts, "node", nodeOpts);
+        if(opts != null && !opts.isEmpty()){
+            destStr += "; {" + opts + "}";
+        }
+        if(NODE_QUEUE.equals(type)){
+            return new AMQQueue(destStr);
+        }else if(NODE_TOPIC.equals(type)){
+            return new AMQTopic(destStr);
+        }else{
+            return new AMQAnyDestination(destStr);
+        }
+    }
+    
+    private static String addOpts(String opts, String k, String v){
+        if(k == null || k.isEmpty() || v == null || v.isEmpty()){
+            return opts;
+        }
+        String kv = k + ":" + v;
+        return (opts == null || opts.isEmpty()) ? kv : opts + ", " + kv; 
+    }
+    
+    public static class ConnectionFactory implements 
+            Adapter<Configuration<String>,Connection> {
+        @Override 
+        public Connection adapt(Configuration<String> a) {
+            try{
+                Connection connection = createConnection(a);
+                connection.start();
+                return connection;
+            }catch(Exception ex){
+                theLogger.log(Level.WARNING, "Unable to start connection.", ex);
+                return null;
+            }
+        }
+    }
+    
+    public static class DestinationFactory implements 
+            Adapter<Configuration<String>,Destination> {
+        @Override 
+        public Destination adapt(Configuration<String> a) {
+            try{
+                return createDestination(a);
+            }catch(URISyntaxException ex){
+                theLogger.log(Level.WARNING, 
+                        "Unable to create destination.", ex);
+                return null;
+            }
+        }
+    }
+    
+    public static class SessionFactory implements Adapter<Connection,Session> {
+        @Override 
+        public Session adapt(Connection a) {
+            try{
+                return a.createSession(false, Session.CLIENT_ACKNOWLEDGE);
+            }catch(JMSException ex){
+                theLogger.log(Level.WARNING, "Unable to create Session.", ex);
+                return null;
+            }
+        }
     }
     
     private static void set(Configuration<String> conf, String key, String val){
