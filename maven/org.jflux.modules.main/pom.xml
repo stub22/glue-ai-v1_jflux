@@ -16,9 +16,13 @@
     </repositories>
     
 	<modules>
+        <!--JFlux Dependency Free APIs -->
 		<module>../org.jflux.api.core</module>
 		<module>../org.jflux.api.data</module>
 		<module>../org.jflux.api.registry</module>
+        <!--JFlux Non-Java Resources -->
+		<module>../org.jflux.resource.avrogen.templates</module>
+        <!--JFlux Implementations with dependencies from Maven Central-->
 		<module>../org.jflux.impl.encode.avro</module>
 		<module>../org.jflux.impl.transport.qpid</module>
 		<module>../org.jflux.impl.registry.osgi</module>
