@@ -21,20 +21,20 @@
             {"name": "timestamp", "type": "long"},
             {"name": "headerProperties", "type" : [{"type":"map", "values":"string"}, "null"]}
         ],
-        "interface": "org.jflux.api.core.event.Header"
+        "interface": "org.jflux.api.core.event.Header<java.lang.String,java.lang.Long>"
     },
     {"name": "EventRecord", "type": "record", "namespace":"org.jflux.avrogen",
         "fields": [
             {"name": "header", "type": "HeaderRecord"},
             {"name": "data", "type": "bytes"}
         ],
-        "interface": "org.jflux.api.core.event.Event<org.jflux.api.core.event.Header,java.nio.ByteBuffer>"
+        "interface": "org.jflux.api.core.event.Event<org.jflux.api.core.event.Header<java.lang.String,java.lang.Long>,java.nio.ByteBuffer>"
     },
     {"name": "EventListRecord", "type": "record", "namespace":"org.jflux.avrogen",
         "fields": [
             {"name": "header", "type": "HeaderRecord"},
             {"name": "data", "type" : {"type":"array", "items": "EventRecord"}}
         ],
-        "interface": "org.jflux.api.core.event.Event<org.jflux.api.core.event.Header,java.util.List<? extends org.jflux.api.core.event.Event<org.jflux.api.core.event.Header,java.nio.ByteBuffer>>>"
+        "interface": "org.jflux.api.core.event.Event<org.jflux.api.core.event.Header<java.lang.String,java.lang.Long>,java.util.List<? extends org.jflux.api.core.event.Event<org.jflux.api.core.event.Header<java.lang.String,java.lang.Long>,java.nio.ByteBuffer>>>"
     }
 ]
