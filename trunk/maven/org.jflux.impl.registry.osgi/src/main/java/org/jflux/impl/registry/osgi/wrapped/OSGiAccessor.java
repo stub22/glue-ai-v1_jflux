@@ -34,10 +34,6 @@ public class OSGiAccessor<
         myContext = context;
     }
 
-    public OSGiAccessor(OSGiContext context) {
-        this(context.getBundleContext());
-    }
-
     @Override
     public Adapter<R, OSGiCertificate> register() {
         return new Adapter<R, OSGiCertificate>() {
@@ -60,8 +56,7 @@ public class OSGiAccessor<
 
             @Override
             public void handleEvent(OSGiCertificate event) {
-                ServiceRegistration reg = event.getRegistration();
-                reg.unregister();
+                event.unregister();
             }
         };
     }
@@ -73,10 +68,7 @@ public class OSGiAccessor<
             @Override
             public OSGiCertificate adapt(M a) {
                 OSGiCertificate cert = a.getCertificate();
-                ServiceRegistration reg = cert.getRegistration();
-                Dictionary<String,String> props = 
-                        new Hashtable<String, String>(a.getProperties());
-                reg.setProperties(props);
+                cert.setProperties(new Hashtable(a.getProperties()));
                 return cert;
             }
         };

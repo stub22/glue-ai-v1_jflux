@@ -45,6 +45,10 @@ public interface PlayableNotifier<T> extends Notifier<T>, Playable{
             myNotifier = new DefaultNotifier<T>();
         }
         
+        public Notifier<T> getNotifier(){
+            return myNotifier;
+        }
+        
         @Override
         public void addListener(Listener<T> listener) {
             myNotifier.addListener(listener);

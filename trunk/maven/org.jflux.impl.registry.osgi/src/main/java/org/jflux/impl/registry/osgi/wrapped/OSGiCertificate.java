@@ -4,6 +4,8 @@
  */
 package org.jflux.impl.registry.osgi.wrapped;
 
+import java.util.Dictionary;
+import org.jflux.api.core.Adapter;
 import org.jflux.api.registry.opt.Certificate;
 import org.osgi.framework.ServiceRegistration;
 
@@ -11,7 +13,7 @@ import org.osgi.framework.ServiceRegistration;
  *
  * @author Matthew Stevenson
  */
-public class OSGiCertificate implements Certificate<OSGiReference> {
+public class OSGiCertificate implements Certificate<OSGiReference>, ServiceRegistration {
     private ServiceRegistration myRegistration;
 
     OSGiCertificate(ServiceRegistration registration) {
@@ -24,10 +26,6 @@ public class OSGiCertificate implements Certificate<OSGiReference> {
     @Override
     public OSGiReference getReference() {
         return new OSGiReference(myRegistration.getReference());
-    }
-    
-    final ServiceRegistration getRegistration(){
-        return myRegistration;
     }
 
     @Override
@@ -53,5 +51,23 @@ public class OSGiCertificate implements Certificate<OSGiReference> {
         hash = 97 * hash + 
                 (this.myRegistration != null ? this.myRegistration.hashCode() : 0);
         return hash;
+    }
+
+    @Override
+    public void setProperties(Dictionary properties) {
+        myRegistration.setProperties(properties);
+    }
+
+    @Override
+    public void unregister() {
+        myRegistration.unregister();
+    }
+    
+    public static class ServiceRegistrationWrapper implements 
+            Adapter<ServiceRegistration,OSGiCertificate> {
+        @Override
+        public OSGiCertificate adapt(ServiceRegistration a) {
+            return new OSGiCertificate(a);
+        }        
     }
 }
