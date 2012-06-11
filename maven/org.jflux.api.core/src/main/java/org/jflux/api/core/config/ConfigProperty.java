@@ -25,7 +25,7 @@ import org.jflux.api.core.event.ValueChange;
  * 
  * @author Matthew Stevenson
  */
-public interface ConfigProperty<V> {
+public interface ConfigProperty<V> {    
     /**
      * Returns a Source for retrieving the property value.
      * @return Source for retrieving the property value

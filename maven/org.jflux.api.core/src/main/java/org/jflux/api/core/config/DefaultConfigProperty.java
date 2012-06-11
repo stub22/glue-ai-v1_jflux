@@ -75,22 +75,4 @@ public class DefaultConfigProperty<V> implements ConfigProperty<V> {
             myNotifier.notifyListeners(change);
         }
     }
-    
-    public static class ReadOnlyProperty<V> extends DefaultConfigProperty<V> {
-        public ReadOnlyProperty(Class<V> valueClass, V value) {
-            super(valueClass, value);
-        }
-
-        @Override
-        public Notifier<ValueChange<V>> getNotifier() {
-            return null;
-        }
-
-        @Override
-        public Listener<V> getSetter() {
-            return null;
-        }
-        
-        
-    }
 }

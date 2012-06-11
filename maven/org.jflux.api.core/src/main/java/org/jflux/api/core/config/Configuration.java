@@ -60,7 +60,7 @@ public interface Configuration<K> {
      * @return untyped property value, returns null if the property is not 
      * available
      */
-    public Object getPropertyValue(K key);
+    public <T> T getPropertyValue(K key);
     /**
      * Returns a property value.
      * A null return value can mean either the key is not present or the value 
@@ -79,7 +79,7 @@ public interface Configuration<K> {
      * @return untyped Source for retrieving a property value, returns null if 
      * the property is not available
      */
-    public Source getPropertySource(K key);
+    public <T> Source<T> getPropertySource(K key);
     /**
      * Returns a typed Source for retrieving a property value.
      * @param <T> type of the property value
@@ -96,7 +96,7 @@ public interface Configuration<K> {
      * @return Notifier to notify listeners of changes to the property, returns 
      * null if the property is not available
      */
-    public Notifier<ValueChange> getPropertyNotifier(K key);
+    public <T> Notifier<ValueChange<T>> getPropertyNotifier(K key);
     /**
      * Returns a typed Notifier to notify listeners of changes to the property.
      * @param <T> type of the property value
@@ -114,7 +114,7 @@ public interface Configuration<K> {
      * @return Listener which sets the property value, returns null if the
      * property is not available
      */
-    public Listener getPropertySetter(K key);
+    public <T> Listener<T> getPropertySetter(K key);
     /**
      * Returns a typed Listener which sets the property value.
      * @param <T> type of the property value
@@ -131,7 +131,7 @@ public interface Configuration<K> {
      * @return class of the property, returns null if the property is not 
      * available
      */
-    public Class getPropertyClass(K key);
+    public <T> Class<T> getPropertyClass(K key);
     
     //Listener<IndexedValue<K, ConfigProperty>> getPropertyAdder();
 }

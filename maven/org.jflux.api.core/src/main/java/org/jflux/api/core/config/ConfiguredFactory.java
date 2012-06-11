@@ -13,25 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.util;
+package org.jflux.api.core.config;
 
+import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Source;
 
 /**
  *
  * @author Matthew Stevenson
  */
-public class DefaultSource<T> implements Source<T> {
-    private T myT;
-
-    public DefaultSource(T t){
-        myT = t;
-    }
-
-    @Override
-    public T getValue() {
-        return myT;
-    }
-    
-    
+public interface ConfiguredFactory<
+            T,K,C extends ConfigValidator,V extends ValidatedConfig<K,C>> 
+        extends Adapter<V,T>, Source<C> {
 }
