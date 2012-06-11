@@ -17,37 +17,40 @@ package org.jflux.api.data.blend;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Source;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface DataCollector<M,D,L> extends Adapter<M,L>  {
-    public static class DefaultCollector<M,D> implements 
-            DataCollector<M, D, List<D>> {
-        private List<Adapter<M,D>> myDataSources;
+public interface DataCollector<D,L> extends Source<L>  {
+    
+    public void addSource(Source<D> source);
+    
+    public static class DefaultCollector<D> implements 
+            DataCollector<D, List<D>> {
+        private List<Source<D>> myDataSources;
 
         public DefaultCollector(){
-            myDataSources = new ArrayList<Adapter<M, D>>();
+            myDataSources = new ArrayList<Source<D>>();
         }
         
         @Override
-        public List<D> adapt(M msg) {
+        public List<D> getValue() {
             List<D> list = new ArrayList<D>(myDataSources.size());
-            for(Adapter<M,D> source : myDataSources){
-                D data = source.adapt(msg);
+            for(Source<D> source : myDataSources){
+                D data = source.getValue();
                 list.add(data);
             }
             return list;
         }
         
-        public void addSource(Adapter<M,D> source){
+        @Override
+        public void addSource(Source<D> source){
             if(source == null){
                 throw new NullPointerException();
             }
             myDataSources.add(source);
         }
-        
     }
 }

@@ -25,7 +25,7 @@ import org.jflux.api.core.chain.AdapterChain.AdapterChainBuilder;
  */
 public class ListenerChain<A,B> implements Listener<A> {
     protected Adapter<A,B> myAdapter;
-    protected Listener<B> myOutputListener;
+    protected Listener<B> myInnerListener;
     
     public ListenerChain(Adapter<A,B> adapter, Listener<B> listener) {
         if(adapter == null || listener == null){
@@ -33,10 +33,10 @@ public class ListenerChain<A,B> implements Listener<A> {
         }
         if(listener instanceof ListenerChain){
             ListenerChain lc = (ListenerChain)listener;
-            myOutputListener = lc.myOutputListener;
+            myInnerListener = lc.myInnerListener;
             myAdapter = new AdapterChain(adapter, lc.myAdapter);            
         }else{
-            myOutputListener = listener;
+            myInnerListener = listener;
             myAdapter = adapter;
         }
     }
@@ -44,31 +44,31 @@ public class ListenerChain<A,B> implements Listener<A> {
     @Override
     public void handleEvent(A input) {
         B b = myAdapter.adapt(input);
-        myOutputListener.handleEvent(b);
+        myInnerListener.handleEvent(b);
     }
 
-    public static <A,B> ListenerChainBuilder<A,B> builder(Adapter<A,B> adapter){
-        return new ListenerChainBuilder<A,A>().attach(adapter);
+    public static <T,S> ListenerChainBuilder<T,S> builder(Adapter<T,S> adapter){
+        return new ListenerChainBuilder<T,T>().attach(adapter);
     }
 
-    public static <A,B> ListenerChainBuilder<A,B> builder(){
-        return new ListenerChainBuilder<A,B>();
+    public static <T> ListenerChainBuilder<T,T> builder(){
+        return new ListenerChainBuilder<T,T>();
     }
     
-    public static class ListenerChainBuilder<A,B> {
-        private AdapterChainBuilder<A,B> myAdapters;
+    public static class ListenerChainBuilder<X,Y> {
+        private AdapterChainBuilder<X,Y> myAdapters;
         
         public ListenerChainBuilder(){
-            myAdapters = new AdapterChainBuilder<A, B>();
+            myAdapters = new AdapterChainBuilder<X, Y>();
         }
 
-        public <N> ListenerChainBuilder<A,N> attach(Adapter<B,N> adapter){
+        public <T> ListenerChainBuilder<X,T> attach(Adapter<Y,T> adapter){
             myAdapters.attach(adapter);
-            return (ListenerChainBuilder<A,N>)this;
+            return (ListenerChainBuilder<X,T>)this;
         }
 
-        public ListenerChain<A,B> done(Listener<B> listener){
-            return new ListenerChain<A,B>(myAdapters.done(), listener);
+        public ListenerChain<X,Y> done(Listener<Y> listener){
+            return new ListenerChain<X,Y>(myAdapters.done(), listener);
         }
     }
 }

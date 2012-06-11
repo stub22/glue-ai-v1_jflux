@@ -25,61 +25,64 @@ import org.jflux.api.core.util.DefaultNotifier;
  *
  * @author Matthew Stevenson
  */
-public class NotifierChain<T> extends DefaultNotifier<T> {
-    protected Notifier myInputNotifier;
-    protected ListenerChain<?,T> myListenerChain;
+public class NotifierChain<A,B> extends DefaultNotifier<B> {
+    protected Notifier<A> myInnerNotifier;
+    protected ListenerChain<A,B> myListenerChain;
         
-    public <A> NotifierChain(Notifier<A> inputNotifier, Adapter<A,T> adapter) {
+    public <C> NotifierChain(Notifier<C> inputNotifier, Adapter<C,B> adapter) {
         if(inputNotifier == null || adapter == null){
             throw new NullPointerException();
         }
         if(inputNotifier instanceof NotifierChain){
-            NotifierChain notifier = (NotifierChain)inputNotifier;
-            Adapter innerAdapter = notifier.myListenerChain.myAdapter;
-            adapter = new AdapterChain(innerAdapter, adapter);
-            myInputNotifier = notifier.myInputNotifier;
+            NotifierChain<A,C> notifier = (NotifierChain)inputNotifier;
+            Adapter<A,C> innerAdapter = notifier.myListenerChain.myAdapter;
+            myListenerChain = new ListenerChain<A,B>(
+                    new AdapterChain<A,B>(innerAdapter, adapter), 
+                    new OutputListener());
+            myInnerNotifier = notifier.myInnerNotifier;
+            myInnerNotifier.addListener(myListenerChain);
         }else{
-            myInputNotifier = inputNotifier;
+            myInnerNotifier = (Notifier<A>)inputNotifier;
+            myListenerChain = new ListenerChain(adapter, new OutputListener());
+            myInnerNotifier.addListener(myListenerChain);
         }
-        myListenerChain = new ListenerChain<A, T>(adapter, new OutputListener());
-        myInputNotifier.addListener(myListenerChain);
     }
     
-    class OutputListener implements Listener<T> {
+    class OutputListener implements Listener<B> {
         @Override
-        public void handleEvent(T b) {
+        public void handleEvent(B b) {
             notifyListeners(b);
         }
     }
 
-    public static <A> NotifierChainBuilder<A,A> builder(Notifier<A> notifier){
-        return new NotifierChainBuilder<A,A>().setNotifier(notifier);
+    public static <T> NotifierChainBuilder<T,T> builder(Notifier<T> notifier){
+        return new NotifierChainBuilder<T,T>().setNotifier(notifier);
     }
 
-    public static <A> NotifierChainBuilder<A,A> builder(){
-        return new NotifierChainBuilder<A,A>();
+    public static <T> NotifierChainBuilder<T,T> builder(){
+        return new NotifierChainBuilder<T,T>();
     }
     
-    public static class NotifierChainBuilder<A,B> {
-        private Notifier<A> myNotifier;
-        private AdapterChainBuilder<A,B> myAdapters;
+    public static class NotifierChainBuilder<X,Y> {
+        private Notifier<X> myNotifier;
+        private AdapterChainBuilder<X,Y> myAdapters;
         
         public NotifierChainBuilder(){
-            myAdapters = new AdapterChainBuilder<A, B>();
+            myAdapters = new AdapterChainBuilder<X, Y>();
         }
         
-        public NotifierChainBuilder<A,B> setNotifier(Notifier<A> notifier){
+        public NotifierChainBuilder<X,Y> setNotifier(Notifier<X> notifier){
             myNotifier = notifier;
             return this;
         }
 
-        public <N> NotifierChainBuilder<A,N> attach(Adapter<B,N> adapter){
+        public <T> NotifierChainBuilder<X,T> attach(Adapter<Y,T> adapter){
             myAdapters.attach(adapter);
-            return (NotifierChainBuilder<A,N>)this;
+            return (NotifierChainBuilder<X,T>)this;
         }
 
-        public NotifierChain<B> done(){
-            return new NotifierChain<B>(myNotifier, myAdapters.done());
+        public <T> NotifierChain<T,Y> done(){
+            return new NotifierChain<T,Y>(myNotifier, myAdapters.done());
         }
     }
 }

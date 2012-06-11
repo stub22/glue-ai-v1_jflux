@@ -53,14 +53,14 @@ public class AdapterChain<A,B> implements Adapter<A,B> {
         return (B)o;
     }
 
-    public static <A,B> AdapterChainBuilder<A,B> builder(Adapter<A,B> adapter){
-        return new AdapterChainBuilder<A,B>(adapter);
+    public static <T,S> AdapterChainBuilder<T,S> builder(Adapter<T,S> adapter){
+        return new AdapterChainBuilder<T,S>(adapter);
     }
     
-    public static class AdapterChainBuilder<H,T> {
+    public static class AdapterChainBuilder<X,Y> {
         private List<Adapter> myAdapterList;
 
-        public AdapterChainBuilder(Adapter<H,T> adapter){
+        public AdapterChainBuilder(Adapter<X,Y> adapter){
             if(adapter == null){
                 throw new NullPointerException();
             }
@@ -72,16 +72,16 @@ public class AdapterChain<A,B> implements Adapter<A,B> {
             myAdapterList = new ArrayList<Adapter>();
         }
 
-        public <N> AdapterChainBuilder<H,N> attach(Adapter<T,N> adapter){
+        public <T> AdapterChainBuilder<X,T> attach(Adapter<Y,T> adapter){
             if(adapter == null){
                 throw new NullPointerException();
             }
             myAdapterList.add(adapter);
-            return (AdapterChainBuilder<H,N>)this;
+            return (AdapterChainBuilder<X,T>)this;
         }
 
-        public Adapter<H,T> done(){
-            return new AdapterChain<H, T>(myAdapterList);
+        public Adapter<X,Y> done(){
+            return new AdapterChain<X, Y>(myAdapterList);
         }
     }
 }
