@@ -8,7 +8,6 @@ import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
 import org.jflux.impl.registry.osgi.direct.OSGiDirectRegistry;
-import org.osgi.framework.BundleContext;
 
 /**
  *
@@ -63,13 +62,5 @@ public class OSGiRegistry<Time> implements Registry<
     
     public OSGiDirectRegistry getDirectRegistry(){
         return myDirectRegistry;
-    }
-    
-    protected BundleContext getBundleContext(
-            OSGiContext<OSGiRegistry<Time>> context){
-        if(context == null || this != context.getRegistry()){
-            return null;
-        }
-        return context.getBundleContext();
     }
 }

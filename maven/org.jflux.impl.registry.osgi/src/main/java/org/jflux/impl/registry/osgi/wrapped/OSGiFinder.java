@@ -35,10 +35,6 @@ public class OSGiFinder implements
         myFinderBase = new FinderBase();
     }
     
-    OSGiFinder(OSGiContext context){
-        this(context.getBundleContext());
-    }
-    
     @Override
     public Adapter<Descriptor<String, String>, OSGiReference> findSingle() {
         return new Adapter<Descriptor<String, String>, OSGiReference>() {

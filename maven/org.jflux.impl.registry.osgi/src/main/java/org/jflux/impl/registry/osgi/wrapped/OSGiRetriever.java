@@ -29,10 +29,6 @@ public class OSGiRetriever<Ref extends OSGiReference> implements
         myContext = context;
     }
     
-    OSGiRetriever(OSGiContext context){
-        this(context.getBundleContext());
-    }
-    
     @Override
     public <T> Adapter<Ref, T> retrieve(final Class<T> clazz) {
         return new Adapter<Ref, T>() {

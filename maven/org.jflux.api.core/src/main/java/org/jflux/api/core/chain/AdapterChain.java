@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.core.util;
+package org.jflux.api.core.chain;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.jflux.api.core.Adapter;
 
@@ -24,36 +23,21 @@ import org.jflux.api.core.Adapter;
  *
  * @author Matthew Stevenson
  */
-public class AdapterChain<H,T> implements Adapter<H,T> {
-    private List<Adapter> myAdapters;
-
-    public static <A,B> AdapterChainBuilder<A,B> build(Adapter<A,B> adapter){
-        return new AdapterChainBuilder<A,B>(adapter);
-    }
-
-    public static <A,B> AdapterChain<A,B> buildUnsafe(List<Adapter> adapters){
-        return new AdapterChain<A, B>(adapters);
-    }
-
-    public static <A,B,C> AdapterChain<A,C> combine(Adapter<A,B> x, Adapter<B,C> y){
-        return new AdapterChain<A, C>(collapse(x,y));
-    }
+public class AdapterChain<A,B> implements Adapter<A,B> {
+    protected List<Adapter> myAdapters;
     
-    private static List<Adapter> collapse(Adapter...l){
-        return collapse(Arrays.asList(l));
-    }
-    private static List<Adapter> collapse(List<Adapter> l){
-        List<Adapter> n = new ArrayList<Adapter>();
-        for(Adapter a : l){
-            if(a == null){
-                continue;
-            }else if(a instanceof AdapterChain){
-                n.addAll(collapse(((AdapterChain)a).myAdapters));
-            }else{
-                n.add(a);
-            }
+    public <T> AdapterChain(Adapter<A,T> a, Adapter<T,B> b){
+        myAdapters = new ArrayList<Adapter>();
+        if(a instanceof AdapterChain){
+            myAdapters.addAll(((AdapterChain)a).myAdapters);
+        }else{
+            myAdapters.add(a);
         }
-        return n;
+        if(b instanceof AdapterChain){
+            myAdapters.addAll(((AdapterChain)b).myAdapters);
+        }else{
+            myAdapters.add(b);
+        }
     }
     
     private AdapterChain(List<Adapter> adapters){
@@ -61,33 +45,31 @@ public class AdapterChain<H,T> implements Adapter<H,T> {
     }
     
     @Override
-    public T adapt(H a) {
-        if(myAdapters.isEmpty()){
-            return null;
-        }else if(myAdapters.size() == 1){
-            return adaptTail(a);
-        }
+    public B adapt(A a) {
         Object o = a;
-        for(Adapter adapter : myAdapters.subList(0, myAdapters.size()-1)){
+        for(Adapter adapter : myAdapters){
             o = adapter.adapt(o);
         }
-        return adaptTail(o);
+        return (B)o;
     }
-    
-    private <V> T adaptTail(V v){
-        Adapter<V,T> aa = myAdapters.get(myAdapters.size());
-        return aa.adapt(v);
+
+    public static <A,B> AdapterChainBuilder<A,B> builder(Adapter<A,B> adapter){
+        return new AdapterChainBuilder<A,B>(adapter);
     }
     
     public static class AdapterChainBuilder<H,T> {
         private List<Adapter> myAdapterList;
 
-        private AdapterChainBuilder(Adapter<H,T> adapter){
+        public AdapterChainBuilder(Adapter<H,T> adapter){
             if(adapter == null){
                 throw new NullPointerException();
             }
             myAdapterList = new ArrayList<Adapter>();
             myAdapterList.add(adapter);
+        }
+
+        public AdapterChainBuilder(){
+            myAdapterList = new ArrayList<Adapter>();
         }
 
         public <N> AdapterChainBuilder<H,N> attach(Adapter<T,N> adapter){

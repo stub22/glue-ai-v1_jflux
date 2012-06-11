@@ -18,6 +18,6 @@ package org.jflux.api.core;
 /**
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface Listener<E> {
-    public void handleEvent(E event);
+public interface Listener<T> {
+    public void handleEvent(T input);
 }

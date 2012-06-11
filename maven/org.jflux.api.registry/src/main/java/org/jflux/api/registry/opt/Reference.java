@@ -26,5 +26,5 @@ import java.util.Set;
 public interface Reference<K,V> {
     public String getName();
     public V getProperty(K key);
-    public Set<K> getPropertyKeys();
+    public Set<K> getPropertyKeySet();
 }

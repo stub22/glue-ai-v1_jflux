@@ -7,14 +7,16 @@ package org.jflux.impl.registry.osgi.wrapped;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import org.jflux.api.core.Adapter;
 import org.jflux.api.registry.opt.Reference;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
 
 /**
  *
  * @author Matthew Stevenson
  */
-public class OSGiReference implements Reference<String, String> {
+public class OSGiReference implements Reference<String, String>, ServiceReference {
 
     public final static String PROP_REFERENCE_NAME = "OSGiReferenceNameProp";
     private ServiceReference myReference;
@@ -40,7 +42,7 @@ public class OSGiReference implements Reference<String, String> {
     }
 
     @Override
-    public Set<String> getPropertyKeys() {
+    public Set<String> getPropertyKeySet() {
         return new HashSet<String>(Arrays.asList(myReference.getPropertyKeys()));
     }
     
@@ -71,5 +73,38 @@ public class OSGiReference implements Reference<String, String> {
         hash = 41 * hash + 
                 (this.myReference != null ? this.myReference.hashCode() : 0);
         return hash;
+    }
+
+    @Override
+    public String[] getPropertyKeys() {
+        return myReference.getPropertyKeys();
+    }
+
+    @Override
+    public Bundle getBundle() {
+        return myReference.getBundle();
+    }
+
+    @Override
+    public Bundle[] getUsingBundles() {
+        return myReference.getUsingBundles();
+    }
+
+    @Override
+    public boolean isAssignableTo(Bundle bundle, String className) {
+        return myReference.isAssignableTo(bundle, className);
+    }
+
+    @Override
+    public int compareTo(Object reference) {
+        return myReference.compareTo(reference);
+    }
+    
+    public static class ServiceReferenceWrapper implements 
+            Adapter<ServiceReference,OSGiReference> {
+        @Override
+        public OSGiReference adapt(ServiceReference a) {
+            return new OSGiReference(a);
+        }        
     }
 }
