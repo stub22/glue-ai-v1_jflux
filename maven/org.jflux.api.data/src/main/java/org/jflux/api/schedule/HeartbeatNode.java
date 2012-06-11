@@ -31,20 +31,20 @@ import org.jflux.api.core.util.DefaultNotifier;
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class HeartbeatNode<M> extends 
-        DefaultProducerNode<M> implements ScheduleNode<M,TimeUnit> {
+public class HeartbeatNode<T> extends 
+        DefaultProducerNode<T> implements ScheduleNode<T,TimeUnit> {
     private final static Logger theLogger = Logger.getLogger(HeartbeatNode.class.getName());
     
-    private Source<M> myFactory;
+    private Source<T> myFactory;
     private ScheduledExecutorService myExecutor;
     private long myInitialDelay;
     private long myPeriod;
     private TimeUnit myTimeUnit;
     private ScheduledFuture<?> myFuture;
     
-    public HeartbeatNode(Source<M> factory, 
+    public HeartbeatNode(Source<T> factory, 
             long initialDelay, long period, TimeUnit timeUnit){
-        super(new DefaultNotifier<M>());
+        super(new DefaultNotifier<T>());
         if(factory == null || timeUnit == null){
             throw new NullPointerException();
         }
@@ -115,8 +115,8 @@ public class HeartbeatNode<M> extends
             if(myFactory == null || getPlayState() != PlayState.RUNNING){
                 return;
             }
-            M t = myFactory.getValue();
-            Notifier<M> n = getNotifier();
+            T t = myFactory.getValue();
+            Notifier<T> n = getNotifier();
             if(n == null || t == null){
                 return;
             }

@@ -31,4 +31,14 @@ public class IteratingNotifier<T> extends
         }
     }
     
+    public static class IteratingArrayNotifier<T> extends 
+            DefaultNotifier<T> implements Listener<T[]>{
+
+        @Override
+        public void handleEvent(T[] event) {
+            for(T t : event){
+                notifyListeners(t);
+            }
+        }
+    }
 }

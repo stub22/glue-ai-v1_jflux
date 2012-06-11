@@ -28,7 +28,7 @@ public class EmptyAdapter<B, A extends B> implements Adapter<A, B> {
         return a;
     }
     
-    public static class CastingAdapter<A, B> implements Adapter<A, B> {
+    public static class UnsafeCastingAdapter<A, B> implements Adapter<A, B> {
 
         @Override
         public B adapt(A a) {
