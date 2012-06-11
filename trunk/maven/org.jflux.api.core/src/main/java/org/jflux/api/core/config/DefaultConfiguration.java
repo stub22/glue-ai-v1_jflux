@@ -18,6 +18,7 @@ package org.jflux.api.core.config;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.jflux.api.core.Adapter;
 import org.jflux.api.core.util.IndexedValue;
 
 /**
@@ -25,21 +26,21 @@ import org.jflux.api.core.util.IndexedValue;
  * @author Matthew Stevenson
  */
 public class DefaultConfiguration<K> extends AbstractConfiguration<K> {
-    private Map<K,ConfigProperty<?>> myPropertyMap;
+    private Map<K,ConfigProperty> myPropertyMap;
     
     public DefaultConfiguration(){
-        myPropertyMap = new HashMap<K, ConfigProperty<?>>();
+        myPropertyMap = new HashMap<K, ConfigProperty>();
+    }
+    public DefaultConfiguration(Adapter<ConfigProperty,ConfigProperty> propertyWrapper){
+        myPropertyMap = new HashMap<K, ConfigProperty>();
     }
     
     public <T> void addProperty(Class<T> propClass, K key, T val){
         if(propClass == null || key == null){
             throw new NullPointerException();
-        }if(myPropertyMap.containsKey(key)){
-            throw new IllegalStateException("Unable to add property.  "
-                    + "Key (" + key + ") already in use.");
         }
         ConfigProperty<T> prop = new DefaultConfigProperty<T>(propClass, val);
-        myPropertyMap.put(key, prop);
+        addProperty(key, prop); 
     }
     
     public void addProperty(IndexedValue<K,ConfigProperty> indexedProperty){
@@ -48,9 +49,15 @@ public class DefaultConfiguration<K> extends AbstractConfiguration<K> {
         }
         K key = indexedProperty.getIndex();
         ConfigProperty prop = indexedProperty.getValue();
+        addProperty(key, prop);
+        
+    }
+    
+    protected void addProperty(K key, ConfigProperty prop){
         if(key == null || prop == null){
             throw new NullPointerException();
-        }if(myPropertyMap.containsKey(key)){
+        }
+        if(myPropertyMap.containsKey(key)){
             throw new IllegalStateException("Unable to add property.  "
                     + "Key (" + key + ") already in use.");
         }
@@ -63,7 +70,7 @@ public class DefaultConfiguration<K> extends AbstractConfiguration<K> {
     }
     
     @Override
-    protected ConfigProperty getConfigProperty(K key){
+    protected <T> ConfigProperty<T> getConfigProperty(K key){
         if(!myPropertyMap.containsKey(key)){
             return null;
         }

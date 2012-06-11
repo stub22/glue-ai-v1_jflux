@@ -26,7 +26,7 @@ import org.jflux.api.core.event.ValueChange;
  */
 public abstract class AbstractConfiguration<K> implements Configuration<K> {
 
-    protected abstract ConfigProperty getConfigProperty(K key);
+    protected abstract <T> ConfigProperty<T> getConfigProperty(K key);
 
     @Override
     public boolean containsKey(K key) {
@@ -51,8 +51,8 @@ public abstract class AbstractConfiguration<K> implements Configuration<K> {
     }
     
     @Override
-    public Object getPropertyValue(K key) {
-        Source src = getPropertySource(key);
+    public <T> T getPropertyValue(K key) {
+        Source<T> src = getPropertySource(key);
         return src == null ? null : src.getValue();
     }
 
@@ -64,7 +64,7 @@ public abstract class AbstractConfiguration<K> implements Configuration<K> {
 
     
     @Override
-    public Source getPropertySource(K key) {
+    public <T> Source<T> getPropertySource(K key) {
         ConfigProperty prop = getConfigProperty(key);
         if(prop == null){
             return null;
@@ -82,7 +82,7 @@ public abstract class AbstractConfiguration<K> implements Configuration<K> {
     }
 
     @Override
-    public Notifier<ValueChange> getPropertyNotifier(K key) {
+    public <T> Notifier<ValueChange<T>> getPropertyNotifier(K key) {
         ConfigProperty prop = getConfigProperty(key);
         if(prop == null){
             return null;
@@ -101,7 +101,7 @@ public abstract class AbstractConfiguration<K> implements Configuration<K> {
     }
 
     @Override
-    public Listener getPropertySetter(K key) {
+    public <T> Listener<T> getPropertySetter(K key) {
         ConfigProperty prop = getConfigProperty(key);
         if(prop == null){
             return null;
@@ -119,13 +119,11 @@ public abstract class AbstractConfiguration<K> implements Configuration<K> {
     }
 
     @Override
-    public Class getPropertyClass(K key) {
+    public <T> Class<T> getPropertyClass(K key) {
         ConfigProperty prop = getConfigProperty(key);
         if(prop == null){
             return null;
         }
         return prop.getPropertyClass();
     }
-    
-    
 }
