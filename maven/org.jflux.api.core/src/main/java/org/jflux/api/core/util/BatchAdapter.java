@@ -23,7 +23,7 @@ import org.jflux.api.core.Adapter;
  *
  * @author Matthew Stevenson
  */
-public class BatchAdapter<A,B> implements Adapter<List<A>,List<B>> {
+public class BatchAdapter<A,B> implements Adapter<Iterable<A>,List<B>> {
     private Adapter<A,B> myAdapter;
     
     public BatchAdapter(Adapter<A,B> adapter){
@@ -34,7 +34,7 @@ public class BatchAdapter<A,B> implements Adapter<List<A>,List<B>> {
     }
     
     @Override
-    public List<B> adapt(List<A> a) {
+    public List<B> adapt(Iterable<A> a) {
         if(a == null){
             throw new NullPointerException();
         }

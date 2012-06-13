@@ -24,7 +24,7 @@ import org.jflux.api.core.Adapter;
  * @author Matthew Stevenson
  */
 public class AdapterChain<A,B> implements Adapter<A,B> {
-    protected List<Adapter> myAdapters;
+    private List<Adapter> myAdapters;
     
     public <T> AdapterChain(Adapter<A,T> a, Adapter<T,B> b){
         myAdapters = new ArrayList<Adapter>();
@@ -42,6 +42,10 @@ public class AdapterChain<A,B> implements Adapter<A,B> {
     
     private AdapterChain(List<Adapter> adapters){
         myAdapters = adapters;
+    }
+    
+    public List<Adapter> getAdapters(){
+        return myAdapters;
     }
     
     @Override

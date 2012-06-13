@@ -48,6 +48,14 @@ public class NotifierChain<A,B> extends DefaultNotifier<B> {
         }
     }
     
+    public Notifier<A> getInnerNotifier(){
+        return myInnerNotifier;
+    }
+    
+    public Adapter<A,B> getInnerAdapter(){
+        return myListenerChain.getInnerAdapter();
+    }
+    
     class OutputListener implements Listener<B> {
         @Override
         public void handleEvent(B b) {

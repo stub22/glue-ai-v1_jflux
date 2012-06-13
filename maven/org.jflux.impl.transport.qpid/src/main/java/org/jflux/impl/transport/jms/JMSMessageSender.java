@@ -15,6 +15,8 @@
  */
 package org.jflux.impl.transport.jms;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jms.BytesMessage;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -27,14 +29,51 @@ import org.jflux.api.core.Listener;
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class JMSMessageSender implements Listener<BytesMessage> {
+    private final static Logger theLogger = Logger.getLogger(JMSMessageSender.class.getName());
+    private Session mySession;
+    private Destination myDestination;
     private MessageProducer myProducer;
 
-    public JMSMessageSender(Session session, Destination dest) 
-            throws JMSException{
-        if(session == null || dest == null){
-            throw new NullPointerException();
+    public JMSMessageSender(Session session, Destination dest) {
+        mySession = session;
+        myDestination = dest;
+        start();
+    }
+    
+    public void setSession(Session session){
+        stop();
+        mySession = session;
+        start();
+    }
+    
+    public void setDestination(Destination dest){
+        stop();
+        myDestination = dest;
+        start();
+    }
+    
+    private void start(){
+        try{
+            if(mySession == null || myDestination == null){
+                return;
+            }
+            myProducer = mySession.createProducer(myDestination);
+        }catch(JMSException ex){
+            theLogger.log(Level.WARNING, "Unable to create producer.", ex);
+            return;
         }
-        myProducer = session.createProducer(dest);
+    }
+    
+    private void stop(){
+        try{
+            if(myProducer == null){
+                return;
+            }
+            myProducer.close();
+        }catch(JMSException ex){
+            theLogger.log(Level.WARNING, "Unable to close producer.", ex);
+            return;
+        }
     }
     
     @Override
@@ -44,7 +83,8 @@ public class JMSMessageSender implements Listener<BytesMessage> {
         }
         try{
             myProducer.send(event);
-        }catch(JMSException ex){}
+        }catch(JMSException ex){
+            theLogger.log(Level.INFO, "Unable to send event.", ex);
+        }
     }
-    
 }

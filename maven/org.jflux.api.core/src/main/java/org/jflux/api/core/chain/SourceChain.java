@@ -27,7 +27,7 @@ public class SourceChain<A,B> implements Source<B> {
     protected Source<A> myInnerSource;
     protected Adapter<A,B> myAdapter;
         
-    public <T> SourceChain(Source<T> source, Adapter<T,B> adapter) {
+    public <T> SourceChain(Source<? extends T> source, Adapter<T,B> adapter) {
         if(source == null || adapter == null){
             throw new NullPointerException();
         }

@@ -98,8 +98,24 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
         mySchema = schema;
     }
     
+    public void setType(Class<T> clazz, Schema schema){
+        if((clazz == null && schema == null) || (myJsonFlag && schema == null)){
+            myWriter = null;
+            return;
+        }
+        mySchema = schema;
+        if(clazz != null && SpecificRecordBase.class.isAssignableFrom(clazz)){
+            myWriter = new SpecificDatumWriter<T>(clazz);
+        }else{
+            myWriter = new GenericDatumWriter<T>(mySchema);
+        }
+    }
+    
     @Override
     public S adapt(EncodeRequest<T, S> a) {
+        if(myWriter == null){
+            return null;
+        }
         try{
             S out = a.getStream();
             Encoder e = (myJsonFlag ? 

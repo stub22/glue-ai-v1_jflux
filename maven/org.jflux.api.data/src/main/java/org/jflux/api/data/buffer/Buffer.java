@@ -16,6 +16,7 @@
 package org.jflux.api.data.buffer;
 
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Listener;
 import org.jflux.api.core.Source;
 
 /**
@@ -25,7 +26,8 @@ import org.jflux.api.core.Source;
 public interface Buffer<I,V> {
     public Source<V> getHead();
     public Source<V> getTail();
-    public Adapter<I,V> getIndexAdapter(I index);
+    public Adapter<I,V> getIndex();
+    public Listener<V> addValue();
     
     public Source<? extends Iterable<V>> getValues();
 }

@@ -29,14 +29,14 @@ public interface ConfigValidator<K, E> extends
     @Override
     public List<E> adapt(Configuration<K> a);
     
-    public abstract class AbstractValidator<K,E> implements 
+    public abstract class AbstractConfigValidator<K,E> implements 
             ConfigValidator<K, E> {
         public abstract Set<K> getValidKeySet();
 
-        public abstract <V> Adapter<V,List<E>> getFieldValidator(
+        protected abstract <V> Adapter<V,List<E>> getFieldValidator(
                 K key, Configuration<K> config);
 
-        public abstract <V> Adapter<V,List<E>> getFieldValidator(
+        protected abstract <V> Adapter<V,List<E>> getFieldValidator(
                 Class<V> clazz, K key, Configuration<K> config);
 
         @Override

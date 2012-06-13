@@ -29,16 +29,19 @@ public class MessagePacker implements Adapter<ByteArrayOutputStream,BytesMessage
     private Session mySession;
     
     public MessagePacker(Session session){
-        if(session == null){
-            throw new NullPointerException();
-        }
+        mySession = session;
+    }
+    
+    public synchronized void setSession(Session session){
         mySession = session;
     }
     
     @Override
-    public BytesMessage adapt(ByteArrayOutputStream a) {
+    public synchronized BytesMessage adapt(ByteArrayOutputStream a) {
         if(a == null){
             throw new NullPointerException();
+        }else if(mySession == null){
+            return null;
         }
         try{
             BytesMessage msg = mySession.createBytesMessage();
