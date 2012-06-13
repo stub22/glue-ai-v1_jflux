@@ -33,8 +33,12 @@ public class MessageHeaderAdapter implements Adapter<BytesMessage,BytesMessage>{
         myContentType = contentType;
     }
     
+    public synchronized void setContentType(String contentType){
+        myContentType = contentType;
+    }
+    
     @Override
-    public BytesMessage adapt(BytesMessage a) {
+    public synchronized BytesMessage adapt(BytesMessage a) {
         if(!(a instanceof JMSBytesMessage)){
             return a;
         }

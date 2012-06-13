@@ -17,14 +17,40 @@ package org.jflux.api.core.config;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.config.ConfigValidator.AbstractConfigValidator;
+import org.jflux.api.core.config.SimpleValidator.PropertyError;
 
 /**
  *
  * @author Matthew Stevenson
  */
-public class SimpleValidator {
+public class SimpleValidator<K> extends 
+        AbstractConfigValidator<K, PropertyError<K,?>> {
+    
+    private Map<K, Adapter<?, List<PropertyError<K,?>>>> myPropertyValidators;
+
+    
+    
+    @Override
+    public Set<K> getValidKeySet() {
+        return myPropertyValidators.keySet();
+    }
+
+    @Override
+    protected <V> Adapter<V, List<PropertyError<K, ?>>> getFieldValidator(
+            K key, Configuration<K> config) {
+        return (Adapter)myPropertyValidators.get(key);
+    }
+
+    @Override
+    protected <V> Adapter<V, List<PropertyError<K, ?>>> getFieldValidator(
+            Class<V> clazz, K key, Configuration<K> config) {
+        return (Adapter)myPropertyValidators.get(key);
+    }    
+    
     public static class EnumeratedPropertyValidator<K,V> implements 
             Adapter<V,List<PropertyError<K,V>>> {
         private K myKey;
@@ -47,16 +73,6 @@ public class SimpleValidator {
                             myKey, a, "Invalid property value."));
         }
     }
-    
-//    public static class PropertyStateValidator<K,V,E> implements 
-//            Adapter<V,List<PropertyError<K,V>>> {
-//        private Configuration<K> myConfiguration;
-//        
-//        @Override
-//        public List<PropertyError<K,V>> adapt(V a) {
-//            throw new UnsupportedOperationException("Not supported yet.");
-//        }
-//    }
     
     public static class PropertyError<K,V> {
         private K myKey;

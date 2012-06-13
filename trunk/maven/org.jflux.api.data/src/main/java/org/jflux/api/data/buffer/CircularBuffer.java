@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Listener;
 import org.jflux.api.core.Source;
 
 
@@ -34,6 +35,12 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
     private int myHead;
     private int myTail;
     private int myCapacity;
+    
+    private Source<V> myHeadSource;
+    private Source<V> myTailSource;
+    private Source<List<V>> myValuesSource;
+    private Adapter<Integer,V> myIndexAdapter;
+    private Listener<V> myAdder;
 
     /**
      * Creates a new CircularBufferCache with the given capacity.
@@ -50,13 +57,43 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
         myNextIndex = 0;
         myHead = 0;
         myTail = 0;
+        myHeadSource = new Source<V>() {
+            @Override
+            public V getValue() {
+                return getHeadValue();
+            }
+        };
+        myTailSource = new Source<V>() {
+            @Override
+            public V getValue() {
+                return getTailValue();
+            }
+        };
+        myIndexAdapter = new Adapter<Integer, V>() {
+            @Override
+            public V adapt(Integer a) {
+                return get(a);
+            }
+        };
+        myValuesSource = new Source<List<V>>() {
+            @Override
+            public List<V> getValue() {
+                return getValueList();
+            }
+        };
+        myAdder = new Listener<V>() {
+            @Override
+            public void handleEvent(V input) {
+                add(input);
+            }
+        };
     }
     /**
-    * Returns the nth item from the head of the buffer.
-    * n=0 returns the head element, n=1 returns head-1,
-    * n=size()-1 returns the tail.
-    * @param n item index relative to the head
-    * @return nth item from the head of the buffer
+    * Returns the nth item from the tail of the buffer.
+    * n=0 returns the tail element, n=1 returns tail-1,
+    * n=size()-1 returns the head.
+    * @param n item index relative to the tail
+    * @return nth item from the tail of the buffer
     * @throws IllegalArgumentException if n less than 0 or n is greater than or
     * equal to the number of elements.
     */
@@ -67,7 +104,7 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
                     + "Buffer capacity is " + myCapacity + ".  "
                     + "Number of elements is " + myElements.size() + ".");
         }
-        int index = (myHead-n)%myCapacity;
+        int index = (myTail-n)%myCapacity;
         return myElements.get(index);
     }
     /**
@@ -81,10 +118,10 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
         }else{
             myElements.set(myNextIndex, value);
         }
-        myHead = myNextIndex;
+        myTail = myNextIndex;
         myNextIndex = (myNextIndex+1)%myCapacity;
         if(myHead == myTail && myElements.size() > 1){
-            myTail = myNextIndex;
+            myHead = myNextIndex;
         }
     }
     /**
@@ -103,7 +140,7 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
         if(myElements.isEmpty()){
             return null;
         }
-        return myElements.get(myHead);
+        return myElements.get(myTail);
     }
     
     public List<V> getValueList(){
@@ -111,11 +148,11 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
             return Collections.EMPTY_LIST;
         }
         List<V> vals = new ArrayList<V>(myElements.size());
-        if(myHead > myTail){
-            vals.addAll(myElements.subList(myTail, myHead+1));
+        if(myTail > myHead){
+            vals.addAll(myElements.subList(myHead, myTail+1));
         }else{
-            vals.addAll(myElements.subList(myTail, myElements.size()));
-            vals.addAll(myElements.subList(0, myHead+1));
+            vals.addAll(myElements.subList(myHead, myElements.size()));
+            vals.addAll(myElements.subList(0, myTail+1));
         }
         return vals;
     }
@@ -129,41 +166,26 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
 
     @Override
     public Source<V> getHead() {
-        return new Source<V>() {
-            @Override
-            public V getValue() {
-                return getHeadValue();
-            }
-        };
+        return myHeadSource;
     }
 
     @Override
     public Source<V> getTail() {
-        return new Source<V>() {
-            @Override
-            public V getValue() {
-                return getTailValue();
-            }
-        };
+        return myTailSource;
     }
 
     @Override
-    public Adapter<Integer, V> getIndexAdapter(Integer index) {
-        return new Adapter<Integer, V>() {
-            @Override
-            public V adapt(Integer a) {
-                return get(a);
-            }
-        };
+    public Adapter<Integer, V> getIndex() {
+        return myIndexAdapter;
     }
 
     @Override
     public Source<List<V>> getValues() {
-        return new Source<List<V>>() {
-            @Override
-            public List<V> getValue() {
-                return getValueList();
-            }
-        };
+        return myValuesSource;
+    }
+
+    @Override
+    public Listener<V> addValue() {
+        return myAdder;
     }
 }

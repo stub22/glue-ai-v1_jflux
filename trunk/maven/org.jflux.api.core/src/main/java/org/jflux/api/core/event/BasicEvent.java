@@ -56,8 +56,23 @@ public class BasicEvent<H,D> implements Event<H,D> {
             this(new SourceAdapter<D, H>(headerSource));
         }
         
+        public void setHeaderFactory(Adapter<D,H> headerFeactory){
+            myHeaderFactory = headerFeactory;
+        }
+        
+        public void setHeaderSource(Source<H> headerSource){
+            if(headerSource == null){
+                myHeaderFactory = null;
+            }else{
+                myHeaderFactory = new SourceAdapter<D, H>(headerSource);
+            }
+        }
+        
         @Override
         public Event<H, D> adapt(D a) {
+            if(myHeaderFactory == null){
+                return null;
+            }
             H header = myHeaderFactory.adapt(a);
             return new BasicEvent<H, D>(header, a);
         }

@@ -40,6 +40,14 @@ public class ListenerChain<A,B> implements Listener<A> {
             myAdapter = adapter;
         }
     }
+    
+    public Listener<B> getInnerListener(){
+        return myInnerListener;
+    }
+    
+    public Adapter<A,B> getInnerAdapter(){
+        return myAdapter;
+    }
 
     @Override
     public void handleEvent(A input) {
