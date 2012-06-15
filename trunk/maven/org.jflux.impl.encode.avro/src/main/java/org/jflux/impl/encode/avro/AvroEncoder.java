@@ -113,7 +113,8 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
     
     @Override
     public S adapt(EncodeRequest<T, S> a) {
-        if(myWriter == null){
+        if(a == null || a.getValue() == null || 
+                a.getStream() == null || myWriter == null){
             return null;
         }
         try{

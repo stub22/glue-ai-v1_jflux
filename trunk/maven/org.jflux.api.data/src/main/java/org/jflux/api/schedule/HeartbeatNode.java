@@ -124,7 +124,7 @@ public class HeartbeatNode<T> extends
                 n.notifyListeners(t);
             }catch(RuntimeException ex){
                 theLogger.log(Level.WARNING, 
-                        "Runtime Exception in Heartbeat Node", ex);
+                        "Runtime Exception in Heartbeat Node");
             }
         }
         
