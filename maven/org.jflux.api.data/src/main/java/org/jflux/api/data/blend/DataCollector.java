@@ -23,9 +23,10 @@ import org.jflux.api.core.Source;
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface DataCollector<D,L> extends Source<L>  {
+public interface DataCollector<D,L> extends Source<L> {
     
     public void addSource(Source<D> source);
+    public void removeSource(Source<D> source);
     
     public static class DefaultCollector<D> implements 
             DataCollector<D, List<D>> {
@@ -50,7 +51,17 @@ public interface DataCollector<D,L> extends Source<L>  {
             if(source == null){
                 throw new NullPointerException();
             }
-            myDataSources.add(source);
+            if(!myDataSources.contains(source)){
+                myDataSources.add(source);
+            }
+        }
+        
+        @Override
+        public void removeSource(Source<D> source){
+            if(source == null){
+                throw new NullPointerException();
+            }
+            myDataSources.remove(source);
         }
     }
 }
