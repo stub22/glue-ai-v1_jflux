@@ -78,7 +78,9 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
         myValuesSource = new Source<List<V>>() {
             @Override
             public List<V> getValue() {
-                return getValueList();
+                List<V> vals = getValueList();
+                reset();
+                return vals;
             }
         };
         myAdder = new Listener<V>() {
@@ -87,6 +89,11 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
                 add(input);
             }
         };
+    }
+    private void reset(){
+        myHead = 0;
+        myTail = 0;
+        myNextIndex = 0;
     }
     /**
     * Returns the nth item from the tail of the buffer.
@@ -98,11 +105,11 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
     * equal to the number of elements.
     */
     public V get(Integer n){
-        if(n < 0 || n >= myElements.size()){
+        if(n < 0 || n >= getSize()){
             throw new IllegalArgumentException(
                     "Index: " + n + " out of bounds.  "
                     + "Buffer capacity is " + myCapacity + ".  "
-                    + "Number of elements is " + myElements.size() + ".");
+                    + "Number of elements is " + getSize() + ".");
         }
         int index = (myTail-n)%myCapacity;
         return myElements.get(index);
@@ -118,9 +125,10 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
         }else{
             myElements.set(myNextIndex, value);
         }
+        boolean empty = myHead == myTail;
         myTail = myNextIndex;
         myNextIndex = (myNextIndex+1)%myCapacity;
-        if(myHead == myTail && myElements.size() > 1){
+        if(myHead == myTail && !empty){
             myHead = myNextIndex;
         }
     }
@@ -130,28 +138,29 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
     * @return head element of the buffer, returns null if the buffer is empty
     */
     public V getHeadValue(){
-        if(myElements.isEmpty()){
+        if(getSize() == 0){
             return null;
         }
         return myElements.get(myHead);
     }
     
     public V getTailValue(){
-        if(myElements.isEmpty()){
+        if(getSize() == 0){
             return null;
         }
         return myElements.get(myTail);
     }
     
     public List<V> getValueList(){
-        if(myElements.isEmpty()){
+        int size = getSize();
+        if(size == 0){
             return Collections.EMPTY_LIST;
         }
-        List<V> vals = new ArrayList<V>(myElements.size());
+        List<V> vals = new ArrayList<V>(size);
         if(myTail > myHead){
             vals.addAll(myElements.subList(myHead, myTail+1));
         }else{
-            vals.addAll(myElements.subList(myHead, myElements.size()));
+            vals.addAll(myElements.subList(myHead, size));
             vals.addAll(myElements.subList(0, myTail+1));
         }
         return vals;
@@ -161,7 +170,12 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
      * @return number of elements in the buffer
      */
     public int getSize(){
-        return myElements.size();
+        if(myHead == myTail){
+            return 0;
+        }else if(myTail < myHead){
+            return myCapacity - (myHead - myTail - 1);
+        }
+        return myTail - myHead;
     }
 
     @Override
