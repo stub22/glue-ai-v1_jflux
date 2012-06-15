@@ -38,9 +38,7 @@ public class MessagePacker implements Adapter<ByteArrayOutputStream,BytesMessage
     
     @Override
     public synchronized BytesMessage adapt(ByteArrayOutputStream a) {
-        if(a == null){
-            throw new NullPointerException();
-        }else if(mySession == null){
+        if(a == null || mySession == null){
             return null;
         }
         try{
