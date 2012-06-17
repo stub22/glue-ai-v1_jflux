@@ -16,6 +16,7 @@
 package org.jflux.api.core.event;
 
 import java.util.Map;
+import org.jflux.api.core.Adapter;
 
 /**
  *
@@ -26,4 +27,31 @@ public interface Header<SourceRef, Time> {
     public Time getTimestamp();
     public String getEventType();
     public Map<String,String> getHeaderProperties();
+    
+    public static class HeaderTypeAdapter implements Adapter<Header,String> {
+        @Override 
+        public String adapt(Header a) {
+            return a == null ? null : a.getEventType();
+        }
+    }
+    
+    public static class HeaderPropertyAdapter implements 
+            Adapter<Header,String> {
+        private String myPropertyKey;
+        public HeaderPropertyAdapter(String propertyKey){
+            if(propertyKey == null){
+                throw new NullPointerException();
+            }
+            myPropertyKey = propertyKey;
+        }
+        
+        @Override 
+        public String adapt(Header a) {
+            if(a == null || a.getHeaderProperties() == null){
+                return null;
+            }
+            Map<String,String> props = a.getHeaderProperties();
+            return props.get(myPropertyKey);
+        }
+    }
 }

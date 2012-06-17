@@ -19,90 +19,49 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
-import org.jflux.api.core.event.Event;
+import org.jflux.api.core.util.MapAdapter;
 
 /**
  *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public interface Router<E> extends Listener<E> {
+public interface Router<T> extends Listener<T> {
     final static Logger theLogger = Logger.getLogger(Router.class.getName());
     
-    public static class BasicRouter<E> implements Router<E> {
-        private Adapter<E,Listener<E>> myListenerFinder;
+    public static class DefaultRouter<K,T> implements Router<T> {
+        private Adapter<T,K> myKeyAdapter;
+        private MapAdapter<K,Listener<T>> myRouteMap;
         
-        public BasicRouter(Adapter<E,Listener<E>> listenerProc){
-            if(listenerProc == null){
+        public DefaultRouter(Adapter<T,K> keyAdapter){
+            if(keyAdapter == null){
                 throw new NullPointerException();
             }
-            myListenerFinder = listenerProc;
+            myRouteMap = new MapAdapter<K, Listener<T>>();
+            myKeyAdapter = keyAdapter;
         }
         
         @Override
-        public void handleEvent(E event) {
-            Listener<E> listener = myListenerFinder.adapt(event);
-            if(listener == null){
-                return;
-            }
-            listener.handleEvent(event);
+        public void handleEvent(T event) {
+            theLogger.log(Level.INFO, "Routing item: {0}", event);
+            K key = myKeyAdapter.adapt(event);
+            Listener<T> route = myRouteMap.adapt(key);
+            route.handleEvent(event);
         }
         
-    }
-    
-    public static class EventRouter<H,D,E extends Event<H,D>> 
-            implements Router<E> {
-        private Adapter<H,Listener<E>> myListenerFinder;
-        
-        public EventRouter(Adapter<H,Listener<E>> listenerProc){
-            if(listenerProc == null){
-                throw new NullPointerException();
+        public void addRoute(K key, Listener<T> route){
+            if(myRouteMap.getMap().containsKey(key)){
+                theLogger.log(Level.INFO, 
+                        "Replacing existing route for key: {0}", key);
+            }else{
+                theLogger.log(Level.INFO, 
+                        "Adding router path for key: {0}", key);
             }
-            myListenerFinder = listenerProc;
+            myRouteMap.getMap().put(key, route);
         }
         
-        @Override
-        public void handleEvent(E event) {
-            if(event == null){
-                theLogger.warning("Ignoring null event.");
-                return;
-            }
-            H header = event.getHeader();    
-            Listener<E> listener = myListenerFinder.adapt(header);
-            if(listener == null){
-                theLogger.log(Level.WARNING, 
-                        "Could not find listener for event: {0}", event);
-                return;
-            }
-            listener.handleEvent(event);
-        }
-    }
-    
-    public static class EventDataRouter<H,D,E extends Event<H,D>> 
-            implements Router<E> {
-        private Adapter<H,Listener<D>> myListenerFinder;
-        
-        public EventDataRouter(Adapter<H,Listener<D>> listenerProc){
-            if(listenerProc == null){
-                throw new NullPointerException();
-            }
-            myListenerFinder = listenerProc;
-        }
-        
-        @Override
-        public void handleEvent(E event) {
-            if(event == null){
-                theLogger.warning("Ignoring null event.");
-                return;
-            }
-            H header = event.getHeader();
-            D data = event.getData();            
-            Listener<D> listener = myListenerFinder.adapt(header);
-            if(listener == null){
-                theLogger.log(Level.WARNING, 
-                        "Could not find listener for event: {0}", event);
-                return;
-            }
-            listener.handleEvent(data);
+        public void removeRoute(K key){
+            theLogger.log(Level.INFO, "Removing router path for key: {0}", key);
+            myRouteMap.getMap().remove(key);
         }
     }
 }
