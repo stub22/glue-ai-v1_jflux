@@ -35,16 +35,19 @@ import org.slf4j.LoggerFactory;
  */
 public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
     private final static Logger theLogger = LoggerFactory.getLogger(JMSMessageReceiver.class);
+    private Session mySession;
+    private Destination myDestination;
     private MessageConsumer myMessageConsumer;
     private Thread myPollingThread;
     
-    public JMSMessageReceiver(Session session, Destination dest) 
-            throws JMSException{
+    public JMSMessageReceiver(Session session, Destination dest){
         super(new DefaultNotifier<BytesMessage>());
         if(session == null || dest == null){
             throw new NullPointerException();
         }
-        myMessageConsumer = session.createConsumer(dest);
+        mySession = session;
+        myDestination = dest;
+        createConsumer();
     }
     
     /**
@@ -67,7 +70,44 @@ public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
         });
         myPollingThread.start();
         return true;
-    }  
+    }
+    
+    public void setDestination(Destination dest){
+        closeConsumer();
+        myDestination = dest;
+        createConsumer();
+    }
+    
+    public void setSession(Session session){
+        closeConsumer();
+        mySession = session;
+        createConsumer();
+    }
+    
+    
+    private void createConsumer(){
+        if(mySession == null || myDestination == null){
+            return;
+        }
+        try{
+            myMessageConsumer = mySession.createConsumer(myDestination);
+        }catch(JMSException ex){
+            theLogger.warn("Unable to create JMS Consumer.", ex);
+        }
+    }
+    
+    
+    private void closeConsumer(){
+        if(myMessageConsumer == null){
+            return;
+        }
+        try{
+            myMessageConsumer.close();
+        }catch(JMSException ex){
+            theLogger.warn("Error closeing JMS Consumer.", ex);
+        }
+        myMessageConsumer = null;
+    }
     
     private void eventLoop(){
         while(getPlayState() == PlayState.RUNNING 
@@ -83,7 +123,9 @@ public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
                 if(bytesMsg == null){
                     continue;
                 }
-                getNotifier().notifyListeners(bytesMsg);
+                if(getPlayState() == PlayState.RUNNING ){
+                    getNotifier().notifyListeners(bytesMsg);
+                }
             }catch(Throwable t){
                 theLogger.warn("Error in Message fetch loop.", t);
                 try{
@@ -95,6 +137,12 @@ public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
     
     private BytesMessage fetchMessage(){
         try{
+            if(myMessageConsumer == null){
+                try{
+                    Thread.sleep(10);
+                }catch(InterruptedException ex){}
+                return null;
+            }
             Message msg = myMessageConsumer.receive();
             if(msg == null){
                 theLogger.info("Received Null message.");

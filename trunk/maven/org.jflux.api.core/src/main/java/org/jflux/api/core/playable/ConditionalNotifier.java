@@ -43,8 +43,9 @@ public class ConditionalNotifier<E> implements Notifier<E> {
             myNotifier.notifyListeners(e);
         }else{
             theLogger.log(Level.INFO, 
-                    "PlayState is: {0}, ignoring event: {1}", 
-                    new Object[]{myPlayable.getPlayState(), e});
+                    "PlayState is {0} for Playable: {1}, \nIgnoring event: {2}", 
+                    new Object[]{myPlayable.getPlayState(), 
+                        myPlayable.toString(), e});
         }
     }
 
