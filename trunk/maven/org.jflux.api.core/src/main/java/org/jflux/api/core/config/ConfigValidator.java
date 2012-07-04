@@ -32,8 +32,11 @@ public interface ConfigValidator<K, E> extends
     public abstract class AbstractConfigValidator<K,E> implements 
             ConfigValidator<K, E> {
         public abstract Set<K> getValidKeySet();
-
-        protected abstract <V> Adapter<V,List<E>> getFieldValidator(
+        
+        
+        //protected abstract <V> Adapter<V,List<E>> getFieldValidator(  
+                //does not compile in JDK >= 1.6.25
+        protected abstract Adapter getFieldValidator(
                 K key, Configuration<K> config);
 
         protected abstract <V> Adapter<V,List<E>> getFieldValidator(
@@ -55,9 +58,13 @@ public interface ConfigValidator<K, E> extends
             return allErrors;
         }
 
-        private <V> List<E> validateField(K k, Configuration<K> a){
-            Adapter<V,List<E>> fieldAdapter = getFieldValidator(k, a);
-            V v = a.getPropertyValue(k);
+        //private <V> List<E> validateField(K k, Configuration<K> a){  
+                //does not compile in JDK >= 1.6.25
+        private List<E> validateField(K k, Configuration<K> a){
+            //Adapter<V,List<E>> fieldAdapter = getFieldValidator(k, a);
+            //V v = a.getPropertyValue(k);
+            Adapter<Object,List<E>> fieldAdapter = getFieldValidator(k, a);
+            Object v = a.getPropertyValue(k);
             return fieldAdapter.adapt(v);
         }
     }
