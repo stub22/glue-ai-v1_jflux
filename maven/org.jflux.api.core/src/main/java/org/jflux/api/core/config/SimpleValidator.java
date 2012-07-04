@@ -40,7 +40,8 @@ public class SimpleValidator<K> extends
     }
 
     @Override
-    protected <V> Adapter<V, List<PropertyError<K, ?>>> getFieldValidator(
+    //protected <V> Adapter<V, List<PropertyError<K, ?>>> getFieldValidator(
+    protected Adapter<?, List<PropertyError<K, ?>>> getFieldValidator(
             K key, Configuration<K> config) {
         return (Adapter)myPropertyValidators.get(key);
     }
