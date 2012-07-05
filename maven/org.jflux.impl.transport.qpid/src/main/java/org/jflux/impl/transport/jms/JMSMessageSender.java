@@ -56,6 +56,8 @@ public class JMSMessageSender implements Listener<BytesMessage> {
         try{
             if(mySession == null || myDestination == null){
                 return;
+            }if(myProducer != null){
+                return;
             }
             myProducer = mySession.createProducer(myDestination);
         }catch(JMSException ex){
@@ -70,6 +72,7 @@ public class JMSMessageSender implements Listener<BytesMessage> {
                 return;
             }
             myProducer.close();
+            myProducer = null;
         }catch(JMSException ex){
             theLogger.log(Level.WARNING, "Unable to close producer.", ex);
             return;
