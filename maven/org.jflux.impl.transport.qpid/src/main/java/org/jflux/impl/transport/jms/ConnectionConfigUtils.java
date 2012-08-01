@@ -167,6 +167,8 @@ public class ConnectionConfigUtils {
         String addr = "tcp://" + ip + ":" + port;
         String amqpURL = String.format(theAMQPFormatString, 
                 username, password, clientName, virtualHost, addr);
+        String reconnectOptions = "&connectdelay='5000'&retries='2147483647'";
+        amqpURL += reconnectOptions;
         AMQConnectionFactory cf = new AMQConnectionFactory(amqpURL);
         return cf.createConnection();
     }
