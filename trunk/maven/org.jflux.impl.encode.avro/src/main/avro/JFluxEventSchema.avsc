@@ -39,5 +39,10 @@
         ],
         "interface": "org.jflux.api.core.event.Event<org.jflux.api.core.event.Header<java.lang.String,java.lang.Long>,java.util.List<? extends org.jflux.api.core.event.Event<org.jflux.api.core.event.Header<java.lang.String,java.lang.Long>,java.nio.ByteBuffer>>>",
         "jflux.source": "true"
+    },
+    {"name": "DoubleRecord", "type": "record", "namespace":"org.jflux.avrogen",
+        "fields": [
+            {"name": "value", "type": "double"}
+        ]
     }
 ]
