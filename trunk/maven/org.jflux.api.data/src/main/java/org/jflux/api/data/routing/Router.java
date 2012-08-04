@@ -42,7 +42,7 @@ public interface Router<T> extends Listener<T> {
         
         @Override
         public void handleEvent(T event) {
-            theLogger.log(Level.INFO, "Routing item: {0}", event);
+            //theLogger.log(Level.INFO, "Routing item: {0}", event);
             K key = myKeyAdapter.adapt(event);
             Listener<T> route = myRouteMap.adapt(key);
             route.handleEvent(event);
