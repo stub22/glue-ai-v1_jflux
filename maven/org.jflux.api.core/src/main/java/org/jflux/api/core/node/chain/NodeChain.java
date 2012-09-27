@@ -138,8 +138,18 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         }
        return super.start();
     }
+    @Override
+    public boolean stop(){
+        if(myWiredFlag){
+            unwire();
+        }
+       return super.stop();
+    }
     
     protected void wire(){
+        if(myWiredFlag){
+            return;
+        }
         Notifier n = null;
         if(myProducer != null){
             n = myProducer.getNotifier();
@@ -165,6 +175,36 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         myWiredFlag = true;
     }
     
+    
+    protected void unwire(){
+        if(!myWiredFlag){
+            return;
+        }
+        Notifier n = null;
+        if(myProducer != null){
+            n = myProducer.getNotifier();
+            if(myProducer instanceof NodeChain){
+                ((NodeChain)myProducer).unwire();
+            }
+        }
+        for(ProcessorNode<?,?> proc : myProcessors){
+            if(proc == null){
+                continue;
+            }
+            n = n == null ? proc.getNotifier() : unwire(n, proc);
+            if(proc instanceof NodeChain){
+                ((NodeChain)proc).unwire();
+            }
+        }
+        if(myConsumer != null){
+            unwire(n,myConsumer);
+            if(myConsumer instanceof NodeChain){
+                ((NodeChain)myConsumer).unwire();
+            }
+        }
+        myWiredFlag = false;
+    }
+    
     private <N,T> Notifier<N> wire(Notifier<T> n, ProcessorNode<T,N> proc){
         if(proc == null){
             return null;
@@ -180,6 +220,23 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
             return;
         }
         n.addListener(consumer.getListener());
+    }
+    
+    private <N,T> Notifier<N> unwire(Notifier<T> n, ProcessorNode<T,N> proc){
+        if(proc == null){
+            return null;
+        }
+        if(n != null){
+            n.removeListener(proc.getListener());
+        }
+        return proc.getNotifier();
+    }
+    
+    private <T> void unwire(Notifier<T> n, ConsumerNode<T> consumer){
+        if(n == null || consumer == null){
+            return;
+        }
+        n.removeListener(consumer.getListener());
     }
 
     @Override
