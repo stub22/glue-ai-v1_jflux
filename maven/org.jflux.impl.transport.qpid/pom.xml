@@ -29,11 +29,15 @@
             <groupId>org.slf4j</groupId>
             <version>1.6.1</version>
         </dependency>
+		<!-- stub22 2012-09-27 : This dep should be disabled or marked scope="test" in committed library pom.xml 
+				(and published binaries) so that application can choose its own SLF4J binding.
+		
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.6.1</version>
         </dependency>
+		-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>org.jflux.api.core</artifactId>
