@@ -140,7 +140,7 @@
                     <dependency>
                         <groupId>org.jflux</groupId>
                         <artifactId>org.jflux.resource.avrogen.templates</artifactId>
-                        <version>0.1.3-SNAPSHOT</version>
+                        <version>${project.version}</version>
                     </dependency>
                 </dependencies>
                 <executions>
