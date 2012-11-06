@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.services.lifecycle;
+package org.jflux.api.services;
 
 import java.util.List;
 import java.util.Properties;

@@ -18,7 +18,7 @@ public class BasicDescriptor<K,V> implements Descriptor<K, V> {
     private String myClassName;
     
     @Override
-    public String getName() {
+    public String getDescriptorName() {
         return myName;
     }
 
