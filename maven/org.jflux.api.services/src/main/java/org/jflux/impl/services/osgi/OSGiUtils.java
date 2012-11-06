@@ -21,7 +21,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.services.lifecycle.ManagedService;
+import org.jflux.api.services.ManagedService;
 import org.jflux.api.services.lifecycle.utils.SimpleLifecycle;
 import org.jflux.impl.services.osgi.lifecycle.OSGiComponent;
 import org.osgi.framework.Bundle;

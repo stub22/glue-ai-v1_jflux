@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.services.lifecycle;
+package org.jflux.api.services;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 import org.jflux.api.services.extras.PropertyChangeSource;
-import org.jflux.api.services.lifecycle.DependencyDescriptor.DependencyType;
+import org.jflux.api.services.DependencyDescriptor.DependencyType;
 
 /**
  * Manages the state and availability of a service through a Dependency-
@@ -162,7 +162,7 @@ public interface ServiceLifecycleProvider<T> extends PropertyChangeSource{
         private static boolean checkDescriptor(
                 DependencyDescriptor descriptor, 
                 Map<String,Object> dependencies){
-            String id = descriptor.getDependencyName();
+            String id = descriptor.getDescriptorName();
             Object req = dependencies.get(id);
             if(req == null){
                 return DependencyType.OPTIONAL == 
@@ -192,7 +192,7 @@ public interface ServiceLifecycleProvider<T> extends PropertyChangeSource{
                 return false;
             }
             for(DependencyDescriptor descriptor : descriptors){
-                String id = descriptor.getDependencyName();
+                String id = descriptor.getDescriptorName();
                 Class reqClass = descriptor.getServiceClass();
                 if(dependencyId.equals(id) &&
                         reqClass.isAssignableFrom(dependency.getClass())){
@@ -218,7 +218,7 @@ public interface ServiceLifecycleProvider<T> extends PropertyChangeSource{
                 return false;
             }
             for(DependencyDescriptor descriptor : descriptors){
-                String id = descriptor.getDependencyName();
+                String id = descriptor.getDescriptorName();
                 if(dependencyId.equals(id)){
                     return true;
                 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.services.lifecycle;
+package org.jflux.api.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,10 +188,10 @@ public abstract class AbstractLifecycleProvider<I,T extends I> extends
             throw new NullPointerException();
         }
         for(DependencyDescriptor d : getDependencyDescriptors()){
-            if(desc.getDependencyName().equals(d.getDependencyName())){
+            if(desc.getDescriptorName().equals(d.getDescriptorName())){
                 theLogger.log(Level.WARNING,
                         "Unable to add depenedency, name already in use: {0}",
-                        desc.getDependencyName());
+                        desc.getDescriptorName());
                 return false;
             }
         }
@@ -207,7 +207,7 @@ public abstract class AbstractLifecycleProvider<I,T extends I> extends
             myRuntimeDescriptors = new ArrayList<DependencyDescriptor>();
         }
         theLogger.log(Level.INFO, "Adding optional runtime depenedency {0}", 
-                desc.getDependencyName());
+                desc.getDescriptorName());
         myDescriptors.add(desc);
         myRuntimeDescriptors.add(desc);
         firePropertyChange(PROP_DEPENDENCY_ADDED, null, desc);
@@ -245,7 +245,7 @@ public abstract class AbstractLifecycleProvider<I,T extends I> extends
     
     private DependencyDescriptor getRuntimeDescriptor(String name){
         for(DependencyDescriptor d : myRuntimeDescriptors){
-            if(name.equals(d.getDependencyName())){
+            if(name.equals(d.getDescriptorName())){
                 return d;
             }
         }

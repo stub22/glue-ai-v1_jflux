@@ -18,8 +18,8 @@ package org.jflux.api.services.lifecycle.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import org.jflux.api.services.lifecycle.ManagedService;
-import org.jflux.api.services.lifecycle.ServiceLifecycleProvider;
+import org.jflux.api.services.ManagedService;
+import org.jflux.api.services.ServiceLifecycleProvider;
 
 /**
  *

@@ -15,13 +15,13 @@
  */
 package org.jflux.api.services.lifecycle.utils;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import org.jflux.api.services.lifecycle.DependencyDescriptor;
-import org.jflux.api.services.lifecycle.DependencyDescriptor.DependencyType;
-import org.jflux.impl.services.osgi.OSGiUtils;
+import org.jflux.api.services.DependencyDescriptor;
+import org.jflux.api.services.DependencyDescriptor.DependencyType;
 
 /**
  * Builds a DependencyDescriptor.
@@ -32,7 +32,7 @@ public class DescriptorBuilder extends DescriptorListBuilder{
     private DescriptorListBuilder myListBuilder;
     private String myDependencyName;
     private Class myDependencyClass;
-    private List<String> myFilters;
+    private Map<String,String> myFilterProps;
     private DependencyType myType;
     /**
      * Begins building a DependencyDescriptor with the give name and class.
@@ -56,28 +56,19 @@ public class DescriptorBuilder extends DescriptorListBuilder{
         myDependencyName = name;
         myDependencyClass = clazz;
         myType = type;
-        myFilters = new ArrayList<String>();
+        myFilterProps = new HashMap<String, String>();
     }
     
     public DependencyDescriptor getDescriptor(){
-        String filter = buildFilter();
         return new DependencyDescriptor(
-                myDependencyName, myDependencyClass, filter, myType);
+                myDependencyName, myDependencyClass, myFilterProps, myType);
     }
     
     public DescriptorBuilder with(String key, String value){
         if(key == null || value == null){
             throw new NullPointerException();
         }
-        myFilters.add(OSGiUtils.createFilter(key, value));
-        return this;
-    }
-    
-    public DescriptorBuilder with(String filter){
-        if(filter == null){
-            throw new NullPointerException();
-        }
-        myFilters.add(filter);
+        myFilterProps.put(key, value);
         return this;
     }
     
@@ -86,8 +77,7 @@ public class DescriptorBuilder extends DescriptorListBuilder{
             throw new NullPointerException();
         }
         for(Entry e : props.entrySet()){
-            myFilters.add(OSGiUtils.createFilter(
-                    e.getKey().toString(), e.getValue().toString()));
+            myFilterProps.put(e.getKey().toString(), e.getValue().toString());
         }
         return this;
     }
@@ -116,30 +106,6 @@ public class DescriptorBuilder extends DescriptorListBuilder{
     @Override
     public List<DependencyDescriptor> getDescriptors(){
         return finish().getDescriptors();
-    }
-    
-    private String buildFilter(){
-        if(myFilters.isEmpty()){
-            return null;
-        }
-        StringBuilder filterBuilder = new StringBuilder();
-        if(myFilters.size() > 1){
-            filterBuilder.append("(&");
-        }
-        for(String f : myFilters){
-            f = f.trim();
-            if(!f.startsWith("(")){
-                filterBuilder.append("(");
-            }
-            filterBuilder.append(f);
-            if(f.charAt(f.length()-1) != ')'){
-                filterBuilder.append(")");
-            }
-        }
-        if(myFilters.size() > 1){
-            filterBuilder.append(")");
-        }
-        return filterBuilder.toString();
     }
     
     private DescriptorListBuilder finish(){

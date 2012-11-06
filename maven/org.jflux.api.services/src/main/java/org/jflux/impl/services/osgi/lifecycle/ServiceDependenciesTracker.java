@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
-import org.jflux.api.services.lifecycle.DependencyDescriptor;
-import org.jflux.api.services.lifecycle.DependencyDescriptor.DependencyType;
+import org.jflux.api.services.DependencyDescriptor;
+import org.jflux.api.services.DependencyDescriptor.DependencyType;
 import org.jflux.impl.services.osgi.SingleServiceListener;
 import org.osgi.framework.BundleContext;
 
@@ -128,44 +128,21 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
         if(descriptor == null){
             throw new NullPointerException();
         }
-        return addDependencyDescription(
-                descriptor.getServiceClass(), 
-                descriptor.getDependencyName(), 
-                descriptor.getServiceFilter(),
-                descriptor.getDependencyType());
-    }
-    /**
-     * Adds the description to the list of dependency to listen for.
-     * Descriptions cannot be added once the tracker has been started.
-     * @param clazz dependency class
-     * @param dependencyName local dependency id to be used with a 
-     * ServiceLifecycleProvider
-     * @param filterString optional OSGi filter String for the dependency
-     * @throws IllegalStateException if the tracker has already been started
-     * @throws IllegalArgumentException if the given dependencyId already exists
-     */
-    public boolean addDependencyDescription(
-            Class clazz, String dependencyName, 
-            String filterString, DependencyType type){
-        if(clazz == null || dependencyName == null){
-            throw new NullPointerException();
-        }
+        String dependencyName = descriptor.getDescriptorName(); 
         if(myDependencyDescMap.containsKey(dependencyName)){
             theLogger.log(Level.WARNING, 
                     "Unable to add dependency, name already in use: {0}.", 
                     dependencyName);
             return false;
         }
-        if(type == null){
-            type = DependencyType.REQUIRED;
-        }
         SingleServiceListener ssl = 
-                new SingleServiceListener(clazz, myContext, filterString);
+                new SingleServiceListener(
+                        descriptor.getServiceClass(), 
+                        myContext, 
+                        descriptor.getServiceFilter());
         ssl.addPropertyChangeListener(new RequirementListener(dependencyName));
         myDependencyTrackers.put(dependencyName, ssl);
-        myDependencyDescMap.put(dependencyName, 
-                new DependencyDescriptor(
-                        dependencyName, clazz, filterString, type));
+        myDependencyDescMap.put(dependencyName, descriptor);
         if(isRunning()){
             return ssl.start();
         }

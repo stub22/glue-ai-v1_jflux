@@ -23,7 +23,7 @@ import java.util.Set;
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Descriptor<K,V> {
-    public String getName();
+    public String getDescriptorName();
     public V getProperty(K key);
     public Set<K> getPropertyKeys();
     public String getClassName();

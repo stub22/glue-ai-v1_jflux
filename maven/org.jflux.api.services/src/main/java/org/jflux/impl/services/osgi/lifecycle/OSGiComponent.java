@@ -20,12 +20,12 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.Map.Entry;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
-import org.jflux.api.services.lifecycle.DependencyDescriptor;
-import org.jflux.api.services.lifecycle.ManagedService;
-import org.jflux.api.services.lifecycle.ServiceLifecycleProvider;
-import static org.jflux.api.services.lifecycle.ServiceLifecycleProvider.PROP_DEPENDENCY_ADDED;
-import static org.jflux.api.services.lifecycle.ServiceLifecycleProvider.PROP_DEPENDENCY_REMOVED;
-import org.jflux.api.services.lifecycle.ServiceLifecycleProvider.Validator;
+import org.jflux.api.services.DependencyDescriptor;
+import org.jflux.api.services.ManagedService;
+import org.jflux.api.services.ServiceLifecycleProvider;
+import static org.jflux.api.services.ServiceLifecycleProvider.PROP_DEPENDENCY_ADDED;
+import static org.jflux.api.services.ServiceLifecycleProvider.PROP_DEPENDENCY_REMOVED;
+import org.jflux.api.services.ServiceLifecycleProvider.Validator;
 import org.jflux.impl.services.osgi.OSGiUtils;
 import static org.jflux.impl.services.osgi.lifecycle.ServiceDependenciesTracker.*;
 import org.osgi.framework.BundleContext;
@@ -137,11 +137,7 @@ public class OSGiComponent<T> extends
         }
         myDependenciesTracker = new ServiceDependenciesTracker(myContext);
         for(DependencyDescriptor dd : descriptors){
-            myDependenciesTracker.addDependencyDescription(
-                    dd.getServiceClass(), 
-                    dd.getDependencyName(), 
-                    dd.getServiceFilter(),
-                    dd.getDependencyType());
+            myDependenciesTracker.addDependencyDescription(dd);
         }
         myDependenciesTracker.addPropertyChangeListener(
                 new DependencyStatusListener());
@@ -587,7 +583,7 @@ public class OSGiComponent<T> extends
          */
         private synchronized void addDesc(DependencyDescriptor desc){
             for(DependencyDescriptor d : myAddQueue){
-                if(desc.getDependencyName().equals(d.getDependencyName())){
+                if(desc.getDescriptorName().equals(d.getDescriptorName())){
                     return;
                 }
             }
@@ -603,7 +599,7 @@ public class OSGiComponent<T> extends
             }
             DependencyDescriptor remove = null;
             for(DependencyDescriptor desc : myAddQueue){
-                if(name.equals(desc.getDependencyName())){
+                if(name.equals(desc.getDescriptorName())){
                     remove = desc;
                     break;
                 }
