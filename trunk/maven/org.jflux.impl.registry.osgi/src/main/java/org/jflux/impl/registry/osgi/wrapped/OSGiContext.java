@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Dictionary;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.util.DefaultTimestampSource;
 import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.opt.RegistryContext;
 import org.osgi.framework.Bundle;
@@ -157,7 +158,7 @@ public class OSGiContext<R extends Registry<? extends OSGiContext<R>,?,?,?,?>>
             Adapter<BundleContext,OSGiContext> {
         @Override
         public OSGiContext adapt(BundleContext a) {
-            return new OSGiContext(new OSGiRegistry(), a);
+            return new OSGiContext(new OSGiRegistry(new DefaultTimestampSource()), a);
         }        
     }
 }

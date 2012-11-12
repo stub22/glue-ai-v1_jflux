@@ -4,6 +4,7 @@
  */
 package org.jflux.impl.registry.osgi.wrapped;
 
+import org.jflux.api.core.Source;
 import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
@@ -21,16 +22,21 @@ public class OSGiRegistry<Time> implements Registry<
         OSGiRetriever<OSGiReference>, 
         OSGiMonitor<OSGiRegistry<Time>, Time>> {
     private OSGiDirectRegistry<Time> myDirectRegistry;
+    private Source<Time> myTimestampSource;
     
-    public OSGiRegistry(){
-        
+    public OSGiRegistry(Source<Time> timestampSource){
+        if(timestampSource == null){
+            throw new NullPointerException();
+        }
+        myTimestampSource = timestampSource;
     }
     
-    public OSGiRegistry(OSGiDirectRegistry<Time> directRegistry){
+    public OSGiRegistry(OSGiDirectRegistry<Time> directRegistry, Source<Time> timestampSource){
         if(directRegistry == null){
             throw new NullPointerException();
         }
         myDirectRegistry = directRegistry;
+        myTimestampSource = timestampSource;
     }
 
     @Override
@@ -41,7 +47,7 @@ public class OSGiRegistry<Time> implements Registry<
     @Override
     public OSGiMonitor<OSGiRegistry<Time>, Time> getMonitor(
                     OSGiContext<OSGiRegistry<Time>> context) {
-        return new OSGiMonitor<OSGiRegistry<Time>, Time>(context);
+        return new OSGiMonitor<OSGiRegistry<Time>, Time>(context, myTimestampSource);
     }
 
     @Override
