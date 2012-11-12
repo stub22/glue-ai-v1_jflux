@@ -24,10 +24,10 @@ import org.jflux.api.core.Source;
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
-    private SourceRef mySourceRef;
-    private Time myTimestamp;
-    private String myEventType;
-    private Map<String,String> myProperties;
+    protected SourceRef mySourceRef;
+    protected Time myTimestamp;
+    protected String myEventType;
+    protected Map<String,String> myProperties;
     
     public BasicHeader(SourceRef sourceRef, Time timestamp, 
             String eventType, Map<String,String> props){
