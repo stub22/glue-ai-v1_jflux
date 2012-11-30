@@ -32,9 +32,10 @@ import org.jflux.api.core.Source;
 public class CircularBuffer<V> implements Buffer<Integer, V>{
     private List<V> myElements;
     private int myNextIndex;
-    private int myHead;
-    private int myTail;
+    private int myTailIndex;
+    private int myHeadIndex;
     private int myCapacity;
+    private int mySize;
     
     private Source<V> myHeadSource;
     private Source<V> myTailSource;
@@ -55,8 +56,9 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
         myCapacity = capacity;
         myElements = new ArrayList<V>(myCapacity);
         myNextIndex = 0;
-        myHead = 0;
-        myTail = 0;
+        myTailIndex = 0;
+        myHeadIndex = 0;
+        mySize = 0;
         myHeadSource = new Source<V>() {
             @Override
             public V getValue() {
@@ -90,17 +92,21 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
             }
         };
     }
+    /**
+     * Empties the buffer.
+     */
     private void reset(){
-        myHead = 0;
-        myTail = 0;
+        myTailIndex = 0;
+        myHeadIndex = 0;
         myNextIndex = 0;
+        mySize = 0;
     }
     /**
-    * Returns the nth item from the tail of the buffer.
-    * n=0 returns the tail element, n=1 returns tail-1,
-    * n=size()-1 returns the head.
-    * @param n item index relative to the tail
-    * @return nth item from the tail of the buffer
+    * Returns the nth item from the head of the buffer.
+    * n=0 returns the head element, n=1 returns head-1,
+    * n=size()-1 returns the tail.
+    * @param n item index relative to the head
+    * @return nth item from the head of the buffer
     * @throws IllegalArgumentException if n less than 0 or n is greater than or
     * equal to the number of elements.
     */
@@ -111,7 +117,7 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
                     + "Buffer capacity is " + myCapacity + ".  "
                     + "Number of elements is " + getSize() + ".");
         }
-        int index = (myTail-n)%myCapacity;
+        int index = (myHeadIndex-n)%myCapacity;
         return myElements.get(index);
     }
     /**
@@ -125,11 +131,14 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
         }else{
             myElements.set(myNextIndex, value);
         }
-        boolean empty = myHead == myTail;
-        myTail = myNextIndex;
+        if(mySize < myCapacity){
+            mySize++;
+        }
+        boolean empty = myTailIndex == myHeadIndex;
+        myHeadIndex = myNextIndex;
         myNextIndex = (myNextIndex+1)%myCapacity;
-        if(myHead == myTail && !empty){
-            myHead = myNextIndex;
+        if(myTailIndex == myHeadIndex && !empty){
+            myTailIndex = myNextIndex;
         }
     }
     /**
@@ -141,14 +150,19 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
         if(getSize() == 0){
             return null;
         }
-        return myElements.get(myHead);
+        return myElements.get(myHeadIndex);
     }
     
+    /**
+    * Returns the tail element of the buffer.
+    * The tail element is the earliest added element.
+    * @return tail element of the buffer, returns null if the buffer is empty
+    */
     public V getTailValue(){
         if(getSize() == 0){
             return null;
         }
-        return myElements.get(myTail);
+        return myElements.get(myTailIndex);
     }
     
     public List<V> getValueList(){
@@ -157,11 +171,11 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
             return Collections.EMPTY_LIST;
         }
         List<V> vals = new ArrayList<V>(size);
-        if(myTail > myHead){
-            vals.addAll(myElements.subList(myHead, myTail+1));
+        if(myHeadIndex > myTailIndex){
+            vals.addAll(myElements.subList(myTailIndex, myHeadIndex+1));
         }else{
-            vals.addAll(myElements.subList(myHead, size));
-            vals.addAll(myElements.subList(0, myTail+1));
+            vals.addAll(myElements.subList(myTailIndex, size));
+            vals.addAll(myElements.subList(0, myHeadIndex+1));
         }
         return vals;
     }
@@ -170,12 +184,13 @@ public class CircularBuffer<V> implements Buffer<Integer, V>{
      * @return number of elements in the buffer
      */
     public int getSize(){
-        if(myHead == myTail){
-            return 0;
-        }else if(myTail < myHead){
-            return myCapacity - (myHead - myTail - 1);
-        }
-        return myTail - myHead;
+        return mySize;
+//        if(myHead == myTail){
+//            return 1;
+//        }else if(myTail < myHead){
+//            return myCapacity - (myHead - myTail - 1);
+//        }
+//        return myTail - myHead;
     }
 
     @Override
