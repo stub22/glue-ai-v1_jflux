@@ -1,13 +1,3 @@
-
-import java.util.Collections;
-import java.util.List;
-import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Listener;
-import org.jflux.api.core.Source;
-import org.jflux.api.data.buffer.CircularBuffer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-
 /*
  * Copyright 2012 by The JFlux Project (www.jflux.org).
  *
@@ -23,10 +13,17 @@ import org.junit.BeforeClass;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jflux.api.data.buffer;
 
+import org.junit.Rule;
+import java.util.Collections;
+import java.util.List;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import static org.junit.Assert.*;
 
 /**
@@ -95,6 +92,22 @@ public class CircularBufferTest {
         assertEquals("Did not return the expected value (expected " + expResult
                 + ", got " + result + ")", expResult, result);
     }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testGetBounds() throws IllegalArgumentException{
+        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
+        Integer result = instance.get(1);
+    }
+    
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    
+    @Test
+    public void testGetBounds2(){
+        thrown.expect(IllegalArgumentException.class);
+        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
+        Integer result = instance.get(-2);
+    }
 
     /**
      * Test of add method, of class CircularBuffer.
@@ -121,6 +134,9 @@ public class CircularBufferTest {
         instance.add(expResult);
         
         result = instance.get(n);
+        assertEquals(new Integer(64), result);
+        
+        result = instance.get(0);
         assertEquals("Did not return the expected value (expected " + expResult
                 + ", got " + result + ")", expResult, result);
         
@@ -131,7 +147,7 @@ public class CircularBufferTest {
         instance.add(128);
         instance.add(expResult);
         
-        result = instance.get(n);
+        result = instance.get(0);
         assertEquals("Did not return the expected value (expected " + expResult
                 + ", got " + result + ")", expResult, result);
     }
@@ -198,7 +214,7 @@ public class CircularBufferTest {
         // Empty buffer
         
         instance = new CircularBuffer<Integer>(32);
-        
+        //ExpectedException.none().expect(IndexOutOfBoundsException.class);
         try {
             result = instance.getTailValue();
             
@@ -302,7 +318,7 @@ public class CircularBufferTest {
                 + result + " elements.", expResult, result);
         
         // Full buffer
-        
+        expResult = 3;
         instance = new CircularBuffer<Integer>(expResult);
         instance.add(64);
         instance.add(128);
@@ -504,7 +520,7 @@ public class CircularBufferTest {
         instance.addValue().handleEvent(128);
         instance.addValue().handleEvent(expResult);
         
-        result = instance.get(n);
+        result = instance.get(0);
         assertEquals("Did not return the expected value (expected " + expResult
                 + ", got " + result + ")", expResult, result);
         
@@ -515,7 +531,7 @@ public class CircularBufferTest {
         instance.addValue().handleEvent(128);
         instance.addValue().handleEvent(expResult);
         
-        result = instance.get(n);
+        result = instance.get(0);
         assertEquals("Did not return the expected value (expected " + expResult
                 + ", got " + result + ")", expResult, result);
     }
