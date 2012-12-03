@@ -79,7 +79,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetPartial() {
-        System.out.println("get");
+        System.out.println("get: partial buffer");
         
         Integer n = 1;
         Integer expResult = 128;
@@ -92,7 +92,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetFull() {
-        System.out.println("get");
+        System.out.println("get: full buffer");
         
         Integer n = 1;
         Integer expResult = 128;
@@ -106,7 +106,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetOverFull() {
-        System.out.println("get");
+        System.out.println("get: overfull buffer");
         
         Integer n = 1;
         Integer expResult = 1024;
@@ -120,7 +120,7 @@ public class CircularBufferTest {
      */
     @Test(expected=IllegalArgumentException.class)
     public void testGetEmpty() throws IllegalArgumentException {
-        System.out.println("get");
+        System.out.println("get: empty buffer");
         
         Integer n = 1;
         emptyInstance.get(n);
@@ -128,7 +128,7 @@ public class CircularBufferTest {
     
     @Test
     public void testGetEmpty2(){
-        System.out.println("get");
+        System.out.println("get: empty buffer (test 2)");
         
         thrown.expect(IllegalArgumentException.class);
         emptyInstance.get(-2);
@@ -139,7 +139,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testAddEmpty() {
-        System.out.println("add");
+        System.out.println("add: empty buffer");
         
         Integer n = 0;
         Integer expResult = 64;
@@ -153,7 +153,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testAddPartial() {
-        System.out.println("add");
+        System.out.println("add: partial buffer");
 
         Integer n = 2;
         Integer m = 0;
@@ -178,7 +178,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testAddFull() {
-        System.out.println("add");
+        System.out.println("add: full buffer");
         
         Integer expResult = 2048;
         Integer n = 0;
@@ -196,7 +196,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testAddOverFull() {
-        System.out.println("add");
+        System.out.println("add: overfull buffer");
         
         Integer expResult = 16384;
         Integer n = 0;
@@ -214,7 +214,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetHeadValueEmpty() {
-        System.out.println("getHeadValue");
+        System.out.println("getHeadValue: empty buffer");
         
         Integer result = emptyInstance.getHeadValue();
         assertNull(result);
@@ -225,7 +225,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetHeadValuePartial() {
-        System.out.println("getHeadValue");
+        System.out.println("getHeadValue: partial buffer");
         
         Integer expResult = 256;
         Integer result = partialInstance.getHeadValue();
@@ -237,7 +237,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetHeadValueFull() {
-        System.out.println("getHeadValue");
+        System.out.println("getHeadValue: full buffer");
         
         Integer expResult = 256;
         Integer result = fullInstance.getHeadValue();
@@ -249,7 +249,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetHeadValueOverFull() {
-        System.out.println("getHeadValue");
+        System.out.println("getHeadValue: overfull buffer");
         
         Integer expResult = 2048;
         Integer result = overFullInstance.getHeadValue();
@@ -261,7 +261,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetTailValueEmpty() {
-        System.out.println("getTailValue");
+        System.out.println("getTailValue: empty buffer");
         
         Integer result = emptyInstance.getTailValue();
         assertNull(result);
@@ -272,7 +272,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetTailValuePartial() {
-        System.out.println("getTailValue");
+        System.out.println("getTailValue: partial buffer");
         
         Integer expResult = 64;
         Integer result = partialInstance.getTailValue();
@@ -284,7 +284,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetTailValueFull() {
-        System.out.println("getTailValue");
+        System.out.println("getTailValue: full buffer");
         
         Integer expResult = 64;
         Integer result = fullInstance.getTailValue();
@@ -296,7 +296,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetTailValueOverFull() {
-        System.out.println("getTailValue");
+        System.out.println("getTailValue: overfull buffer");
         
         Integer expResult = 512;
         Integer result = overFullInstance.getTailValue();
@@ -308,7 +308,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetValueListEmpty() {
-        System.out.println("getValueList");
+        System.out.println("getValueList: empty buffer");
         
         List<Integer> expResult = Collections.EMPTY_LIST;
         List<Integer> result = emptyInstance.getValueList();
@@ -321,7 +321,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetValueListPartial() {
-        System.out.println("getValueList");
+        System.out.println("getValueList: partial buffer");
         
         Integer expResultSize = 3;
         Integer expResult0 = 64;
@@ -340,7 +340,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetValueListFull() {
-        System.out.println("getValueList");
+        System.out.println("getValueList: full buffer");
         
         Integer expResultSize = 3;
         Integer expResult0 = 64;
@@ -359,7 +359,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetValueListOverFull() {
-        System.out.println("getValueList");
+        System.out.println("getValueList: overfull buffer");
         
         Integer expResultSize = 3;
         Integer expResult0 = 512;
@@ -378,7 +378,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetSizeEmpty() {
-        System.out.println("getSize");
+        System.out.println("getSize: empty buffer");
         
         Integer expResult = 0;
         Integer result = emptyInstance.getSize();
@@ -391,7 +391,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetSizePartial() {
-        System.out.println("getSize");
+        System.out.println("getSize: partial buffer");
         
         Integer expResult = 3;
         Integer result = partialInstance.getSize();
@@ -403,7 +403,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetSizeFull() {
-        System.out.println("getSize");
+        System.out.println("getSize: full buffer");
         
         Integer expResult = 3;
         Integer result = fullInstance.getSize();
@@ -415,7 +415,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetSizeOverFull() {
-        System.out.println("getSize");
+        System.out.println("getSize: overfull buffer");
         
         Integer expResult = 3;
         Integer result = overFullInstance.getSize();
@@ -427,7 +427,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetHeadEmpty() {
-        System.out.println("getHead");
+        System.out.println("getHead: empty buffer");
         
         Integer result = emptyInstance.getHead().getValue();
         assertNull(result);
@@ -438,7 +438,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetHeadPartial() {
-        System.out.println("getHead");
+        System.out.println("getHead: partial buffer");
         
         Integer expResult = 256;
         Integer result = partialInstance.getHead().getValue();
@@ -450,7 +450,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetHeadFull() {
-        System.out.println("getHead");
+        System.out.println("getHead: full buffer");
         
         Integer expResult = 256;
         Integer result = fullInstance.getHead().getValue();
@@ -462,7 +462,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetHeadOverFull() {
-        System.out.println("getHead");
+        System.out.println("getHead: overfull buffer");
         
         Integer expResult = 2048;
         Integer result = overFullInstance.getHead().getValue();
@@ -474,7 +474,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetTailEmpty() {
-        System.out.println("getTail");
+        System.out.println("getTail: empty buffer");
         
         Integer result = emptyInstance.getTail().getValue();
         assertNull(result);
@@ -485,7 +485,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetTailPartial() {
-        System.out.println("getTail");
+        System.out.println("getTail: partial buffer");
         
         Integer expResult = 64;
         Integer result = partialInstance.getTail().getValue();
@@ -497,7 +497,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetTailFull() {
-        System.out.println("getTail");
+        System.out.println("getTail: full buffer");
         
         Integer expResult = 64;
         Integer result = fullInstance.getTail().getValue();
@@ -509,7 +509,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetTailOverFull() {
-        System.out.println("getTail");
+        System.out.println("getTail: overfull buffer");
         
         Integer expResult = 512;
         Integer result = overFullInstance.getTail().getValue();
@@ -521,7 +521,7 @@ public class CircularBufferTest {
      */
     @Test(expected=IllegalArgumentException.class)
     public void testGetIndexEmpty() throws IllegalArgumentException {
-        System.out.println("getIndex");
+        System.out.println("getIndex: empty buffer");
         
         Integer n = 1;
         emptyInstance.getIndex().adapt(n);
@@ -529,7 +529,7 @@ public class CircularBufferTest {
     
     @Test
     public void testGetIndexEmpty2(){
-        System.out.println("getIndex");
+        System.out.println("getIndex: empty buffer (test 2)");
         
         thrown.expect(IllegalArgumentException.class);
         emptyInstance.getIndex().adapt(-2);
@@ -540,7 +540,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetIndexPartial() {
-        System.out.println("getIndex");
+        System.out.println("getIndex: partial buffer");
         
         Integer n = 1;
         Integer expResult = 128;
@@ -553,7 +553,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetIndexFull() {
-        System.out.println("getIndex");
+        System.out.println("getIndex: full buffer");
         
         Integer n = 1;
         Integer expResult = 128;
@@ -566,7 +566,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetIndexOverFull() {
-        System.out.println("getIndex");
+        System.out.println("getIndex: overfull buffer");
         
         Integer n = 1;
         Integer expResult = 1024;
@@ -579,7 +579,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetValuesEmpty() {
-        System.out.println("getValues");
+        System.out.println("getValues: empty buffer");
         
         List<Integer> expResult = Collections.EMPTY_LIST;
         List<Integer> result = emptyInstance.getValues().getValue();
@@ -592,7 +592,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetValuesPartial() {
-        System.out.println("getValues");
+        System.out.println("getValues: partial buffer");
         
         Integer expResultSize = 3;
         Integer expResult0 = 64;
@@ -611,7 +611,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetValuesFull() {
-        System.out.println("getValues");
+        System.out.println("getValues: full buffer");
         
         Integer expResultSize = 3;
         Integer expResult0 = 64;
@@ -630,7 +630,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testGetValuesOverFull() {
-        System.out.println("getValues");
+        System.out.println("getValues: overfull buffer");
         
         Integer expResultSize = 3;
         Integer expResult0 = 512;
@@ -649,7 +649,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testAddValueEmpty() {
-        System.out.println("addValue");
+        System.out.println("addValue: empty buffer");
         
         Integer n = 0;
         Integer expResult = 64;
@@ -663,7 +663,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testAddValuePartial() {
-        System.out.println("addValue");
+        System.out.println("addValue: partial buffer");
         
         Integer n = 2;
         Integer m = 0;
@@ -688,7 +688,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testAddValueFull() {
-        System.out.println("addValue");
+        System.out.println("addValue: full buffer");
         
         Integer expResult = 2048;
         Integer n = 0;
@@ -706,7 +706,7 @@ public class CircularBufferTest {
      */
     @Test
     public void testAddValueOverFull() {
-        System.out.println("addValue");
+        System.out.println("addValue: overfull buffer");
         
         Integer expResult = 16384;
         Integer n = 0;
