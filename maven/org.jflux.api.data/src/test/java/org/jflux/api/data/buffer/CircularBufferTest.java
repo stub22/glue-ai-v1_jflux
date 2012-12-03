@@ -31,6 +31,7 @@ public class CircularBufferTest {
     private CircularBuffer<Integer> emptyInstance;
     private CircularBuffer<Integer> partialInstance;
     private CircularBuffer<Integer> fullInstance;
+    private CircularBuffer<Integer> overFullInstance;
     
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -59,6 +60,14 @@ public class CircularBufferTest {
         fullInstance.add(64);
         fullInstance.add(128);
         fullInstance.add(256);
+        
+        overFullInstance = new CircularBuffer<Integer>(3);
+        overFullInstance.add(64);
+        overFullInstance.add(128);
+        overFullInstance.add(256);
+        overFullInstance.add(512);
+        overFullInstance.add(1024);
+        overFullInstance.add(2048);
     }
     
     @After
@@ -88,6 +97,20 @@ public class CircularBufferTest {
         Integer n = 1;
         Integer expResult = 128;
         Integer result = fullInstance.get(n);
+
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of get method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetOverFull() {
+        System.out.println("get");
+        
+        Integer n = 1;
+        Integer expResult = 1024;
+        Integer result = overFullInstance.get(n);
 
         assertEquals(expResult, result);
     }
@@ -167,6 +190,24 @@ public class CircularBufferTest {
         Integer result = fullInstance.get(n);
         assertEquals(expResult, result);
     }
+    
+    /**
+     * Test of add method, of class CircularBuffer.
+     */
+    @Test
+    public void testAddOverFull() {
+        System.out.println("add");
+        
+        Integer expResult = 16384;
+        Integer n = 0;
+        
+        overFullInstance.add(4096);
+        overFullInstance.add(8192);
+        overFullInstance.add(expResult);
+        
+        Integer result = fullInstance.get(n);
+        assertEquals(expResult, result);
+    }
 
     /**
      * Test of getHeadValue method, of class CircularBuffer.
@@ -202,6 +243,18 @@ public class CircularBufferTest {
         Integer result = fullInstance.getHeadValue();
         assertEquals(expResult, result);
     }
+    
+    /**
+     * Test of getHeadValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetHeadValueOverFull() {
+        System.out.println("getHeadValue");
+        
+        Integer expResult = 2048;
+        Integer result = overFullInstance.getHeadValue();
+        assertEquals(expResult, result);
+    }
 
     /**
      * Test of getTailValue method, of class CircularBuffer.
@@ -235,6 +288,18 @@ public class CircularBufferTest {
         
         Integer expResult = 64;
         Integer result = fullInstance.getTailValue();
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getTailValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetTailValueOverFull() {
+        System.out.println("getTailValue");
+        
+        Integer expResult = 512;
+        Integer result = overFullInstance.getTailValue();
         assertEquals(expResult, result);
     }
 
@@ -288,6 +353,25 @@ public class CircularBufferTest {
         assertTrue(result.contains(expResult1));
         assertTrue(result.contains(expResult2));
     }
+    
+    /**
+     * Test of getValueList method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetValueListOverFull() {
+        System.out.println("getValueList");
+        
+        Integer expResultSize = 3;
+        Integer expResult0 = 512;
+        Integer expResult1 = 1024;
+        Integer expResult2 = 2048;
+        List<Integer> result = overFullInstance.getValueList();
+        Integer resultSize = result.size();
+        assertEquals(expResultSize, resultSize);
+        assertTrue(result.contains(expResult0));
+        assertTrue(result.contains(expResult1));
+        assertTrue(result.contains(expResult2));
+    }
 
     /**
      * Test of getSize method, of class CircularBuffer.
@@ -325,6 +409,18 @@ public class CircularBufferTest {
         Integer result = fullInstance.getSize();
         assertEquals(expResult, result);
     }
+    
+    /**
+     * Test of getSize method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetSizeOverFull() {
+        System.out.println("getSize");
+        
+        Integer expResult = 3;
+        Integer result = overFullInstance.getSize();
+        assertEquals(expResult, result);
+    }
 
     /**
      * Test of getHead method, of class CircularBuffer.
@@ -360,6 +456,18 @@ public class CircularBufferTest {
         Integer result = fullInstance.getHead().getValue();
         assertEquals(expResult, result);
     }
+    
+    /**
+     * Test of getHead method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetHeadOverFull() {
+        System.out.println("getHead");
+        
+        Integer expResult = 2048;
+        Integer result = overFullInstance.getHead().getValue();
+        assertEquals(expResult, result);
+    }
 
     /**
      * Test of getTail method, of class CircularBuffer.
@@ -393,6 +501,18 @@ public class CircularBufferTest {
         
         Integer expResult = 64;
         Integer result = fullInstance.getTail().getValue();
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getTail method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetTailOverFull() {
+        System.out.println("getTail");
+        
+        Integer expResult = 512;
+        Integer result = overFullInstance.getTail().getValue();
         assertEquals(expResult, result);
     }
 
@@ -440,6 +560,19 @@ public class CircularBufferTest {
         Integer result = fullInstance.getIndex().adapt(n);
         assertEquals(expResult, result);
     }
+    
+   /**
+     * Test of getIndex method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetIndexOverFull() {
+        System.out.println("getIndex");
+        
+        Integer n = 1;
+        Integer expResult = 1024;
+        Integer result = overFullInstance.getIndex().adapt(n);
+        assertEquals(expResult, result);
+    }
 
     /**
      * Test of getValues method, of class CircularBuffer.
@@ -485,6 +618,25 @@ public class CircularBufferTest {
         Integer expResult1 = 128;
         Integer expResult2 = 256;
         List<Integer> result = fullInstance.getValues().getValue();
+        Integer resultSize = result.size();
+        assertEquals(expResultSize, resultSize);
+        assertTrue(result.contains(expResult0));
+        assertTrue(result.contains(expResult1));
+        assertTrue(result.contains(expResult2));
+    }
+    
+    /**
+     * Test of getValues method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetValuesOverFull() {
+        System.out.println("getValues");
+        
+        Integer expResultSize = 3;
+        Integer expResult0 = 512;
+        Integer expResult1 = 1024;
+        Integer expResult2 = 2048;
+        List<Integer> result = overFullInstance.getValues().getValue();
         Integer resultSize = result.size();
         assertEquals(expResultSize, resultSize);
         assertTrue(result.contains(expResult0));
@@ -543,6 +695,24 @@ public class CircularBufferTest {
         
         fullInstance.addValue().handleEvent(512);
         fullInstance.addValue().handleEvent(1024);
+        fullInstance.addValue().handleEvent(expResult);
+        
+        Integer result = fullInstance.get(n);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of addValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testAddValueOverFull() {
+        System.out.println("addValue");
+        
+        Integer expResult = 16384;
+        Integer n = 0;
+        
+        fullInstance.addValue().handleEvent(4096);
+        fullInstance.addValue().handleEvent(8192);
         fullInstance.addValue().handleEvent(expResult);
         
         Integer result = fullInstance.get(n);
