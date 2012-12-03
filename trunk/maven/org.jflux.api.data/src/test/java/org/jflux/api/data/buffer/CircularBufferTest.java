@@ -15,15 +15,11 @@
  */
 package org.jflux.api.data.buffer;
 
-import org.junit.Rule;
 import java.util.Collections;
 import java.util.List;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -31,6 +27,13 @@ import static org.junit.Assert.*;
  * @author Jason G. Pallack <jgpallack@gmail.com>
  */
 public class CircularBufferTest {
+    
+    private CircularBuffer<Integer> emptyInstance;
+    private CircularBuffer<Integer> partialInstance;
+    private CircularBuffer<Integer> fullInstance;
+    
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     
     public CircularBufferTest() {
     }
@@ -45,6 +48,17 @@ public class CircularBufferTest {
     
     @Before
     public void setUp() {
+        emptyInstance = new CircularBuffer<Integer>(32);
+        
+        partialInstance = new CircularBuffer<Integer>(32);
+        partialInstance.add(64);
+        partialInstance.add(128);
+        partialInstance.add(256);
+        
+        fullInstance = new CircularBuffer<Integer>(3);
+        fullInstance.add(64);
+        fullInstance.add(128);
+        fullInstance.add(256);
     }
     
     @After
@@ -55,484 +69,483 @@ public class CircularBufferTest {
      * Test of get method, of class CircularBuffer.
      */
     @Test
-    public void testGet() {
+    public void testGetPartial() {
         System.out.println("get");
         
-        // Partial buffer
+        Integer n = 1;
+        Integer expResult = 128;
+        Integer result = partialInstance.get(n);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of get method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetFull() {
+        System.out.println("get");
         
         Integer n = 1;
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
         Integer expResult = 128;
-        instance.add(64);
-        instance.add(expResult);
-        instance.add(256);
-        Integer result = instance.get(n);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
-        
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        
-        try {
-            result = instance.get(n);
-            
-            fail("Should have given an IllegalArgument exception for an empty list.");
-        } catch(IllegalArgumentException ex) {
-            // success
-        }
-        
-        // Full buffer
-        
-        instance = new CircularBuffer<Integer>(3);
-        instance.add(64);
-        instance.add(expResult);
-        instance.add(256);
-        result = instance.get(n);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer result = fullInstance.get(n);
+
+        assertEquals(expResult, result);
     }
     
+    /**
+     * Test of get method, of class CircularBuffer.
+     */
     @Test(expected=IllegalArgumentException.class)
-    public void testGetBounds() throws IllegalArgumentException{
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
-        Integer result = instance.get(1);
+    public void testGetEmpty() throws IllegalArgumentException {
+        System.out.println("get");
+        
+        Integer n = 1;
+        emptyInstance.get(n);
     }
-    
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
     
     @Test
-    public void testGetBounds2(){
+    public void testGetEmpty2(){
+        System.out.println("get");
+        
         thrown.expect(IllegalArgumentException.class);
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
-        Integer result = instance.get(-2);
+        emptyInstance.get(-2);
     }
 
     /**
      * Test of add method, of class CircularBuffer.
      */
     @Test
-    public void testAdd() {
+    public void testAddEmpty() {
         System.out.println("add");
         
-        // Empty buffer
-        
         Integer n = 0;
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
         Integer expResult = 64;
-        instance.add(expResult);
-        Integer result = instance.get(n);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        emptyInstance.add(expResult);
+        Integer result = emptyInstance.get(n);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of add method, of class CircularBuffer.
+     */
+    @Test
+    public void testAddPartial() {
+        System.out.println("add");
+
+        Integer n = 2;
+        Integer m = 0;
+        Integer expResultN = 512;
+        Integer expResultM = 2048;
         
-        // Partial buffer
+        partialInstance.add(expResultN);
+        partialInstance.add(1024);
+        partialInstance.add(expResultM);
         
-        n = 2;
-        expResult = 256;
-        instance.add(128);
-        instance.add(expResult);
+        Integer result = partialInstance.get(n);
+
+        assertEquals(expResultN, result);
+
+        result = partialInstance.get(m);
         
-        result = instance.get(n);
-        assertEquals(new Integer(64), result);
+        assertEquals(expResultM, result);
+    }
+    
+    /**
+     * Test of add method, of class CircularBuffer.
+     */
+    @Test
+    public void testAddFull() {
+        System.out.println("add");
         
-        result = instance.get(0);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer expResult = 2048;
+        Integer n = 0;
         
-        // Full buffer
+        fullInstance.add(512);
+        fullInstance.add(1024);
+        fullInstance.add(expResult);
         
-        instance = new CircularBuffer<Integer>(3);
-        instance.add(64);
-        instance.add(128);
-        instance.add(expResult);
-        
-        result = instance.get(0);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer result = fullInstance.get(n);
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of getHeadValue method, of class CircularBuffer.
      */
     @Test
-    public void testGetHeadValue() {
+    public void testGetHeadValueEmpty() {
         System.out.println("getHeadValue");
         
-        // Partial buffer
+        Integer result = emptyInstance.getHeadValue();
+        assertNull(result);
+    }
+    
+    /**
+     * Test of getHeadValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetHeadValuePartial() {
+        System.out.println("getHeadValue");
         
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
         Integer expResult = 256;
-        instance.add(64);
-        instance.add(128);
-        instance.add(expResult);
-        Integer result = instance.getHeadValue();
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer result = partialInstance.getHeadValue();
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getHeadValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetHeadValueFull() {
+        System.out.println("getHeadValue");
         
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        
-        try {
-            result = instance.getHeadValue();
-            
-            fail("Should have given an IndexOutOfBounds exception for an empty list.");
-        } catch(IndexOutOfBoundsException ex) {
-            // success
-        }
-        
-        // Full buffer
-        
-        instance = new CircularBuffer<Integer>(3);
-        instance.add(64);
-        instance.add(128);
-        instance.add(expResult);
-        result = instance.getHeadValue();
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer expResult = 256;
+        Integer result = fullInstance.getHeadValue();
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of getTailValue method, of class CircularBuffer.
      */
     @Test
-    public void testGetTailValue() {
+    public void testGetTailValueEmpty() {
         System.out.println("getTailValue");
         
-        // Partial buffer
+        Integer result = emptyInstance.getTailValue();
+        assertNull(result);
+    }
+    
+    /**
+     * Test of getTailValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetTailValuePartial() {
+        System.out.println("getTailValue");
         
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
         Integer expResult = 64;
-        instance.add(expResult);
-        instance.add(128);
-        instance.add(256);
-        Integer result = instance.getTailValue();
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer result = partialInstance.getTailValue();
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getTailValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetTailValueFull() {
+        System.out.println("getTailValue");
         
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        //ExpectedException.none().expect(IndexOutOfBoundsException.class);
-        try {
-            result = instance.getTailValue();
-            
-            fail("Should have given an IndexOutOfBounds exception for an empty list.");
-        } catch(IndexOutOfBoundsException ex) {
-            // success
-        }
-        
-        // Full buffer
-        
-        instance = new CircularBuffer<Integer>(3);
-        instance.add(expResult);
-        instance.add(128);
-        instance.add(256);
-        result = instance.getTailValue();
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer expResult = 64;
+        Integer result = fullInstance.getTailValue();
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of getValueList method, of class CircularBuffer.
      */
     @Test
-    public void testGetValueList() {
+    public void testGetValueListEmpty() {
         System.out.println("getValueList");
         
-        // Partuak buffer
+        List<Integer> expResult = Collections.EMPTY_LIST;
+        List<Integer> result = emptyInstance.getValueList();
         
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getValueList method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetValueListPartial() {
+        System.out.println("getValueList");
+        
         Integer expResultSize = 3;
         Integer expResult0 = 64;
         Integer expResult1 = 128;
         Integer expResult2 = 256;
-        instance.add(expResult0);
-        instance.add(expResult1);
-        instance.add(expResult2);
-        List<Integer> result = instance.getValueList();
+        List<Integer> result = partialInstance.getValueList();
         Integer resultSize = result.size();
-        assertEquals("List should be " + expResultSize +
-                " elements, is actually " + resultSize + " elements.",
-                expResultSize, resultSize);
-        assertTrue(expResult0 + " is not in the list.",
-                result.contains(expResult0));
-        assertTrue(expResult1 + " is not in the list.",
-                result.contains(expResult1));
-        assertTrue(expResult2 + " is not in the list.",
-                result.contains(expResult2));
+        assertEquals(expResultSize, resultSize);
+        assertTrue(result.contains(expResult0));
+        assertTrue(result.contains(expResult1));
+        assertTrue(result.contains(expResult2));
+    }
+    
+    /**
+     * Test of getValueList method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetValueListFull() {
+        System.out.println("getValueList");
         
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        List<Integer> expResult = Collections.EMPTY_LIST;
-        result = instance.getValueList();
-        
-        assertEquals("List should be empty but isn't.", expResult, result);
-        
-        // Full buffer
-        
-        instance = new CircularBuffer<Integer>(expResultSize);
-        instance.add(expResult0);
-        instance.add(expResult1);
-        instance.add(expResult2);
-        result = instance.getValueList();
-        resultSize = result.size();
-        assertEquals("List should be " + expResultSize +
-                " elements, is actually " + resultSize + " elements.",
-                expResultSize, resultSize);
-        assertTrue(expResult0 + " is not in the list.",
-                result.contains(expResult0));
-        assertTrue(expResult1 + " is not in the list.",
-                result.contains(expResult1));
-        assertTrue(expResult2 + " is not in the list.",
-                result.contains(expResult2));
+        Integer expResultSize = 3;
+        Integer expResult0 = 64;
+        Integer expResult1 = 128;
+        Integer expResult2 = 256;
+        List<Integer> result = fullInstance.getValueList();
+        Integer resultSize = result.size();
+        assertEquals(expResultSize, resultSize);
+        assertTrue(result.contains(expResult0));
+        assertTrue(result.contains(expResult1));
+        assertTrue(result.contains(expResult2));
     }
 
     /**
      * Test of getSize method, of class CircularBuffer.
      */
     @Test
-    public void testGetSize() {
+    public void testGetSizeEmpty() {
         System.out.println("getSize");
         
-        // Partial buffer
+        Integer expResult = 0;
+        Integer result = emptyInstance.getSize();
         
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getSize method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetSizePartial() {
+        System.out.println("getSize");
+        
         Integer expResult = 3;
-        instance.add(64);
-        instance.add(128);
-        instance.add(256);
-        Integer result = instance.getSize();
-        assertEquals("Size should be " + expResult + " elements, is actually "
-                + result + " elements.", expResult, result);
+        Integer result = partialInstance.getSize();
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getSize method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetSizeFull() {
+        System.out.println("getSize");
         
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        expResult = 0;
-        result = instance.getSize();
-        
-        assertEquals("Size should be " + expResult + " elements, is actually "
-                + result + " elements.", expResult, result);
-        
-        // Full buffer
-        expResult = 3;
-        instance = new CircularBuffer<Integer>(expResult);
-        instance.add(64);
-        instance.add(128);
-        instance.add(256);
-        result = instance.getSize();
-        assertEquals("Size should be " + expResult + " elements, is actually "
-                + result + " elements.", expResult, result);
+        Integer expResult = 3;
+        Integer result = fullInstance.getSize();
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of getHead method, of class CircularBuffer.
      */
     @Test
-    public void testGetHead() {
+    public void testGetHeadEmpty() {
         System.out.println("getHead");
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
+        
+        Integer result = emptyInstance.getHead().getValue();
+        assertNull(result);
+    }
+    
+    /**
+     * Test of getHead method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetHeadPartial() {
+        System.out.println("getHead");
+        
         Integer expResult = 256;
-        instance.add(64);
-        instance.add(128);
-        instance.add(expResult);
-        Integer result = instance.getHead().getValue();
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer result = partialInstance.getHead().getValue();
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getHead method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetHeadFull() {
+        System.out.println("getHead");
         
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        
-        try {
-            result = instance.getHead().getValue();
-            
-            fail("Should have given an IndexOutOfBounds exception for an empty list.");
-        } catch(IndexOutOfBoundsException ex) {
-            // success
-        }
-        
-        // Full buffer
-        
-        instance = new CircularBuffer<Integer>(3);
-        instance.add(64);
-        instance.add(128);
-        instance.add(expResult);
-        result = instance.getHead().getValue();
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer expResult = 256;
+        Integer result = fullInstance.getHead().getValue();
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of getTail method, of class CircularBuffer.
      */
     @Test
-    public void testGetTail() {
+    public void testGetTailEmpty() {
         System.out.println("getTail");
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
+        
+        Integer result = emptyInstance.getTail().getValue();
+        assertNull(result);
+    }
+    
+    /**
+     * Test of getTail method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetTailPartial() {
+        System.out.println("getTail");
+        
         Integer expResult = 64;
-        instance.add(expResult);
-        instance.add(128);
-        instance.add(256);
-        Integer result = instance.getTail().getValue();
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer result = partialInstance.getTail().getValue();
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getTail method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetTailFull() {
+        System.out.println("getTail");
         
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        
-        try {
-            result = instance.getTail().getValue();
-            
-            fail("Should have given an IndexOutOfBounds exception for an empty list.");
-        } catch(IndexOutOfBoundsException ex) {
-            // success
-        }
-        
-        // Full buffer
-        
-        instance = new CircularBuffer<Integer>(3);
-        instance.add(expResult);
-        instance.add(128);
-        instance.add(256);
-        result = instance.getTail().getValue();
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer expResult = 64;
+        Integer result = fullInstance.getTail().getValue();
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of getIndex method, of class CircularBuffer.
      */
-    @Test
-    public void testGetIndex() {
+    @Test(expected=IllegalArgumentException.class)
+    public void testGetIndexEmpty() throws IllegalArgumentException {
         System.out.println("getIndex");
+        
         Integer n = 1;
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
+        emptyInstance.getIndex().adapt(n);
+    }
+    
+    @Test
+    public void testGetIndexEmpty2(){
+        System.out.println("getIndex");
+        
+        thrown.expect(IllegalArgumentException.class);
+        emptyInstance.getIndex().adapt(-2);
+    }
+    
+    /**
+     * Test of getIndex method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetIndexPartial() {
+        System.out.println("getIndex");
+        
+        Integer n = 1;
         Integer expResult = 128;
-        instance.add(64);
-        instance.add(expResult);
-        instance.add(256);
-        Integer result = instance.getIndex().adapt(n);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer result = partialInstance.getIndex().adapt(n);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getIndex method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetIndexFull() {
+        System.out.println("getIndex");
         
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        
-        try {
-            result = instance.getIndex().adapt(n);
-            
-            fail("Should have given an IllegalArgument exception for an empty list.");
-        } catch(IllegalArgumentException ex) {
-            // success
-        }
-        
-        // Full buffer
-        
-        instance = new CircularBuffer<Integer>(3);
-        instance.add(64);
-        instance.add(expResult);
-        instance.add(256);
-        result = instance.getIndex().adapt(n);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer n = 1;
+        Integer expResult = 128;
+        Integer result = fullInstance.getIndex().adapt(n);
+        assertEquals(expResult, result);
     }
 
     /**
      * Test of getValues method, of class CircularBuffer.
      */
     @Test
-    public void testGetValues() {
+    public void testGetValuesEmpty() {
         System.out.println("getValues");
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
+        
+        List<Integer> expResult = Collections.EMPTY_LIST;
+        List<Integer> result = emptyInstance.getValues().getValue();
+        
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getValues method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetValuesPartial() {
+        System.out.println("getValues");
+        
         Integer expResultSize = 3;
         Integer expResult0 = 64;
         Integer expResult1 = 128;
         Integer expResult2 = 256;
-        instance.add(expResult0);
-        instance.add(expResult1);
-        instance.add(expResult2);
-        List<Integer> result = instance.getValues().getValue();
+        List<Integer> result = partialInstance.getValues().getValue();
         Integer resultSize = result.size();
-        assertEquals("List should be " + expResultSize +
-                " elements, is actually " + resultSize + " elements.",
-                expResultSize, resultSize);
-        assertTrue(expResult0 + " is not in the list.",
-                result.contains(expResult0));
-        assertTrue(expResult1 + " is not in the list.",
-                result.contains(expResult1));
-        assertTrue(expResult2 + " is not in the list.",
-                result.contains(expResult2));
+        assertEquals(expResultSize, resultSize);
+        assertTrue(result.contains(expResult0));
+        assertTrue(result.contains(expResult1));
+        assertTrue(result.contains(expResult2));
+    }
+    
+    /**
+     * Test of getValues method, of class CircularBuffer.
+     */
+    @Test
+    public void testGetValuesFull() {
+        System.out.println("getValues");
         
-        // Empty buffer
-        
-        instance = new CircularBuffer<Integer>(32);
-        List<Integer> expResult = Collections.EMPTY_LIST;
-        result = instance.getValues().getValue();
-        
-        assertEquals("List should be empty but isn't.", expResult, result);
-        
-        // Full buffer
-        
-        instance = new CircularBuffer<Integer>(expResultSize);
-        instance.add(expResult0);
-        instance.add(expResult1);
-        instance.add(expResult2);
-        result = instance.getValues().getValue();
-        resultSize = result.size();
-        assertEquals("List should be " + expResultSize +
-                " elements, is actually " + resultSize + " elements.",
-                expResultSize, resultSize);
-        assertTrue(expResult0 + " is not in the list.",
-                result.contains(expResult0));
-        assertTrue(expResult1 + " is not in the list.",
-                result.contains(expResult1));
-        assertTrue(expResult2 + " is not in the list.",
-                result.contains(expResult2));
+        Integer expResultSize = 3;
+        Integer expResult0 = 64;
+        Integer expResult1 = 128;
+        Integer expResult2 = 256;
+        List<Integer> result = fullInstance.getValues().getValue();
+        Integer resultSize = result.size();
+        assertEquals(expResultSize, resultSize);
+        assertTrue(result.contains(expResult0));
+        assertTrue(result.contains(expResult1));
+        assertTrue(result.contains(expResult2));
     }
 
     /**
      * Test of addValue method, of class CircularBuffer.
      */
     @Test
-    public void testAddValue() {
+    public void testAddValueEmpty() {
         System.out.println("addValue");
         
-        // Empty buffer
-        
         Integer n = 0;
-        CircularBuffer<Integer> instance = new CircularBuffer<Integer>(32);
         Integer expResult = 64;
-        instance.addValue().handleEvent(expResult);
-        Integer result = instance.get(n);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        emptyInstance.addValue().handleEvent(expResult);
+        Integer result = emptyInstance.get(n);
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of addValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testAddValuePartial() {
+        System.out.println("addValue");
         
-        // Partial buffer
+        Integer n = 2;
+        Integer m = 0;
+        Integer expResultN = 512;
+        Integer expResultM = 2048;
         
-        n = 2;
-        expResult = 256;
-        instance.addValue().handleEvent(128);
-        instance.addValue().handleEvent(expResult);
+        partialInstance.addValue().handleEvent(expResultN);
+        partialInstance.addValue().handleEvent(1024);
+        partialInstance.addValue().handleEvent(expResultM);
         
-        result = instance.get(0);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        Integer result = partialInstance.get(n);
+
+        assertEquals(expResultN, result);
+
+        result = partialInstance.get(m);
         
-        // Full buffer
+        assertEquals(expResultM, result);
+    }
+    
+    /**
+     * Test of addValue method, of class CircularBuffer.
+     */
+    @Test
+    public void testAddValueFull() {
+        System.out.println("addValue");
         
-        instance = new CircularBuffer<Integer>(3);
-        instance.addValue().handleEvent(64);
-        instance.addValue().handleEvent(128);
-        instance.addValue().handleEvent(expResult);
+        Integer expResult = 2048;
+        Integer n = 0;
         
-        result = instance.get(0);
-        assertEquals("Did not return the expected value (expected " + expResult
-                + ", got " + result + ")", expResult, result);
+        fullInstance.addValue().handleEvent(512);
+        fullInstance.addValue().handleEvent(1024);
+        fullInstance.addValue().handleEvent(expResult);
+        
+        Integer result = fullInstance.get(n);
+        assertEquals(expResult, result);
     }
 }
