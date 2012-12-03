@@ -205,7 +205,7 @@ public class CircularBufferTest {
         overFullInstance.add(8192);
         overFullInstance.add(expResult);
         
-        Integer result = fullInstance.get(n);
+        Integer result = overFullInstance.get(n);
         assertEquals(expResult, result);
     }
 
@@ -711,11 +711,11 @@ public class CircularBufferTest {
         Integer expResult = 16384;
         Integer n = 0;
         
-        fullInstance.addValue().handleEvent(4096);
-        fullInstance.addValue().handleEvent(8192);
-        fullInstance.addValue().handleEvent(expResult);
+        overFullInstance.addValue().handleEvent(4096);
+        overFullInstance.addValue().handleEvent(8192);
+        overFullInstance.addValue().handleEvent(expResult);
         
-        Integer result = fullInstance.get(n);
+        Integer result = overFullInstance.get(n);
         assertEquals(expResult, result);
     }
 }
