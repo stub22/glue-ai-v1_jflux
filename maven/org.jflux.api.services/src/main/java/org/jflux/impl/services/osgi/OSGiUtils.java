@@ -13,32 +13,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.jflux.impl.services.osgi;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.services.ManagedService;
-import org.jflux.api.services.lifecycle.utils.SimpleLifecycle;
-import org.jflux.impl.services.osgi.lifecycle.OSGiComponent;
+import org.jflux.api.registry.Accessor;
+import org.jflux.api.registry.Finder;
+import org.jflux.api.registry.opt.BasicRegistrationRequest;
+import org.jflux.api.registry.opt.Certificate;
+import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.api.registry.opt.Reference;
+import org.jflux.api.registry.opt.RegistrationRequest;
+import org.jflux.api.registry.opt.RegistryContext;
+import org.jflux.api.services.DependencyDescriptor;
+import org.jflux.impl.registry.osgi.wrapped.OSGiContext.BundleContextWrapper;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceListener;
-import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
 
 /**
  * Utility methods for working with OSGi.
+ *
  * @author Matthew Stevenson <www.robokind.org>
  */
 public class OSGiUtils {
     private final static Logger theLogger = Logger.getLogger(OSGiUtils.class.getName());
+
+    /**
+     * Create an OSGi filter string for the given property.
+     * @param key The property's name.
+     * @param val The property's value.
+     * @return an OSGi filter string
+     */
+    public static String createFilter(String key, String val) {
+        if(key == null || val == null) {
+            return null;
+        }
+        return String.format("(%s=%s)", key, val);
+    }
+    
     /**
      * Returns the BundleContext associated with the given Class.
      * @param clazz Class associated with a Bundle
@@ -72,6 +89,34 @@ public class OSGiUtils {
     }
     
     /**
+     * Get a class's registry context.
+     * @param clazz
+     * @return a registry context
+     */
+    public static RegistryContext getRegistryContext(Class clazz){
+        BundleContext context = getBundleContext(clazz);
+        if(context == null){
+            return null;
+        }
+        RegistryContext rc = new BundleContextWrapper().adapt(context);
+        return rc;
+    }
+    
+    /**
+     * Convert an OSGi bundle context into a non-OSGi-specific generic registry
+     * context.
+     * @param context
+     * @return the input in RegistryContext form
+     */
+    public static RegistryContext getRegistryContext(BundleContext context){
+        if(context == null){
+            return null;
+        }
+        RegistryContext rc = new BundleContextWrapper().adapt(context);
+        return rc;
+    }
+    
+    /**
      * Creates a filter string which matches all of the properties given.
      * @param props Properties to match
      * @return OSGi filter string, null if props is null or empty
@@ -86,7 +131,11 @@ public class OSGiUtils {
             String val = (String)e.getValue();
             filter = String.format("%s(%s=%s)", filter,key,val);
         }
-        return String.format("(&%s)", filter);
+        if(props.size() > 1) {
+            return String.format("(&%s)", filter);
+        } else {
+            return filter;
+        }
     }
     
     /**
@@ -102,16 +151,17 @@ public class OSGiUtils {
         return String.format("(%s=%s)",key,val);
     }
     
-    public static String createFilter(String key, String val){
-        if(key == null || val == null){
-            return null;
-        }
-        return String.format("(%s=%s)",key,val);
-    }
-    
+    /**
+     * Creates an OSGi ID filter string from a property and an OSGi filter
+     * string.
+     * @param idPropertyName the name of the property
+     * @param idString the value of the property
+     * @param filter the base filter string
+     * @return the ID filter string
+     */
     public static String createIdFilter(
             String idPropertyName, String idString, String filter){
-        String idFilter = 
+        String idFilter =
                 OSGiUtils.createServiceFilter(idPropertyName, idString);
         if(filter == null || filter.isEmpty()){
             filter = idFilter;
@@ -122,276 +172,170 @@ public class OSGiUtils {
     }
     
     /**
+     * Determines if a set of unique properties is already in use.
+     * @param context the registry context to check for properties
+     * @param uniqueProperties the unique properties
+     * @param registrationClassNames the classes associated with the properties
+     * @return true if the unique properties are not in use
+     */
+    public static boolean uniquePropertiesAvailable(
+            RegistryContext context, Properties uniqueProperties,
+            String[] registrationClassNames) {
+        if(uniqueProperties == null) {
+            return true;
+        }
+        for(Entry e : uniqueProperties.entrySet()) {
+            String key = e.getKey().toString();
+            String val = e.getValue().toString();
+            // iterate through myRegistrationClassNames
+            // grab the class for each class name
+            // create a DependencyDescriptor
+            // check that key and that value, create a new map
+            // do the finder for that, see if it's null
+            // if not null, return false
+            for(String clsName : registrationClassNames) {
+                if(scanClassForProps(context, clsName, key, val)) {
+                    theLogger.log(Level.SEVERE,
+                            "Unique service property already in use: ({}={}).",
+                            new Object[]{key, val});
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private static boolean scanClassForProps(
+            RegistryContext context, String clsName, String key, String val) {
+        try {
+            Class cls = Class.forName(clsName);
+            Map<String, String> props = new HashMap();
+            Finder f = context.getRegistry().getFinder(context);
+            props.put(key, val);
+            Descriptor d = new DependencyDescriptor("", cls, props);
+            Object result = f.findSingle().adapt(d);
+            if(result != null) {
+                return true;
+            }
+        } catch(Exception ex) {
+            theLogger.log(Level.SEVERE, ex.getMessage());
+        }
+        return false;
+    }
+    
+    /**
+     * Registers the given service only if a service does not exist with the 
+     * given id.
+     * @param context the registry context for the service
+     * @param cls the service class name
+     * @param uniqueProperties the service's unique properties
+     * @param service the service to register
+     * @param props the service's non-unique properties
+     * @return the Certificate, or null if a service exists
+     */
+    public static Certificate registerUniqueService(
+            RegistryContext context, String cls,
+            Properties uniqueProperties, Object service,
+            Map<String, String> props) {
+        String[] classNames = new String[1];
+        classNames[0] = cls;
+        
+        if(!uniquePropertiesAvailable(context, uniqueProperties, classNames)) {
+            return null;
+        }
+        
+        RegistrationRequest<Object, String, String> rr =
+                    new BasicRegistrationRequest<Object, String, String>(
+                    "", service, props, cls);
+        Accessor acc = context.getRegistry().getAccessor(context);
+        
+        return (Certificate)acc.register().adapt(rr);
+    }
+    
+    /**
+     * Registers the given service only if a service does not exist with the 
+     * given id.
+     * @param context the registry context for the service
+     * @param cls the service class name
+     * @param uniqueProperties the service's unique properties
+     * @param service the service to register
+     * @param props the service's non-unique properties
+     * @return the Certificate, or null if a service exists
+     */
+    public static Certificate registerUniqueService(
+            RegistryContext context, String cls,
+            Properties uniqueProperties, Object service,
+            Properties props) {
+        String[] classNames = new String[1];
+        Map<String, String> propMap = new HashMap<String, String>();
+        classNames[0] = cls;
+        
+        if(props != null) {
+            for(Entry e: props.entrySet()) {
+                propMap.put(e.getKey().toString(), e.getValue().toString());
+            }
+        }
+        
+        return registerUniqueService(
+                context, cls, uniqueProperties, service, propMap);
+    }
+    
+    /**
      * Checks the OSGi Service Registry for a Service with the given class and
-     * matching the given filter. Returns true if a matching ServiceReference is
-     * found, return null if there is an InvalidSyntaxException.
-     * @param context BundleContext to use
+     * matching the given properties.
+     * @param context RegistryContext to use
      * @param clazz Class name to match
-     * @param filter OSGi Service filter String
+     * @param idPropertyName name of an additional property to use
+     * @param idString value of an additional property to use
+     * @param props the properties to use
      * @return true if a matching ServiceReference is found, returns null if 
      * there is an InvalidSyntaxException
      */
-    public static Boolean serviceExists(
-            BundleContext context, String clazz, String filter){
-        try{
-            ServiceReference[] refs = 
-                    context.getAllServiceReferences(clazz, filter); 
-            boolean exists = (refs != null);
-            return exists;
-        }catch(InvalidSyntaxException ex){
-            theLogger.log(Level.WARNING, 
-                    "Invalid OSGi filter syntax String: " + filter + ".", ex);
-            return null;
-        }
-    }
-    
-    public static Boolean serviceExists(
-            BundleContext context, String clazz, Properties props){
-        String filter = createServiceFilter(props);
-        return serviceExists(context, clazz, filter);
-    }
-    
-    public static Boolean serviceExists(BundleContext context, String clazz, 
-            String idPropertyName, String idString, Properties props){
-        if(props == null){
+
+    public static boolean serviceExists(
+            RegistryContext context, String clazz, String idPropertyName,
+            String idString, Properties props) {
+        Finder fin = context.getRegistry().getFinder(context);
+        
+        if(props == null) {
             props = new Properties();
         }
+        
         props.put(idPropertyName, idString);
+        
         return serviceExists(context, clazz, props);
     }
     
     /**
      * Checks the OSGi Service Registry for a Service with the given class and
-     * matching the given filter. Returns true if a matching ServiceReference is
-     * found, return null if there is an InvalidSyntaxException.
-     * @param context BundleContext to use
-     * @param clazz Class to match
-     * @param filter OSGi Service filter String
+     * matching the given filter.
+     * @param context RegistryContext to use
+     * @param clazz Class name to match
+     * @param props the properties to use
      * @return true if a matching ServiceReference is found, returns null if 
      * there is an InvalidSyntaxException
      */
-    public static Boolean serviceExists(
-            BundleContext context, Class clazz, String filter){
-        return serviceExists(context, clazz.getName(), filter);
-    }
-    
-    /**
-     * Checks the OSGi Service Registry for an existing Service matching the
-     * given filter String and one or more of the given Class names.
-     * @param context BundleContext to use
-     * @param classes one or more of the class names must be matched
-     * @param filter OSGi Service filter String to match
-     * @return true if a ServiceReference is found matching one or more of the
-     * given classes and the filter String, return null if there is an 
-     * InvalidSyntaxException
-     */
-    public static Boolean serviceExists(
-            BundleContext context, String[] classes, String filter) {
-        for(String c : classes){
-            Boolean b = serviceExists(context, c, filter);
-            if(b == null){//InvalidSyntaxException
-                return null;
-            }else if(!b){
-                continue;
-            }else if(b){
-                theLogger.log(Level.INFO, 
-                        "Found existing Service: {0}, matching {1}.", 
-                        new Object[]{c, filter});
-                return true;
+
+    public static boolean serviceExists(
+            RegistryContext context, String clazz, Properties props) {
+        Finder fin = context.getRegistry().getFinder(context);
+        Map<String, String> propMap = new HashMap<String, String>();
+        
+        if(props != null) {
+            for(Entry e: props.entrySet()) {
+                propMap.put(e.getKey().toString(), e.getValue().toString());
             }
-        }theLogger.log(Level.INFO, 
-                        "No existing Service matching {0} with class {1}.", 
-                        new Object[]{filter, Arrays.toString(classes)});
-        return false;
-    }
-    
-    public static <T> T getService(
-            Class<T> clazz, BundleContext context, ServiceReference ref){
-        if(context == null || ref == null){
-            theLogger.warning("Cannot get service with null "
-                    + "BundleContext or ServiceReference");
-            return null;
         }
-        Object obj = context.getService(ref);
-        if(obj == null){
-            theLogger.log(Level.WARNING, 
-                    "Service for reference ({0}) has a null Service.", 
-                    getInformationString(ref));
-            context.ungetService(ref);
-            return null;
-        }else if(!clazz.isAssignableFrom(obj.getClass())){   
-            theLogger.log(Level.WARNING, 
-                    "Service for reference ({0}) is not assignable to {1}.", 
-                    new Object[]{getInformationString(ref),clazz.getName()});
-            context.ungetService(ref);
-            return null;
+        
+        try {
+            Descriptor d = new DependencyDescriptor(
+                    "", Class.forName(clazz), propMap);
+            Reference r = (Reference)fin.findSingle().adapt(d);
+            
+            return r != null;
+        } catch(Exception e) {
+            theLogger.log(Level.SEVERE, e.getMessage());
+            return false;
         }
-        try{
-            return (T)obj;
-        }catch(Throwable t){
-            theLogger.log(Level.WARNING, 
-                    "There was an error casting the Service", t);
-            context.ungetService(ref);
-            return null;
-        }
-    }
-    
-    public static String getInformationString(ServiceReference ref){
-        return "{ServiceReference: [" + 
-                formatPropertiesString(ref) + ", " +
-                formatUsingBundlesString(ref) + ", " +
-                "{toString: " + ref.toString() + "}]}";
-    }
-    
-    public static String formatPropertiesString(ServiceReference ref){
-        String props = "";
-        for(String s : ref.getPropertyKeys()){
-            String prop = "{" + s + ": " + ref.getProperty(s).toString() + "}";
-            props = props.isEmpty() ? prop : (props + ", " + prop);
-        }
-        return "{properties: " + props + "}";
-    }
-    
-    public static String formatUsingBundlesString(ServiceReference ref){
-        String bundles = "";
-        for(Bundle b : ref.getUsingBundles()){
-            String name = b.getSymbolicName();
-            bundles = bundles.isEmpty() ? name : (bundles + ", " + name);
-        }
-        return "{bundles: [" + bundles + "]}";
-    }
-    
-    public static <T> SingleServiceListener<T> createIdServiceListener(
-            Class<T> clazz, BundleContext context, String idPropertyName, 
-            String idString, String filter){
-        if(context == null || idPropertyName == null || idString == null){
-            throw new NullPointerException();
-        }
-        filter = createIdFilter(idPropertyName, idString, filter);
-        return new SingleServiceListener<T>(clazz, context, filter);
-    }
-    
-    public static ServiceRegistration registerService(
-            BundleContext context, String className, String idPropertyName, 
-            String idString, Object service, Properties serviceProperties){
-        if(context == null || className == null || 
-                idPropertyName == null || idString == null || service == null){
-            throw new NullPointerException();
-        }
-        if(serviceProperties == null){
-            serviceProperties = new Properties();
-        }
-        serviceProperties.put(idPropertyName, idString);
-        ServiceRegistration reg = context.registerService(
-                className, service, serviceProperties);
-        if(reg == null){
-            theLogger.log(Level.WARNING, 
-                    "Unknown error registering Service with Id: {0}={1}", 
-                    new Object[]{idPropertyName,idString});
-        }else{
-            theLogger.log(Level.INFO, 
-                    "Successfully registered Service with Id: {0}={1}", 
-                    new Object[]{idPropertyName,idString});
-        }
-        return reg;
-    }
-    
-    public static ManagedService startComponent(
-            BundleContext context, String className, String idPropertyName, 
-            String idString, Object service, Properties serviceProperties){
-        return startComponent(context, new String[]{className}, 
-                idPropertyName, idString, service, serviceProperties);      
-    }
-    public static ManagedService startComponent(
-            BundleContext context, String[] classNames, String idPropertyName, 
-            String idString, Object service, Properties serviceProperties){
-        if(idPropertyName != null){
-            if(serviceProperties == null){
-                serviceProperties = new Properties();
-            }
-            serviceProperties.put(idPropertyName, idString);
-        }
-        return startComponent(context, classNames, service, serviceProperties);      
-    }
-    public static ManagedService startComponent(BundleContext context, 
-            String[] classNames, Object service, Properties serviceProperties){
-        if(context == null || service == null){
-            throw new NullPointerException();
-        }
-        SimpleLifecycle lifecycle = 
-                new SimpleLifecycle(service, classNames, null);
-        OSGiComponent comp = 
-                new OSGiComponent(context, lifecycle, serviceProperties);
-        comp.start();
-        return comp;        
-    }
-    
-    /**
-     * Registers the given service only if a service does not exist with the 
-     * given id.  Returns the ServiceRegistration, or null if a service exists.
-     * @param context
-     * @param className
-     * @param idPropertyName
-     * @param idString
-     * @param service
-     * @param serviceProperties
-     * @return the ServiceRegistration, or null if a service exists
-     */
-    public static ServiceRegistration registerUniqueService(
-            BundleContext context, String className, String idPropertyName, 
-            String idString, Object service, Properties serviceProperties){
-        if(context == null || service == null){
-            throw new NullPointerException();
-        }
-        if(serviceExists(context, className, 
-                idPropertyName, idString, null)){
-            theLogger.log(Level.WARNING, 
-                    "Service already exists with Id: {0}={1}", 
-                    new Object[]{idPropertyName,idString});
-            return null;
-        }
-        return registerService(context, className, 
-                idPropertyName, idString, service, serviceProperties);
-    }
-    
-    public static ManagedService startUniqueComponent(
-            BundleContext context, String className, String idPropertyName, 
-            String idString, Object service, Properties serviceProperties){
-        return startUniqueComponent(context, new String[]{className}, 
-                idPropertyName, idString, service, serviceProperties);      
-    }
-    public static ManagedService startUniqueComponent(
-            BundleContext context, String[] classNames, String idPropertyName, 
-            String idString, Object service, Properties serviceProperties){
-        Properties uniqueProps = new Properties();
-        uniqueProps.put(idPropertyName, idString);
-        return startUniqueComponent(
-                context, classNames, service, uniqueProps, serviceProperties);      
-    }
-    public static ManagedService startUniqueComponent(BundleContext context, 
-            String[] classNames, Object service, Properties uniqueProps, 
-            Properties serviceProperties){
-        if(context == null || service == null){
-            throw new NullPointerException();
-        }
-        SimpleLifecycle lifecycle = 
-                new SimpleLifecycle(service, classNames, null);
-        OSGiComponent comp = new OSGiComponent(
-                context, lifecycle, serviceProperties, uniqueProps, true);
-        comp.start();
-        return comp;        
-    }
-    
-    public static void addServiceListener(
-            BundleContext context, ServiceListener listener, 
-            Class clazz, String serviceFilter) throws InvalidSyntaxException{
-        String listenerFilter = "(" + Constants.OBJECTCLASS + "=" + 
-                clazz.getName() + ")";
-        boolean empty = (serviceFilter == null || serviceFilter.isEmpty());
-        listenerFilter = empty ? listenerFilter : "(&" + listenerFilter + 
-                serviceFilter + ")";
-        theLogger.log(Level.INFO, 
-                "Adding ServiceListener for: {0}", listenerFilter);
-        context.addServiceListener(listener, listenerFilter);
     }
 }

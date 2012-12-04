@@ -24,8 +24,24 @@ import java.util.Set;
  * @author Matthew Stevenson
  */
 public interface RegistrationRequest<T,K,V> {
+    /**
+     * Gets the service's name.
+     * @return the service's name
+     */
     public String getName();
+    /**
+     * Gets the service.
+     * @return the service
+     */
     public T getItem();
+    /**
+     * Gets the service's properties
+     * @return the service's properties
+     */
     public Map<K,V> getProperties();
+    /**
+     * Gets the class names the service will be registered under
+     * @return a set of class names
+     */
     public Set<String> getClassNames();
 }

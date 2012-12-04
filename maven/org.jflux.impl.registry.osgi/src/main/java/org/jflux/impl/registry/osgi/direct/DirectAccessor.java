@@ -28,7 +28,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 /**
- *
+ * A bare OSGi accessor with no JFlux wrappers.
  * @author Matthew Stevenson
  */
 public class DirectAccessor implements Accessor<
@@ -94,11 +94,19 @@ public class DirectAccessor implements Accessor<
         };
     }
 
+    /**
+     * Not supported yet.
+     * @return
+     */
     @Override
     public Adapter<RegistrationRequest<?, String, String>, Notifier<ServiceRegistration>> registerAsync() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Not supported yet.
+     * @return
+     */
     @Override
     public Adapter<Modification<ServiceRegistration, String, String>, Notifier<ServiceRegistration>> modifyAsync() {
         throw new UnsupportedOperationException("Not supported yet.");

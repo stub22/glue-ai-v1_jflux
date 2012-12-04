@@ -43,7 +43,16 @@ public interface Accessor<Req,Cert,ModReq> {
      * @return Adapter for modifying a registration
      */
     public Adapter<ModReq,Cert> modify();
-    
+
+    /**
+     * Returns an Adapter for registering items asynchronously.
+     * @return Adapter for registering items
+     */
     public Adapter<Req,Notifier<Cert>> registerAsync();
+    
+    /**
+     * Returns an Adapter for modifying a registration asynchronously.
+     * @return Adapter for modifying a registration
+     */
     public Adapter<ModReq,Notifier<Cert>> modifyAsync();
 }

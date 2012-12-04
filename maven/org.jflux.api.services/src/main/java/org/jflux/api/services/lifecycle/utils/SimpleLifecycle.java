@@ -57,6 +57,16 @@ public class SimpleLifecycle<T> implements ServiceLifecycleProvider<T> {
         this(service, new String[]{clazz.getName()}, props);
     }
     
+    /**
+     * Creates a SimpleLifecycle for the given service.
+     * @param service service for the lifecycle to handle
+     * @param clazz class the service should be available as
+     * @param idKey Name of an additional property used when registering the
+     * service.
+     * @param idStr Value of an additional property used when registering the
+     * service.
+     * @param props Properties to use when registering the service
+     */
     public SimpleLifecycle(T service, Class<T> clazz, 
             String idKey, String idStr, Properties props){
         this(service, new String[]{clazz.getName()}, idKey, idStr, props);
@@ -71,6 +81,16 @@ public class SimpleLifecycle<T> implements ServiceLifecycleProvider<T> {
         this(service, new String[]{className}, props);
     }
     
+    /**
+     * Creates a SimpleLifecycle for the given service.
+     * @param service service for the lifecycle to handle
+     * @param serviceClassNames classes the service should be available as
+     * @param idKey Name of an additional property used when registering the
+     * service.
+     * @param idStr Value of an additional property used when registering the
+     * service.
+     * @param props Properties to use when registering the service
+     */
     public SimpleLifecycle(
             T service, String[] serviceClassNames, 
             String idKey, String idStr, Properties props){
@@ -88,6 +108,12 @@ public class SimpleLifecycle<T> implements ServiceLifecycleProvider<T> {
         return p;
     }
     
+    /**
+     * Creates a SimpleLifecycle for the given service.
+     * @param service service for the lifecycle to handle
+     * @param serviceClassNames classes the service should be available as
+     * @param props Properties to use when registering the service
+     */
     public SimpleLifecycle(
             T service, String[] serviceClassNames, Properties props){
         if(service == null || serviceClassNames == null){

@@ -24,10 +24,23 @@ import org.jflux.api.services.ServiceLifecycleProvider;
  * @author Matthew Stevenson <www.robokind.org>
  */
 public interface ManagedServiceFactory {
+    /**
+     * Creates a managed service.
+     * @param lifecycle the lifecycle provider
+     * @param registrationPropeties the service's properties
+     * @return the created service
+     */
     public <T> ManagedService<T> createService(
             ServiceLifecycleProvider<T> lifecycle, 
             Properties registrationPropeties);
     
+    /**
+     * Creates a managed service with unique properties.
+     * @param lifecycle the lifecycle provider
+     * @param registrationPropeties the service's properties
+     * @param uniqueRegistrationPropeties the service's unique properties
+     * @return the created service
+     */
     public <T> ManagedService<T> createService(
             ServiceLifecycleProvider<T> lifecycle, 
             Properties registrationPropeties, 

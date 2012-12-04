@@ -27,6 +27,9 @@ import org.jflux.api.services.ServiceLifecycleProvider;
  */
 public class ManagedServiceGroup {
     
+    /**
+     * The property key for the group ID.
+     */
     public final static String PROP_GROUP_ID = "serviceGroupId";
     
     private ManagedServiceFactory myFactory;
@@ -35,8 +38,18 @@ public class ManagedServiceGroup {
     private String myGroupId;
     private boolean myStartFlag;
     
+    /**
+     * The group's properties.
+     */
     protected Properties myServiceProperties;
     
+    /**
+     * Creates a managed service group.
+     * @param factory the managed service factory
+     * @param lifecycles a list of lifecycle providers
+     * @param groupId the ID of the group
+     * @param registrationProperties the group's properties
+     */
     public ManagedServiceGroup(
             ManagedServiceFactory factory,
             List<ServiceLifecycleProvider> lifecycles, 
@@ -55,6 +68,9 @@ public class ManagedServiceGroup {
         myServiceProperties.put(PROP_GROUP_ID, myGroupId);
     }
     
+    /**
+     * Starts the group's services.
+     */
     public synchronized void start(){
         if(myStartFlag){
             return;
@@ -74,6 +90,9 @@ public class ManagedServiceGroup {
         myStartFlag = true;
     }
     
+    /**
+     * Stops the group's services.
+     */
     public synchronized void stop(){
         if(!myStartFlag || myServices == null || myServices.isEmpty()){
             return;

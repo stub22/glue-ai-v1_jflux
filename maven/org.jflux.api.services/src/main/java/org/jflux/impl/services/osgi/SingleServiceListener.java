@@ -15,17 +15,24 @@
  */
 package org.jflux.impl.services.osgi;
 
+import java.sql.Time;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jflux.api.core.Listener;
+import org.jflux.api.core.Notifier;
+import org.jflux.api.core.event.Event;
+import org.jflux.api.core.event.Header;
+import org.jflux.api.registry.Finder;
+import org.jflux.api.registry.Monitor;
+import org.jflux.api.registry.Registry;
+import org.jflux.api.registry.Retriever;
+import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.api.registry.opt.Reference;
+import org.jflux.api.registry.opt.RegistryContext;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceEvent;
-import org.osgi.framework.ServiceListener;
-import org.osgi.framework.ServiceReference;
+import org.jflux.impl.registry.osgi.wrapped.OSGiMonitor;
 
 /**
  * Listens to the OSGi Service Registry for a single service, and provides
@@ -35,7 +42,7 @@ import org.osgi.framework.ServiceReference;
  * @author Matthew Stevenson <www.robokind.org>
  */
 public class SingleServiceListener<T> 
-        extends PropertyChangeNotifier implements ServiceListener{
+        extends PropertyChangeNotifier implements Listener<Event<Header<Registry, Time>, Reference>>{
     private final static Logger theLogger = Logger.getLogger(SingleServiceListener.class.getName());
     
     /**
@@ -51,60 +58,48 @@ public class SingleServiceListener<T>
      */
     public final static String PROP_SERVICE_REMOVED = "serviceRemoved";
     
-    private Class<T> myClass;
-    private String myFilter;
+    private Descriptor<String, String> myDescriptor;
     private T myTrackedClass;
-    private ServiceReference myReference;
-    private BundleContext myContext;
-    private List<ServiceReference> myReferences;
+    private Reference myReference;
+    private RegistryContext myContext;
+    private List<Reference> myReferences;
     private boolean myStartFlag;
+    private Notifier myNotifier;
 
     /**
      * Creates a new SingleServiceListener.
-     * @param clazz class of the service
+     * @param descriptor the Descriptor of the service to listen for
      * @param context BundleContext for accessing the Service Registry
-     * @param serviceFilter optional OSGi filter String to match
-     * 
-     * @throws NullPointerException if clazz or context are null
+     * @throws NullPointerException if descriptor or context are null
      */
     public SingleServiceListener(
-            Class<T> clazz, BundleContext context, String serviceFilter){
-        if(clazz == null || context == null){
+            RegistryContext context, Descriptor<String, String> descriptor){
+        if(descriptor == null || context == null){
             throw new NullPointerException();
         }
         myContext = context;
-        myReferences = new LinkedList<ServiceReference>();
-        myClass = clazz;
-        myFilter = serviceFilter;
+        myReferences = new LinkedList<Reference>();
+        myDescriptor = descriptor;
         myStartFlag = false;
         
     }
     
     /**
-     * Returns a reference to the service being tracked.  Returns null if the
-     * service is not available.
-     * @return reference to the service being tracked, null if the
-     * service is not available
+     * Returns a reference to the service being tracked.
+     * @return reference to the service being tracked, null if the service is
+     * not available
      */
-    public ServiceReference getServiceReference(){
+    public Reference getServiceReference(){
         ensureTracking();
         return myReference;
     }
     
     /**
-     * Returns the class of the service 
-     * @return class of the service
+     * Returns the descriptor of the service 
+     * @return descriptor of the service
      */
-    public Class<T> getServiceClass(){
-        return myClass;
-    }
-    
-    /**
-     * Returns the optional OSGi filter string, null if not set.
-     * @return optional OSGi filter string, null if not set
-     */
-    public String getFilterString(){
-        return myFilter;
+    public Descriptor<String, String> getServiceDescriptor(){
+        return myDescriptor;
     }
     
     /**
@@ -123,13 +118,13 @@ public class SingleServiceListener<T>
             return true;
         }
         if(myReference != null){
-            ServiceReference ref = myReference;
+            Reference ref = myReference;
             myReference = null;
             if(track(ref)){
                 return true;
             }
         }
-        for(ServiceReference ref : myReferences){
+        for(Reference ref : myReferences){
             if(track(ref)){
                 return true;
             }
@@ -163,34 +158,20 @@ public class SingleServiceListener<T>
     }
     
     private boolean startListening(){
-        String listenerFilter = "(" + Constants.OBJECTCLASS + "=" + 
-                myClass.getName() + ")";
-        boolean empty = (myFilter == null || myFilter.isEmpty());
-        listenerFilter = empty ? listenerFilter : "(&" + listenerFilter + 
-                myFilter + ")";
-        try{
-            myContext.addServiceListener(this, listenerFilter);
-            return true;
-        }catch(InvalidSyntaxException ex){
-            theLogger.log(Level.WARNING, "Could not register ServiceListener. "
-                    + "Invalid filter syntax.", ex);
-            return false;
-        }
+        Monitor mon = myContext.getRegistry().getMonitor(myContext);
+        myNotifier = mon.getNotifier(myDescriptor);
+        myNotifier.addListener(this);
+        return true;
     }
     
     private boolean collectServiceReferences(){
-        ServiceReference[] refs;
-        try{ 
-            refs = myContext.getServiceReferences(myClass.getName(),myFilter);
-        }catch(InvalidSyntaxException ex){
-            theLogger.log(Level.SEVERE, 
-                    "There was an error fetching service references.", ex);
-            return false;
-        }
+        List<Reference> refs;
+        Finder<Descriptor,Reference> fin = myContext.getRegistry().getFinder(myContext);
+        refs = fin.findAll().adapt(myDescriptor);
         if(refs == null){
             return true;
         }
-        for(ServiceReference ref : refs){
+        for(Reference ref : refs){
             if(!myReferences.contains(ref)){
                 addService(ref);
             }
@@ -219,24 +200,30 @@ public class SingleServiceListener<T>
 
     private void stopListening(){
         try{
-            myContext.removeServiceListener(this);
+            Monitor mon = myContext.getRegistry().getMonitor(myContext);
+            mon.releaseNotifier().handleEvent(myNotifier);
         }catch(IllegalStateException ex){
             theLogger.log(Level.WARNING, "BundleContext not valid.", ex);
         }
     }
-    
+
+    /**
+     * Responds to a service changing state.
+     * @param input the state change
+     */
     @Override
-    public void serviceChanged(ServiceEvent se) {
-        ServiceReference ref = se.getServiceReference();
-        switch(se.getType()){
-            case ServiceEvent.REGISTERED: addService(ref); break;
-            case ServiceEvent.MODIFIED_ENDMATCH:
-            case ServiceEvent.UNREGISTERING: removeService(ref); break;
-            case ServiceEvent.MODIFIED: modified(ref); break;
+    public void handleEvent(Event<Header<Registry, Time>, Reference> input) {
+        if(input.getHeader().getEventType().equals(OSGiMonitor.REGISTERED)) {
+            addService(input.getData());
+        } else if(input.getHeader().getEventType().equals(OSGiMonitor.UNREGISTERING)
+                || input.getHeader().getEventType().equals(OSGiMonitor.MODIFIED_ENDMATCH)) {
+            removeService(input.getData());
+        } else if(input.getHeader().getEventType().equals(OSGiMonitor.MODIFIED)) {
+            modified(input.getData());
         }
     }
 
-    private void addService(ServiceReference ref){
+    private void addService(Reference ref){
         if(!myReferences.contains(ref)){
             myReferences.add(ref);
         }
@@ -245,7 +232,7 @@ public class SingleServiceListener<T>
         }
     }
     
-    private void removeService(ServiceReference ref){
+    private void removeService(Reference ref){
         myReferences.remove(ref);
         if(myReferences.isEmpty()){
             untrackWithEvent(ref);
@@ -254,19 +241,21 @@ public class SingleServiceListener<T>
         }
     }
     
-    private void modified(ServiceReference ref){
+    private void modified(Reference ref){
         if(ref == null || !ref.equals(myReference)){
             return;
         }
         firePropertyChange(PROP_SERVICE_MODIFIED, null, myTrackedClass);
     }
     
-    private void untrackWithEvent(ServiceReference ref){
+    private void untrackWithEvent(Reference ref){
         if(myReference == null || !myReference.equals(ref)){
             return;
         }
         try{
-            myContext.ungetService(myReference);
+            Retriever ret = myContext.getRegistry().getRetriever(myContext);
+                    
+            ret.release().handleEvent(myReference);
         }catch(Exception ex){
             theLogger.log(Level.WARNING, "Error ungetting service", ex);
         }
@@ -276,12 +265,14 @@ public class SingleServiceListener<T>
         firePropertyChange(PROP_SERVICE_REMOVED, null, old);
     }
     
-    private void untrack(ServiceReference ref){
+    private void untrack(Reference ref){
         if(myReference == null || !myReference.equals(ref)){
             return;
         }
         try{
-            myContext.ungetService(myReference);
+            Retriever ret = myContext.getRegistry().getRetriever(myContext);
+                    
+            ret.release().handleEvent(myReference);
         }catch(Exception ex){
             theLogger.log(Level.WARNING, "Error ungetting service", ex);
         }
@@ -289,14 +280,15 @@ public class SingleServiceListener<T>
         myTrackedClass = null;
     }
     
-    private boolean track(ServiceReference ref){
+    private boolean track(Reference ref){
         if(ref == null){
             throw new NullPointerException();
         }
         if(ref.equals(myReference)){
             return true;
         }
-        T tracked = OSGiUtils.getService(myClass, myContext, ref);
+        Retriever ret = myContext.getRegistry().getRetriever(myContext);
+        T tracked = (T)ret.retrieve().adapt(ref);
         if(tracked == null){
             return false;
         }

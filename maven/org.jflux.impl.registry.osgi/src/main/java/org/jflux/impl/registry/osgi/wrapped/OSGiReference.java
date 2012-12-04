@@ -13,14 +13,21 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
 
 /**
- *
+ * Reference implementation for OSGi
  * @author Matthew Stevenson
  */
 public class OSGiReference implements Reference<String, String>, ServiceReference {
 
+    /**
+     * The reference's property name
+     */
     public final static String PROP_REFERENCE_NAME = "OSGiReferenceNameProp";
     private ServiceReference myReference;
 
+    /**
+     * Converts an OSGi ServiceReference into a JFlux Reference
+     * @param ref the ServiceReference
+     */
     public OSGiReference(ServiceReference ref) {
         if (ref == null) {
             throw new NullPointerException();
@@ -28,6 +35,10 @@ public class OSGiReference implements Reference<String, String>, ServiceReferenc
         myReference = ref;
     }
 
+    /**
+     * Gets the reference's name
+     * @return the reference's name
+     */
     @Override
     public String getName() {
         Object nameObj = myReference.getProperty(PROP_REFERENCE_NAME);
@@ -35,12 +46,21 @@ public class OSGiReference implements Reference<String, String>, ServiceReferenc
                 ? "anonRef:" + this.toString() : nameObj.toString();
     }
 
+    /**
+     * Gets a reference's property by name.
+     * @param key the property name
+     * @return the property value
+     */
     @Override
     public String getProperty(String key) {
         Object obj = myReference.getProperty(key);
         return obj == null ? null : obj.toString();
     }
 
+    /**
+     * Gets the names of all the reference's properties
+     * @return a set of property names
+     */
     @Override
     public Set<String> getPropertyKeySet() {
         return new HashSet<String>(Arrays.asList(myReference.getPropertyKeys()));
@@ -75,21 +95,41 @@ public class OSGiReference implements Reference<String, String>, ServiceReferenc
         return hash;
     }
 
+    /**
+     * Gets the names of all the reference's properties
+     * @return the property names
+     */
     @Override
     public String[] getPropertyKeys() {
         return myReference.getPropertyKeys();
     }
 
+    /**
+     * Gets the bundle associated with the reference
+     * @return the bundle
+     */
     @Override
     public Bundle getBundle() {
         return myReference.getBundle();
     }
 
+    /**
+     * Gets the bundles associated with the reference
+     * @return the bundles
+     */
     @Override
     public Bundle[] getUsingBundles() {
         return myReference.getUsingBundles();
     }
 
+    /**
+     * Determine if the reference binds to a specified class in a specified
+     * bundle
+     * @param bundle the bundle
+     * @param className the class
+     * @return true if the reference binds to a specified class in a specified
+     * bundle
+     */
     @Override
     public boolean isAssignableTo(Bundle bundle, String className) {
         return myReference.isAssignableTo(bundle, className);
@@ -100,8 +140,16 @@ public class OSGiReference implements Reference<String, String>, ServiceReferenc
         return myReference.compareTo(reference);
     }
     
+    /**
+     * Wraps an OSGi ServiceReference to a JFlux Reference
+     */
     public static class ServiceReferenceWrapper implements 
             Adapter<ServiceReference,OSGiReference> {
+        /**
+         * Converts an OSGi ServiceReference to a JFlux Reference
+         * @param a the ServiceReference
+         * @return the Reference
+         */
         @Override
         public OSGiReference adapt(ServiceReference a) {
             return new OSGiReference(a);

@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>org.jflux.api.registry</artifactId>
+            <artifactId>org.jflux.impl.registry.osgi</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -42,6 +42,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
+                        <Export-Package>org.jflux.api.services.*,org.jflux.impl.services.*</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>

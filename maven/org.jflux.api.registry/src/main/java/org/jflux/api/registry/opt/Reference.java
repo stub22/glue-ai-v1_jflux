@@ -24,7 +24,20 @@ import java.util.Set;
  * @author Matthew Stevenson
  */
 public interface Reference<K,V> {
+    /**
+     * Gets the reference's name
+     * @return the reference's name
+     */
     public String getName();
+    /**
+     * Gets a property of the reference by name
+     * @param key the property name
+     * @return the property value
+     */
     public V getProperty(K key);
+    /**
+     * Gets all properties of the reference
+     * @return a set of property names
+     */
     public Set<K> getPropertyKeySet();
 }

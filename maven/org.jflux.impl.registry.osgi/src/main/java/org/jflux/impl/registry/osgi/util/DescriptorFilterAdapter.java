@@ -18,6 +18,11 @@ import org.osgi.framework.Constants;
 public class DescriptorFilterAdapter implements 
         Adapter<Descriptor<String,String>, String> {
 
+    /**
+     * Creates an OSGi filter string from a descriptor's properties.
+     * @param a the descriptor
+     * @return an OSGi filter string
+     */
     public static String getPropertiesFilter(Descriptor<String, String> a) {
         Set<String> keys = a.getPropertyKeys();
         List<String> conditions = new ArrayList<String>(keys.size());
@@ -26,9 +31,21 @@ public class DescriptorFilterAdapter implements
             String condition = format(key, val);
             conditions.add(condition);
         }
-        String filter = combine(conditions);
+        String filter;
+        if(conditions.size() > 1) {
+            filter = combine(conditions);
+        } else if(conditions.size() == 1) {
+            filter = conditions.get(0);
+        } else {
+            filter = null;
+        }
         return filter;
     }
+    /**
+     * Converts a descriptor into an OSGi filter string.
+     * @param a the descriptor
+     * @return an OSGi filter string
+     */
     public static String getFullFilter(Descriptor<String, String> a) {
         Set<String> keys = a.getPropertyKeys();
         List<String> conditions = new ArrayList<String>(keys.size());
@@ -38,7 +55,14 @@ public class DescriptorFilterAdapter implements
             conditions.add(condition);
         }
         conditions.add(format(Constants.OBJECTCLASS, a.getClassName()));
-        String filter = combine(conditions);
+        String filter;
+        if(conditions.size() > 1) {
+            filter = combine(conditions);
+        } else if(conditions.size() == 1) {
+            filter = conditions.get(0);
+        } else {
+            filter = null;
+        }
         return filter;
     }
 
@@ -55,6 +79,11 @@ public class DescriptorFilterAdapter implements
         return sb.toString();
     }
 
+    /**
+     * Creates an OSGi filter string from a descriptor's properties.
+     * @param a the descriptor
+     * @return an OSGi filter string
+     */
     @Override
     public String adapt(Descriptor<String, String> a) {
         return getPropertiesFilter(a);

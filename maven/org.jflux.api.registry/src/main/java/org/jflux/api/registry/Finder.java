@@ -43,21 +43,58 @@ public interface Finder<Desc,Ref> {
     
     /**
      * Returns an Adapter for finding all references matching a description.
+     * @param max the maximum number of parameters
      * @return Adapter for finding all references matching a description.
      */
     public Adapter<Desc,List<Ref>> findCount(int max);
     
+    /**
+     * Returns an Adapter for finding a single reference from a description
+     * asynchronously.
+     * @return Adapter for finding a single reference from a description
+     */
     public Adapter<Desc,PlayableNotifier<Ref>> findSingleAsync();
     
+    /**
+     * Returns an Adapter for finding a continuous reference from a description
+     * asynchronously.
+     * @return Adapter for finding a continuous reference from a description
+     */
     public Adapter<Desc,PlayableNotifier<Ref>> findContinuousAsync();
     
+    /**
+     * Returns an Adapter for finding a continuous reference from a description
+     * asynchronously.
+     * @param max the maximum number of parameters
+     * @return Adapter for finding a continuous reference from a description
+     */
     public Adapter<Desc,PlayableNotifier<Ref>> findContinuousAsync(int max);
     
+    /**
+     * Returns an Adapter for finding all references matching a description
+     * asynchronously.
+     * @return Adapter for finding all references matching a description.
+     */
     public Adapter<Desc,PlayableNotifier<List<Ref>>> findAllAsync();
     
+    /**
+     * Returns an Adapter for finding the number of references matching a
+     * description asynchronously.
+     * @param max the maximum number of parameters
+     * @return Adapter for finding the number of references matching a
+     * description.
+     */
     public Adapter<Desc,PlayableNotifier<List<Ref>>> findCountAsync(int max);
     
+    /**
+     * A basic Finder backend.
+     */
     public static class DefaultFinderProvider {
+        /**
+         * Returns an Adapter for finding a single reference.
+         * @param finder the Finder frontend
+         * @return Adapter for finding a single reference
+         */
         public static <D,R> Adapter<D,R> findSingle(Finder<D,R> finder) {
             final Adapter<D, List<R>> find = finder.findAll();
 
@@ -73,6 +110,12 @@ public interface Finder<Desc,Ref> {
             };
         }
         
+        /**
+         * Returns an Adapter for finding all references.
+         * @param finder the Finder frontend
+         * @param max the maximum number of parameters
+         * @return Adapter for finding all references.
+         */
         public static <D,R> Adapter<D,List<R>> findCount(
                 Finder<D,R> finder, final int max) {
             
@@ -90,6 +133,11 @@ public interface Finder<Desc,Ref> {
             };
         }
 
+        /**
+         * Returns an Adapter for finding a single reference asynchronously.
+         * @param finder the Finder frontend
+         * @return Adapter for finding a single reference
+         */
         public static <D,R> Adapter<D,PlayableNotifier<R>> findSingleAsync(
                 Finder<D,R> finder){
             Adapter<D,R> f = finder.findSingle();
@@ -99,16 +147,32 @@ public interface Finder<Desc,Ref> {
             return new AsyncAdapter<D,R>(f);
         }
 
+        /**
+         * Returns an Adapter for finding a continuous reference asynchronously.
+         * @param finder the Finder frontend
+         * @return Adapter for finding a continuous reference
+         */
         public static <D,R> Adapter<D,PlayableNotifier<R>> findContinuousAsync(
                 Finder<D,R> finder){
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        /**
+         * Returns an Adapter for finding a continuous reference asynchronously.
+         * @param finder the Finder frontend
+         * @param max the maximum number of parameters
+         * @return Adapter for finding a continuous reference
+         */
         public static <D,R> Adapter<D,PlayableNotifier<R>> findContinuousAsync(
                 Finder<D,R> finder, int max){
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        /**
+         * Returns an Adapter for finding all references asynchronously.
+         * @param finder the Finder frontend
+         * @return Adapter for finding all references
+         */
         public static <D,R> Adapter<D,PlayableNotifier<List<R>>> findAllAsync(
                 Finder<D,R> finder){
             Adapter<D,List<R>> f = finder.findAll();
@@ -118,6 +182,13 @@ public interface Finder<Desc,Ref> {
             return new AsyncAdapter<D,List<R>>(f);
         }
 
+        /**
+         * Returns an Adapter for finding the number of references
+         * asynchronously.
+         * @param finder the Finder frontend
+         * @param max the maximum number of parameters
+         * @return Adapter for finding the number of references
+         */
         public static <D,R> Adapter<D,PlayableNotifier<List<R>>> findCountAsync(
                 Finder<D,R> finder, int max){
             Adapter<D,List<R>> f = finder.findCount(max);

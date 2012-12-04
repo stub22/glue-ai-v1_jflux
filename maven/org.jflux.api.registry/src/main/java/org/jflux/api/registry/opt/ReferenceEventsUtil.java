@@ -28,20 +28,47 @@ import org.jflux.api.core.event.Header;
  * @author Matthew Stevenson
  */
 public class ReferenceEventsUtil {
+    /**
+     * Event ID for reference added
+     */
     public final static String REFERENCE_ADDED = "referenceAdded";
+    /**
+     * Event ID for reference modified
+     */
     public final static String REFERENCE_MODIFIED = "referenceModified";
+    /**
+     * Event ID for reference removed
+     */
     public final static String REFERENCE_REMOVED = "referenceRemoved";
         
+    /**
+     * Generate a reference added event
+     * @param sourceRef the source reference
+     * @param timestamp the timestamp
+     * @return the event generator
+     */
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> addedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){
         return referenceEventFactory(sourceRef, timestamp, REFERENCE_ADDED);
     }
+    /**
+     * Generate a reference modified event
+     * @param sourceRef the source reference
+     * @param timestamp the timestamp
+     * @return the event generator
+     */
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> modifiedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){
         return referenceEventFactory(sourceRef, timestamp, REFERENCE_MODIFIED);
     }
+    /**
+     * Generate a reference removed event
+     * @param sourceRef the source reference
+     * @param timestamp the timestamp
+     * @return the event generator
+     */
     public static <SourceRef,Time,Ref> Adapter<
             Ref,Event<Header<SourceRef,Time>,Ref>> removedEventFactory(
                     SourceRef sourceRef, Source<Time> timestamp){

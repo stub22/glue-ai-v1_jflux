@@ -30,7 +30,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
 /**
- *
+ * A bare OSGi registry with no JFlux wrappers.
  * @author Matthew Stevenson
  */
 public class OSGiDirectRegistry<Time> implements Registry<

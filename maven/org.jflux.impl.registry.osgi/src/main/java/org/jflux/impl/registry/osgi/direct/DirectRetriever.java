@@ -25,7 +25,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 /**
- *
+ * A bare OSGi retriever with no JFlux wrappers.
  * @author Matthew Stevenson
  */
 public class DirectRetriever implements 
@@ -83,11 +83,20 @@ public class DirectRetriever implements
         };
     }
 
+    /**
+     * Not supported yet.
+     * @param clazz
+     * @return
+     */
     @Override
     public <T> Adapter<ServiceReference, Notifier<T>> retrieveAsync(Class<T> clazz) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Not supported yet.
+     * @return
+     */
     @Override
     public Adapter<ServiceReference, Notifier<?>> retrieveAsync() {
         throw new UnsupportedOperationException("Not supported yet.");

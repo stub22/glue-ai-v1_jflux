@@ -14,7 +14,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
 /**
- *
+ * Retriever implementation for OSGi.
  * @author Matthew Stevenson
  */
 public class OSGiRetriever<Ref extends OSGiReference> implements 
@@ -75,11 +75,20 @@ public class OSGiRetriever<Ref extends OSGiReference> implements
         };
     }
 
+    /**
+     * Not supported yet.
+     * @param clazz
+     * @return
+     */
     @Override
     public <T> Adapter<Ref, Notifier<T>> retrieveAsync(Class<T> clazz) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Not supported yet.
+     * @return
+     */
     @Override
     public Adapter<Ref, Notifier<?>> retrieveAsync() {
         throw new UnsupportedOperationException("Not supported yet.");

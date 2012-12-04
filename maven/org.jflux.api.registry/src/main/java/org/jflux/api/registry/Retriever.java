@@ -29,6 +29,7 @@ import org.jflux.api.core.Notifier;
 public interface Retriever<Ref> {
     /**
      * Returns an Adapter for retrieving an item.
+     * @param clazz the item's class
      * @return Adapter for retrieving an item
      */
     public <T> Adapter<Ref,T> retrieve(Class<T> clazz);
@@ -43,7 +44,17 @@ public interface Retriever<Ref> {
      */
     public Listener<Ref> release();
     
+    /**
+     * Returns an Adapter for retrieving an item asynchronously.
+     * @param clazz the item's class
+     * @return Adapter for retrieving an item
+     */
     public <T> Adapter<Ref,Notifier<T>> retrieveAsync(Class<T> clazz);
     
+    /**
+     * Returns a Listener for releasing an item which was retrieved
+     * asynchronously.
+     * @return Listener for releasing an item which was retrieved
+     */
     public Adapter<Ref,Notifier<?>> retrieveAsync();
 }

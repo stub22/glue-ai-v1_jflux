@@ -64,6 +64,7 @@ public class BasicMutableHeader<SourceRef,Time> extends
             if(timestampSource == null){
                 throw new NullPointerException();
             }
+            myTimestampSource = timestampSource;
             mySourceRef = sourceRef;
             myEventType = eventType;
             myProperties = props;

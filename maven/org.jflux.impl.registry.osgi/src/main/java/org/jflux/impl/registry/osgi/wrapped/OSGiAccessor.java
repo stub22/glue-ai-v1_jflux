@@ -17,7 +17,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 
 /**
- *
+ * Accessor implementation for OSGi.
  * @author Matthew Stevenson
  */
 public class OSGiAccessor<
@@ -40,8 +40,9 @@ public class OSGiAccessor<
 
             @Override
             public OSGiCertificate adapt(R a) {
-                String[] classNames = null;
-                Dictionary props = null;
+                String[] classNames = a.getClassNames().toArray(new String[0]);
+                Dictionary<String,String> props = 
+                        new Hashtable<String, String>(a.getProperties());
                 Object item = a.getItem();
                 ServiceRegistration reg = 
                         myContext.registerService(classNames, item, props);
@@ -74,11 +75,19 @@ public class OSGiAccessor<
         };
     }
 
+    /**
+     * Not supported yet.
+     * @return
+     */
     @Override
     public Adapter<R, Notifier<OSGiCertificate>> registerAsync() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Not supported yet.
+     * @return
+     */
     @Override
     public Adapter<M, Notifier<OSGiCertificate>> modifyAsync() {
         throw new UnsupportedOperationException("Not supported yet.");
