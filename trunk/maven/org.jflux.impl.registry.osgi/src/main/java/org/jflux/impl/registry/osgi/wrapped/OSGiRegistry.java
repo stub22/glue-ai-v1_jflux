@@ -11,7 +11,7 @@ import org.jflux.api.registry.opt.RegistrationRequest;
 import org.jflux.impl.registry.osgi.direct.OSGiDirectRegistry;
 
 /**
- *
+ * Registry implementation for OSGi
  * @author Matthew Stevenson
  */
 public class OSGiRegistry<Time> implements Registry<
@@ -24,6 +24,10 @@ public class OSGiRegistry<Time> implements Registry<
     private OSGiDirectRegistry<Time> myDirectRegistry;
     private Source<Time> myTimestampSource;
     
+    /**
+     * Creates a timestamped OSGi registry with a timestamp.
+     * @param timestampSource the timestamp
+     */
     public OSGiRegistry(Source<Time> timestampSource){
         if(timestampSource == null){
             throw new NullPointerException();
@@ -31,6 +35,11 @@ public class OSGiRegistry<Time> implements Registry<
         myTimestampSource = timestampSource;
     }
     
+    /**
+     * Creates a timestamped OSGiRegistry from a direct registry.
+     * @param directRegistry the direct registry
+     * @param timestampSource the timestamp
+     */
     public OSGiRegistry(OSGiDirectRegistry<Time> directRegistry, Source<Time> timestampSource){
         if(directRegistry == null){
             throw new NullPointerException();
@@ -66,6 +75,10 @@ public class OSGiRegistry<Time> implements Registry<
         return new OSGiRetriever<OSGiReference>(context);
     }
     
+    /**
+     * Gets the underlying direct registry
+     * @return the direct registry
+     */
     public OSGiDirectRegistry getDirectRegistry(){
         return myDirectRegistry;
     }

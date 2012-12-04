@@ -175,14 +175,28 @@ public class PropertyChangeNotifier implements PropertyChangeSource{
         myPropertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
     }
     
+    /**
+     * Returns all property change listeners.
+     * @return an array of property change listeners
+     */
     protected PropertyChangeListener[] getPropertyChangeListeners(){
         return myPropertyChangeSupport.getPropertyChangeListeners();
     }
     
+    /**
+     * Returns all property change listeners for a particular property.
+     * @param propertyName the name of the property
+     * @return an array of property change listeners
+     */
     protected PropertyChangeListener[] getPropertyChangeListeners(String propertyName){
         return myPropertyChangeSupport.getPropertyChangeListeners(propertyName);
     }
     
+    /**
+     * Determine if a listener is defined for a property.
+     * @param propertyName the name of the property
+     * @return true if a listener is found for the property
+     */
     protected boolean hasListeners(String propertyName){
         return myPropertyChangeSupport.hasListeners(propertyName);
     }   

@@ -23,5 +23,9 @@ package org.jflux.api.registry.opt;
  * @author Matthew Stevenson
  */
 public interface Certificate<Ref> {
+    /**
+     * Gets the reference to the service the certificate is for.
+     * @return the reference
+     */
     public Ref getReference();
 }

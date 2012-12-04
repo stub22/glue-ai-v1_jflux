@@ -18,7 +18,7 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 
 /**
- *
+ * Finder implementation for OSGi
  * @author Matthew Stevenson
  */
 public class OSGiFinder implements 
@@ -92,30 +92,58 @@ public class OSGiFinder implements
         };
     }
 
+    /**
+     * Returns an Adapter for finding a single reference from a description
+     * asynchronously.
+     * @return Adapter for finding a single reference from a description
+     */
     @Override
     public Adapter<Descriptor<String, String>, 
             PlayableNotifier<OSGiReference>> findSingleAsync() {
         return DefaultFinderProvider.findSingleAsync(this);
     }
 
+    /**
+     * Returns an Adapter for finding a continuous reference from a description
+     * asynchronously.
+     * @return Adapter for finding a continuous reference from a description
+     */
     @Override
     public Adapter<Descriptor<String, String>, 
             PlayableNotifier<OSGiReference>> findContinuousAsync() {
         return DefaultFinderProvider.findContinuousAsync(this);
     }
 
+    /**
+     * Returns an Adapter for finding a continuous reference from a description
+     * asynchronously.
+     * @param max the maximum number of parameters
+     * @return Adapter for finding a continuous reference from a description
+     */
     @Override
     public Adapter<Descriptor<String, String>, 
             PlayableNotifier<OSGiReference>> findContinuousAsync(int max) {
         return DefaultFinderProvider.findContinuousAsync(this, max);
     }
 
+    /**
+     * Returns an Adapter for finding all references matching a description
+     * asynchronously.
+     * @return Adapter for finding all references matching a description.
+     */
     @Override
     public Adapter<Descriptor<String, String>, 
             PlayableNotifier<List<OSGiReference>>> findAllAsync() {
         return DefaultFinderProvider.findAllAsync(this);
     }
 
+    /**
+     * Returns an Adapter for finding the number of references matching a
+     * description asynchronously.
+     * @param max the maximum number of parameters
+     * @return Adapter for finding the number of references matching a
+     * description.
+     */
     @Override
     public Adapter<Descriptor<String, String>, 
             PlayableNotifier<List<OSGiReference>>> findCountAsync(int max) {

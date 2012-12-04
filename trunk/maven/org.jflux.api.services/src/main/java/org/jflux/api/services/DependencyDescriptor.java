@@ -43,7 +43,7 @@ public final class DependencyDescriptor implements Descriptor<String, String> {
      * Create a new required DependencyDescriptor with the given values.
      * @param dependencyName dependency name within a ServiceLifecycleProvider
      * @param clazz Class of the dependency
-     * @param filter optional OSGi filter string
+     * @param props Properties of the dependency
      */
     public DependencyDescriptor(String dependencyName, 
             Class clazz, Map<String,String> props){
@@ -54,7 +54,7 @@ public final class DependencyDescriptor implements Descriptor<String, String> {
      * Create a new DependencyDescriptor with the given values.
      * @param dependencyName dependency name within a ServiceLifecycleProvider
      * @param clazz Class of the dependency
-     * @param filter optional OSGi filter string
+     * @param props Properties of the dependency
      * @param type is this dependency required or optional
      */
     public DependencyDescriptor(String dependencyName, 

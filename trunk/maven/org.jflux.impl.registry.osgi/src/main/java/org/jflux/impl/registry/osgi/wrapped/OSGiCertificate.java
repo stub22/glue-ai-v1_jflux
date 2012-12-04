@@ -10,7 +10,7 @@ import org.jflux.api.registry.opt.Certificate;
 import org.osgi.framework.ServiceRegistration;
 
 /**
- *
+ * Certificate implementation for OSGi.
  * @author Matthew Stevenson
  */
 public class OSGiCertificate implements Certificate<OSGiReference>, ServiceRegistration {
@@ -23,6 +23,10 @@ public class OSGiCertificate implements Certificate<OSGiReference>, ServiceRegis
         myRegistration = registration;
     }
     
+    /**
+     * Gets a reference to the certificate's service.
+     * @return a reference to the certificate's service.
+     */
     @Override
     public OSGiReference getReference() {
         return new OSGiReference(myRegistration.getReference());
@@ -53,18 +57,33 @@ public class OSGiCertificate implements Certificate<OSGiReference>, ServiceRegis
         return hash;
     }
 
+    /**
+     * Sets the certificate's properties.
+     * @param properties the properties to set
+     */
     @Override
     public void setProperties(Dictionary properties) {
         myRegistration.setProperties(properties);
     }
 
+    /**
+     * Unregisters the certificate's service
+     */
     @Override
     public void unregister() {
         myRegistration.unregister();
     }
     
+    /**
+     * Wraps an OSGi ServiceRegistration into a JFlux Certificate
+     */
     public static class ServiceRegistrationWrapper implements 
             Adapter<ServiceRegistration,OSGiCertificate> {
+        /**
+         * Converts a ServiceRegistration into a Certificate
+         * @param a the ServiceRegistration
+         * @return the Certificate
+         */
         @Override
         public OSGiCertificate adapt(ServiceRegistration a) {
             return new OSGiCertificate(a);

@@ -29,7 +29,7 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 
 /**
- *
+ * A bare OSGi monitor with no JFlux wrappers.
  * @author Matthew Stevenson
  */
 public class DirectMonitor<Time> implements Monitor<
@@ -69,6 +69,9 @@ public class DirectMonitor<Time> implements Monitor<
         };
     }
     
+    /**
+     * A notifier for service events.
+     */
     public static class ServiceEventNotifier extends 
             DefaultPlayableNotifier<ServiceEvent> implements ServiceListener{
         private BundleContext myContext;
@@ -82,11 +85,19 @@ public class DirectMonitor<Time> implements Monitor<
             myFilter = filter;
         }
         
+        /**
+         * Notifies listeners when a service's state changes.
+         * @param event the state change
+         */
         @Override
         public void serviceChanged(ServiceEvent event) {
             notifyListeners(event);
         }
         
+        /**
+         * Starts the notifier
+         * @return true if the notifier starts successfully
+         */
         @Override
         public boolean start(){
             if(myContext == null || !super.start()){
@@ -95,6 +106,10 @@ public class DirectMonitor<Time> implements Monitor<
             return listen();
         }
         
+        /**
+         * Pauses the notifier
+         * @return true if the notifier pauses successfully
+         */
         @Override
         public boolean pause(){
             if(myContext == null || 
@@ -105,6 +120,10 @@ public class DirectMonitor<Time> implements Monitor<
             return true;
         }
         
+        /**
+         * Resumes the notifier if paused.
+         * @return  true if the notifier resumes successfully
+         */
         @Override
         public boolean resume(){
             if(myContext == null || 
@@ -114,6 +133,10 @@ public class DirectMonitor<Time> implements Monitor<
             return listen();
         }
         
+        /**
+         * Stops the notifier
+         * @return  true if the notifier stops successfully
+         */
         @Override
         public boolean stop(){
             if(myContext == null || !super.stop()){

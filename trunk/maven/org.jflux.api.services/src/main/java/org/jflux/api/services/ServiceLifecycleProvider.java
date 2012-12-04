@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
-import org.jflux.api.services.extras.PropertyChangeSource;
 import org.jflux.api.services.DependencyDescriptor.DependencyType;
+import org.jflux.api.services.extras.PropertyChangeSource;
 
 /**
  * Manages the state and availability of a service through a Dependency-
@@ -61,7 +61,11 @@ public interface ServiceLifecycleProvider<T> extends PropertyChangeSource{
      * @param dependencyMap dependencies needed to start the service lifecycle
      */
     public void start(Map<String,Object> dependencyMap);
-    
+
+    /**
+     * Called when the service is stopped or if any dependency ceases to be
+     * available.
+     */
     public void stop();
     /**
      * Called after the service is started and a dependency is changed or 

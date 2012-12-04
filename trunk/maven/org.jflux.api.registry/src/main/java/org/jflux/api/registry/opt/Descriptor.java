@@ -23,8 +23,25 @@ import java.util.Set;
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Descriptor<K,V> {
+    /**
+     * Gets the descriptor's name
+     * @return the descriptor's name
+     */
     public String getDescriptorName();
+    /**
+     * Gets one of the descriptor's properties by name
+     * @param key the property name
+     * @return the property value
+     */
     public V getProperty(K key);
+    /**
+     * Gets all of the descriptor's properties
+     * @return a set of property names
+     */
     public Set<K> getPropertyKeys();
+    /**
+     * Gets the name of the class associated with the descriptor
+     * @return the class name
+     */
     public String getClassName();
 }

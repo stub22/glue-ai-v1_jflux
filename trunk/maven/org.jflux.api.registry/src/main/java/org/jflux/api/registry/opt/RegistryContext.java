@@ -23,6 +23,15 @@ import org.jflux.api.registry.Registry;
  * @author Matthew Stevenson
  */
 public interface RegistryContext<R extends Registry,K,V> {
+    /**
+     * Get the context's registry.
+     * @return the registry
+     */
     public R getRegistry();
+    /**
+     * Get a property of the context by name.
+     * @param key the property name
+     * @return the property value
+     */
     public V getProperty(K key);
 }

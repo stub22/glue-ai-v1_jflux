@@ -29,14 +29,6 @@ import org.jflux.api.registry.opt.RegistryContext;
  * Provides access to registry components based on the given context.
  * 
  * @param <Context> Provides registry permissions
- * @param <Desc> Describes registry items
- * @param <RegReq> Requests an item be added to the registry
- * @param <ModReq> Requests a registration be modified
- * @param <RefEvt> Reference Event type used by the registry
- * @param <Ref> Reference to an item
- * @param <Cert> Certificate providing permissions for modifying or removing a 
- * registration
- * 
  * @author Matthew Stevenson
  */
 public interface Registry<
@@ -54,7 +46,7 @@ public interface Registry<
     /**
      * Returns a registry Monitor matching the context permissions.
      * @param context
-     * @return
+     * @return Monitor matching the context permissions
      */
     public M getMonitor(Context context);
     /**
@@ -95,6 +87,9 @@ public interface Registry<
             M extends Monitor<Desc,RefEvt,N>> extends Registry<Cxt,F,A,R,M>{
     }
     
+    /**
+     * A basic kind of Registry
+     */
     public static interface BasicRegistry<CxtK,CxtV,Time,K,V> extends Registry<
             RegistryContext<BasicRegistry<CxtK,CxtV,Time,K,V>,CxtK,CxtV>,
             Finder<Descriptor<K,V>,Reference<K,V>>,

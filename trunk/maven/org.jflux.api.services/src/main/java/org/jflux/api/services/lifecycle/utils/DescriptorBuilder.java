@@ -35,15 +35,23 @@ public class DescriptorBuilder extends DescriptorListBuilder{
     private Map<String,String> myFilterProps;
     private DependencyType myType;
     /**
-     * Begins building a DependencyDescriptor with the give name and class.
+     * Begins building a DependencyDescriptor with the given name and class.
      * By default the DependencyType is REQUIRED.  Call optional()
-     * @param name
-     * @param clazz 
+     * @param name the name of the dependency.
+     * @param clazz the class associated with the dependency.
      */
     public DescriptorBuilder(String name, Class clazz){
         this(new DescriptorListBuilder(), name, clazz, DependencyType.REQUIRED);
     }
-    
+
+    /**
+     * Begins building a DependencyDescriptor with the given name and class,
+     * descriptor list builder, and dependency type.
+     * @param listBuilder a descriptor list builder
+     * @param name the name of the dependency.
+     * @param clazz the class associated with the dependency.
+     * @param type the dependency type (REQUIRED or OPTIONAL)
+     */
     public DescriptorBuilder(DescriptorListBuilder listBuilder, 
             String name, Class clazz, DependencyType type){
         if(listBuilder == null || name == null || clazz == null){
@@ -59,11 +67,21 @@ public class DescriptorBuilder extends DescriptorListBuilder{
         myFilterProps = new HashMap<String, String>();
     }
     
+    /**
+     * Gives the dependency descriptor.
+     * @return the dependency descriptor
+     */
     public DependencyDescriptor getDescriptor(){
         return new DependencyDescriptor(
                 myDependencyName, myDependencyClass, myFilterProps, myType);
     }
     
+    /**
+     * Add a property to the dependency descriptor.
+     * @param key the property's name
+     * @param value the property's value
+     * @return this
+     */
     public DescriptorBuilder with(String key, String value){
         if(key == null || value == null){
             throw new NullPointerException();
@@ -72,6 +90,11 @@ public class DescriptorBuilder extends DescriptorListBuilder{
         return this;
     }
     
+    /**
+     * Add a set of properties to the dependency descriptor.
+     * @param props the properties
+     * @return this
+     */
     public DescriptorBuilder with(Properties props){
         if(props == null){
             throw new NullPointerException();

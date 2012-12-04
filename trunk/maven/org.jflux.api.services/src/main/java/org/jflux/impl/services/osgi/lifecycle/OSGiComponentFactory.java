@@ -16,19 +16,23 @@
 package org.jflux.impl.services.osgi.lifecycle;
 
 import java.util.Properties;
+import org.jflux.api.registry.opt.RegistryContext;
 import org.jflux.api.services.ManagedService;
 import org.jflux.api.services.ServiceLifecycleProvider;
 import org.jflux.api.services.lifecycle.utils.ManagedServiceFactory;
-import org.osgi.framework.BundleContext;
 
 /**
  *
  * @author Matthew Stevenson <www.robokind.org>
  */
 public class OSGiComponentFactory implements ManagedServiceFactory{
-    private BundleContext myContext;
+    private RegistryContext myContext;
     
-    public OSGiComponentFactory(BundleContext context){
+    /**
+     * Creates an OSGi component factory.
+     * @param context the registry context
+     */
+    public OSGiComponentFactory(RegistryContext context){
         if(context == null){
             throw new NullPointerException();
         }

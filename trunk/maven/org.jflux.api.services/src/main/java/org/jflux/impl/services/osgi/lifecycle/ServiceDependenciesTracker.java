@@ -22,11 +22,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.services.extras.PropertyChangeNotifier;
+import org.jflux.api.registry.opt.RegistryContext;
 import org.jflux.api.services.DependencyDescriptor;
 import org.jflux.api.services.DependencyDescriptor.DependencyType;
+import org.jflux.api.services.extras.PropertyChangeNotifier;
 import org.jflux.impl.services.osgi.SingleServiceListener;
-import org.osgi.framework.BundleContext;
 
 /**
  * Monitors the OSGi Service Registry for a set of service dependencies.  
@@ -58,7 +58,7 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
      */
     public final static String PROP_ALL_DEPENDENCIES_AVAILABLE = "allDependenciesAvailable";
     
-    private BundleContext myContext;
+    private RegistryContext myContext;
     private int myRequiredCount;
     private Map<String,SingleServiceListener> myDependencyTrackers;
     private Map<String,DependencyDescriptor> myDependencyDescMap;
@@ -70,7 +70,7 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
      * Creates an empty ServiceDependenciesTracker with the given BundleContext.
      * @param context 
      */
-    public ServiceDependenciesTracker(BundleContext context){
+    public ServiceDependenciesTracker(RegistryContext context){
         if(context == null){
             throw new NullPointerException();
         }
@@ -121,6 +121,7 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
     /**
      * Adds the description to the list of dependency to listen for.
      * @param descriptor dependency description to listen for
+     * @return 
      * @throws IllegalStateException if the tracker has already been started
      * @throws IllegalArgumentException if the given dependencyId already exists
      */
@@ -135,11 +136,8 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
                     dependencyName);
             return false;
         }
-        SingleServiceListener ssl = 
-                new SingleServiceListener(
-                        descriptor.getServiceClass(), 
-                        myContext, 
-                        descriptor.getServiceFilter());
+        SingleServiceListener ssl =
+                new SingleServiceListener(myContext, descriptor);
         ssl.addPropertyChangeListener(new RequirementListener(dependencyName));
         myDependencyTrackers.put(dependencyName, ssl);
         myDependencyDescMap.put(dependencyName, descriptor);
@@ -148,6 +146,11 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
         }
         return true;
     }
+    /**
+     * Removes a tracker.
+     * @param name the name of the tracker to remove
+     * @return true if the removal was successful
+     */
     public boolean removeDependencyTracker(String name){
         if(name == null){
             throw new NullPointerException();
@@ -178,6 +181,10 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
         }
     }
     
+    /**
+     * Determines if the tracker is running.
+     * @return true if the tracker is running
+     */
     public boolean isRunning(){
         return myListeningFlag;
     }
@@ -192,6 +199,9 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
         }
     }
     
+    /**
+     * Destroys this tracker.
+     */
     public void dispose(){
         myListeningFlag = false;
         this.clearAllListeners();

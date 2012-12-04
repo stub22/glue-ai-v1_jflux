@@ -24,7 +24,7 @@ import org.jflux.impl.registry.osgi.direct.OSGiDirectRegistry;
 import org.osgi.framework.ServiceEvent;
 
 /**
- *
+ * Monitor implementation for OSGi
  * @author Matthew Stevenson
  */
 public class OSGiMonitor<
@@ -55,6 +55,7 @@ public class OSGiMonitor<
         DefaultPlayableNotifier<ServiceEvent> dpn = myDirectMonitor.getNotifier(desc);
         Notifier<ServiceEvent> n = dpn.getNotifier();
         Notifier<Event<Header<R, Time>, OSGiReference>> nc = new NotifierChain(n, myEventAdapter);
+        dpn.start();
         return new DefaultPlayableNotifier<Event<Header<R, Time>, OSGiReference>>(nc);
     }
 
@@ -64,15 +65,34 @@ public class OSGiMonitor<
         return new ServiceNotifierStopper();
     }
     
+    /**
+     * Registered state
+     */
     public final static String REGISTERED = "registered";
+    /**
+     * Modified state
+     */
     public final static String MODIFIED = "modified";
+    /**
+     * Modified (end match) state
+     */
     public final static String MODIFIED_ENDMATCH = "modified_endmatch";
+    /**
+     * Unregistering state
+     */
     public final static String UNREGISTERING = "unregistering";
     
+    /**
+     * Wraps an OSGi ServiceEvent into a JFlux Event
+     */
     public class ServiceEventAdapter implements 
             Adapter<ServiceEvent, Event<Header<R, Time>, OSGiReference>> {
         private Source<MutableHeader<R, Time>> myHeaderSource;
         
+        /**
+         * Creates a ServiceEventAdapter from a header source
+         * @param headerSource the header source
+         */
         public ServiceEventAdapter(Source<MutableHeader<R, Time>> headerSource){
             if(headerSource == null){
                 throw new NullPointerException();
@@ -80,6 +100,11 @@ public class OSGiMonitor<
             myHeaderSource = headerSource;
         }
         
+        /**
+         * Converts an OSGi ServiceEvent into a JFlux Event
+         * @param a the ServiceEvent
+         * @return the Event
+         */
         @Override
         public Event<Header<R, Time>, OSGiReference> adapt(ServiceEvent a) {
             MutableHeader<R, Time> h = myHeaderSource.getValue();
