@@ -8,7 +8,7 @@ import java.util.Map;
 import org.jflux.api.registry.opt.Modification;
 
 /**
- *
+ * Basic implementation of Modification
  * @author Matthew Stevenson
  */
 public class BasicModification<Cert, K, V> implements 
@@ -16,11 +16,19 @@ public class BasicModification<Cert, K, V> implements
     private Cert myCertificate;
     private Map<K,V> myProperties;
     
+    /**
+     * Gets the Certificate associated with the modification
+     * @return the Certificate
+     */
     @Override
     public Cert getCertificate() {
         return myCertificate;
     }
 
+    /**
+     * Gets the properties to be modified
+     * @return the properties
+     */
     @Override
     public Map<K, V> getProperties() {
         return myProperties;
