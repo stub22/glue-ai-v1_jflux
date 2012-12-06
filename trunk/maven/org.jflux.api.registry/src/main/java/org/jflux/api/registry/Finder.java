@@ -33,20 +33,20 @@ public interface Finder<Desc,Ref> {
      * Returns an Adapter for finding a single reference from a description.
      * @return Adapter for finding a single reference from a description
      */
-    public Adapter<Desc,Ref> findSingle();
+    public Ref findSingle(Desc desc);
     
     /**
      * Returns an Adapter for finding all references matching a description.
      * @return Adapter for finding all references matching a description.
      */
-    public Adapter<Desc,List<Ref>> findAll();
+    public List<Ref> findAll(Desc desc);
     
     /**
      * Returns an Adapter for finding all references matching a description.
      * @param max the maximum number of parameters
      * @return Adapter for finding all references matching a description.
      */
-    public Adapter<Desc,List<Ref>> findCount(int max);
+    public List<Ref> findCount(int max, Desc desc);
     
     /**
      * Returns an Adapter for finding a single reference from a description
@@ -95,19 +95,12 @@ public interface Finder<Desc,Ref> {
          * @param finder the Finder frontend
          * @return Adapter for finding a single reference
          */
-        public static <D,R> Adapter<D,R> findSingle(Finder<D,R> finder) {
-            final Adapter<D, List<R>> find = finder.findAll();
-
-            return new Adapter<D,R>() {
-                @Override
-                public R adapt(D a) {
-                    List<R> list = find.adapt(a);
-                    if(list == null || list.isEmpty()){
-                        return null;
-                    }
-                    return list.get(0);
-                }
-            };
+        public static <D,R> R findSingle(Finder<D,R> finder, D desc) {
+            final List<R> find = finder.findAll(desc);
+            if(find == null || find.isEmpty()){
+                return null;
+            }
+            return find.get(0);
         }
         
         /**
@@ -116,21 +109,13 @@ public interface Finder<Desc,Ref> {
          * @param max the maximum number of parameters
          * @return Adapter for finding all references.
          */
-        public static <D,R> Adapter<D,List<R>> findCount(
-                Finder<D,R> finder, final int max) {
-            
-            final Adapter<D, List<R>> find = finder.findAll();
-
-            return new Adapter<D, List<R>>() {
-                @Override
-                public List<R> adapt(D a) {
-                    List<R> list = find.adapt(a);
-                    if(list == null || list.size() <= max){
-                        return list;
-                    }
-                    return list.subList(0, max);
-                }
-            };
+        public static <D,R> List<R> findCount(
+                Finder<D,R> finder, final int max, D desc) {
+            final List<R> find = finder.findAll(desc);
+            if(find == null || find.size() <= max){
+                return find;
+            }
+            return find.subList(0, max);
         }
 
         /**
@@ -140,11 +125,12 @@ public interface Finder<Desc,Ref> {
          */
         public static <D,R> Adapter<D,PlayableNotifier<R>> findSingleAsync(
                 Finder<D,R> finder){
-            Adapter<D,R> f = finder.findSingle();
-            if(f == null){
-                return null;
-            }
-            return new AsyncAdapter<D,R>(f);
+//            Adapter<D,R> f = finder.findSingle();
+//            if(f == null){
+//                return null;
+//            }
+//            return new AsyncAdapter<D,R>(f);
+            return new AsyncAdapter<D,R>(null);
         }
 
         /**
@@ -175,11 +161,13 @@ public interface Finder<Desc,Ref> {
          */
         public static <D,R> Adapter<D,PlayableNotifier<List<R>>> findAllAsync(
                 Finder<D,R> finder){
-            Adapter<D,List<R>> f = finder.findAll();
-            if(f == null){
-                return null;
-            }
-            return new AsyncAdapter<D,List<R>>(f);
+//            Adapter<D,List<R>> f = finder.findAll();
+//            if(f == null){
+//                return null;
+//            }
+//            return new AsyncAdapter<D,List<R>>(f);
+            
+            return new AsyncAdapter<D,List<R>>(null);
         }
 
         /**
@@ -191,11 +179,12 @@ public interface Finder<Desc,Ref> {
          */
         public static <D,R> Adapter<D,PlayableNotifier<List<R>>> findCountAsync(
                 Finder<D,R> finder, int max){
-            Adapter<D,List<R>> f = finder.findCount(max);
-            if(f == null){
-                return null;
-            }
-            return new AsyncAdapter<D,List<R>>(f);
+//            Adapter<D,List<R>> f = finder.findCount(max);
+//            if(f == null){
+//                return null;
+//            }
+//            return new AsyncAdapter<D,List<R>>(f);
+            return new AsyncAdapter<D,List<R>>(null);
         }
         
         

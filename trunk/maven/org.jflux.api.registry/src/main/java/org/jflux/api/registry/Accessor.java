@@ -16,7 +16,6 @@
 package org.jflux.api.registry;
 
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 
 /**
@@ -32,17 +31,17 @@ public interface Accessor<Req,Cert,ModReq> {
      * Returns an Adapter for registering items.
      * @return Adapter for registering items
      */
-    public Adapter<Req,Cert> register();
+    public Cert register(Req request);
     /**
      * Returns a Listener for unregistering items.
      * @return Listener for unregistering an items
      */
-    public Listener<Cert> unregister();
+    public void unregister(Cert cert);
     /**
      * Returns an Adapter for modifying a registration.
      * @return Adapter for modifying a registration
      */
-    public Adapter<ModReq,Cert> modify();
+    public Cert modify(ModReq request);
 
     /**
      * Returns an Adapter for registering items asynchronously.

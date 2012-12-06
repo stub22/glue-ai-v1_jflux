@@ -167,7 +167,7 @@ public class SingleServiceListener<T>
     private boolean collectServiceReferences(){
         List<Reference> refs;
         Finder<Descriptor,Reference> fin = myContext.getRegistry().getFinder(myContext);
-        refs = fin.findAll().adapt(myDescriptor);
+        refs = fin.findAll(myDescriptor);
         if(refs == null){
             return true;
         }
@@ -255,7 +255,7 @@ public class SingleServiceListener<T>
         try{
             Retriever ret = myContext.getRegistry().getRetriever(myContext);
                     
-            ret.release().handleEvent(myReference);
+            ret.release(myReference);
         }catch(Exception ex){
             theLogger.log(Level.WARNING, "Error ungetting service", ex);
         }
@@ -272,7 +272,7 @@ public class SingleServiceListener<T>
         try{
             Retriever ret = myContext.getRegistry().getRetriever(myContext);
                     
-            ret.release().handleEvent(myReference);
+            ret.release(myReference);
         }catch(Exception ex){
             theLogger.log(Level.WARNING, "Error ungetting service", ex);
         }
@@ -288,7 +288,7 @@ public class SingleServiceListener<T>
             return true;
         }
         Retriever ret = myContext.getRegistry().getRetriever(myContext);
-        T tracked = (T)ret.retrieve().adapt(ref);
+        T tracked = (T)ret.retrieve(ref);
         if(tracked == null){
             return false;
         }

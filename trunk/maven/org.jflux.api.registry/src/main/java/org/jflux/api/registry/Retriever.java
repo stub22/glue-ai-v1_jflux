@@ -16,7 +16,6 @@
 package org.jflux.api.registry;
 
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 
 /**
@@ -32,17 +31,17 @@ public interface Retriever<Ref> {
      * @param clazz the item's class
      * @return Adapter for retrieving an item
      */
-    public <T> Adapter<Ref,T> retrieve(Class<T> clazz);
+    public <T> T retrieve(Class<T> clazz, Ref reference);
     /**
      * Returns an Adapter for retrieving an untyped item.
      * @return Adapter for retrieving an untyped item
      */
-    public Adapter<Ref,?> retrieve();
+    public Object retrieve(Ref reference);
     /**
      * Returns a Listener for releasing an item which was retrieved.
      * @return Listener for releasing an item which was retrieved
      */
-    public Listener<Ref> release();
+    public void release(Ref reference);
     
     /**
      * Returns an Adapter for retrieving an item asynchronously.

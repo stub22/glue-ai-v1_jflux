@@ -7,7 +7,6 @@ package org.jflux.impl.registry.osgi.wrapped;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Retriever;
 import org.osgi.framework.BundleContext;
@@ -30,49 +29,33 @@ public class OSGiRetriever<Ref extends OSGiReference> implements
     }
     
     @Override
-    public <T> Adapter<Ref, T> retrieve(final Class<T> clazz) {
-        return new Adapter<Ref, T>() {
-            @Override
-            public T adapt(Ref a) {
-                ServiceReference ref = a.getReference();
-                Object obj = myContext.getService(ref);
-                if(obj == null){
-                    return null;
-                }
-                try{
-                    return (T)obj;
-                }catch(ClassCastException ex){
-                    theLogger.log(Level.SEVERE, 
-                            "Unable to cast item to specified type.  "
-                            + "Expected: " + clazz.getName() + ",  "
-                            + "Found: " + obj.getClass().getName(), ex);
-                    return null;
-                }
-            }
-        };
+    public <T> T retrieve(final Class<T> clazz, Ref reference) {
+        ServiceReference ref = reference.getReference();
+        Object obj = myContext.getService(ref);
+        if(obj == null){
+            return null;
+        }
+        try{
+            return (T)obj;
+        }catch(ClassCastException ex){
+            theLogger.log(Level.SEVERE, 
+                    "Unable to cast item to specified type.  "
+                    + "Expected: " + clazz.getName() + ",  "
+                    + "Found: " + obj.getClass().getName(), ex);
+            return null;
+        }
     }
 
     @Override
-    public Adapter<Ref, ?> retrieve() {
-        return new Adapter<Ref, Object>() {
-            @Override
-            public Object adapt(Ref a) {
-                ServiceReference ref = a.getReference();
-                return myContext.getService(ref);
-            }
-        };
+    public Object retrieve(Ref reference) {
+        ServiceReference ref = reference.getReference();
+        return myContext.getService(ref);
     }
 
     @Override
-    public Listener<Ref> release() {
-        return new Listener<Ref>() {
-
-            @Override
-            public void handleEvent(Ref event) {
-                ServiceReference ref = event.getReference();
-                myContext.ungetService(ref);
-            }
-        };
+    public void release(Ref reference) {
+        ServiceReference ref = reference.getReference();
+        myContext.ungetService(ref);
     }
 
     /**

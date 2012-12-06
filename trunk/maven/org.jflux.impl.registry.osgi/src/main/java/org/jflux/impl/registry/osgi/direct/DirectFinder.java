@@ -47,39 +47,27 @@ public class DirectFinder implements
     }
     
     @Override
-    public Adapter<Descriptor<String, String>, ServiceReference> findSingle() {
-        return new Adapter<Descriptor<String, String>, ServiceReference>() {
-            @Override
-            public ServiceReference adapt(Descriptor<String, String> a) {
-                ServiceReference[] refs = myFinderBase.adapt(a);
-                if(refs == null){
-                    return null;
-                }
-                return refs[0];
-            }
-        };
+    public ServiceReference findSingle(Descriptor<String, String> desc) {
+        ServiceReference[] refs = myFinderBase.adapt(desc);
+        if(refs == null){
+            return null;
+        }
+        return refs[0];
     }
 
     @Override
-    public Adapter<
-            Descriptor<String, String>, List<ServiceReference>> findAll() {
-        return new Adapter<
-                Descriptor<String, String>, List<ServiceReference>>() {
-            @Override
-            public List<ServiceReference> adapt(Descriptor<String, String> a) {
-                ServiceReference[] refs = myFinderBase.adapt(a);
-                if(refs == null){
-                    return null;
-                }
-                return Arrays.asList(refs);
-            }
-        };
+    public List<ServiceReference> findAll(Descriptor<String, String> desc) {
+        ServiceReference[] refs = myFinderBase.adapt(desc);
+        if(refs == null){
+            return null;
+        }
+        return Arrays.asList(refs);
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, 
-            List<ServiceReference>> findCount(final int max) {
-        return DefaultFinderProvider.findCount(this, max);
+    public List<ServiceReference> findCount(
+            final int max, Descriptor<String, String> desc) {
+        return DefaultFinderProvider.findCount(this, max, desc);
     }
 
     /**

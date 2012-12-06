@@ -19,7 +19,6 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Accessor;
 import org.jflux.api.registry.opt.Modification;
@@ -46,52 +45,27 @@ public class DirectAccessor implements Accessor<
     }
 
     @Override
-    public Adapter<
-            RegistrationRequest<?, String, String>, 
-            ServiceRegistration> register() {
-        return new Adapter<
-                RegistrationRequest<?, String, String>, 
-                ServiceRegistration>() {
-
-            @Override
-            public ServiceRegistration adapt(
-                    RegistrationRequest<?, String, String> a) {
-                String[] classNames = null;
-                Dictionary props = null;
-                Object item = a.getItem();
-                return myContext.registerService(classNames, item, props);
-            }
-        };
+    public ServiceRegistration register(
+            RegistrationRequest<?, String, String> request) {
+        String[] classNames = null;
+        Dictionary props = null;
+        Object item = request.getItem();
+        return myContext.registerService(classNames, item, props);
     }
 
     @Override
-    public Listener<ServiceRegistration> unregister() {
-        return new Listener<ServiceRegistration>() {
-            @Override
-            public void handleEvent(ServiceRegistration event) {
-                event.unregister();
-            }
-        };
+    public void unregister(ServiceRegistration cert) {
+        cert.unregister();
     }
 
     @Override
-    public Adapter<
-            Modification<ServiceRegistration, String, String>, 
-            ServiceRegistration> modify() {
-        return new Adapter<
-                Modification<ServiceRegistration, String, String>, 
-                ServiceRegistration>() {
-
-            @Override
-            public ServiceRegistration adapt(
-                    Modification<ServiceRegistration, String, String> a) {
-                ServiceRegistration reg = a.getCertificate();
-                Dictionary<String,String> props = 
-                        new Hashtable<String, String>(a.getProperties());
-                reg.setProperties(props);
-                return reg;
-            }
-        };
+    public ServiceRegistration modify(
+            Modification<ServiceRegistration, String, String> request) {
+        ServiceRegistration reg = request.getCertificate();
+        Dictionary<String,String> props = 
+                new Hashtable<String, String>(request.getProperties());
+        reg.setProperties(props);
+        return reg;
     }
 
     /**

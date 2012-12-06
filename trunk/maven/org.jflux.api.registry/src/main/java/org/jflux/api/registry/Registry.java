@@ -18,12 +18,7 @@ package org.jflux.api.registry;
 import org.jflux.api.core.event.Event;
 import org.jflux.api.core.event.Header;
 import org.jflux.api.core.playable.PlayableNotifier;
-import org.jflux.api.registry.opt.Certificate;
-import org.jflux.api.registry.opt.Descriptor;
-import org.jflux.api.registry.opt.Modification;
-import org.jflux.api.registry.opt.Reference;
-import org.jflux.api.registry.opt.RegistrationRequest;
-import org.jflux.api.registry.opt.RegistryContext;
+import org.jflux.api.registry.opt.*;
 
 /**
  * Provides access to registry components based on the given context.
