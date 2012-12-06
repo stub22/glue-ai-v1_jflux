@@ -277,7 +277,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
                     "", this, props, classNames);
             Accessor acc = myContext.getRegistry().getAccessor(myContext);
 
-            mySelfRegistration = (Certificate)acc.register().adapt(rr);
+            mySelfRegistration = (Certificate)acc.register(rr);
         } catch(Exception e) {
             theLogger.error(e.getMessage());
         }
@@ -292,7 +292,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
         }
         try {
             Accessor acc = myContext.getRegistry().getAccessor(myContext);
-            acc.unregister().handleEvent(mySelfRegistration);
+            acc.unregister(mySelfRegistration);
         } catch(Exception e) {
             theLogger.error(e.getMessage());
         }
@@ -322,7 +322,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
                 try {
                     Accessor acc = myContext.getRegistry().getAccessor(myContext);
 
-                    acc.unregister().handleEvent(myServiceRegistration);
+                    acc.unregister(myServiceRegistration);
                 } catch(Exception e) {
                     theLogger.error(e.getMessage());
                 }
@@ -377,7 +377,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
                     "", myService, propMap, classNames);
             Accessor acc = myContext.getRegistry().getAccessor(myContext);
 
-            myServiceRegistration = (Certificate)acc.register().adapt(rr);
+            myServiceRegistration = (Certificate)acc.register(rr);
         } catch(Exception e) {
             theLogger.error(e.getMessage());
         }
@@ -461,7 +461,8 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
             register();
             if(oldReg != null) {
                 try {
-                    myContext.getRegistry().getAccessor(myContext).unregister();
+                    Accessor acc = myContext.getRegistry().getAccessor(myContext);
+                    acc.unregister(oldReg);
                 } catch(Exception e) {
                     theLogger.error(e.getMessage());
                 }

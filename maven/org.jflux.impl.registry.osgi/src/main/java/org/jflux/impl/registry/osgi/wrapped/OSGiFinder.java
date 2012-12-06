@@ -36,60 +36,42 @@ public class OSGiFinder implements
     }
     
     @Override
-    public Adapter<Descriptor<String, String>, OSGiReference> findSingle() {
-        return new Adapter<Descriptor<String, String>, OSGiReference>() {
-            @Override
-            public OSGiReference adapt(Descriptor<String, String> a) {
-                ServiceReference[] refs = myFinderBase.adapt(a);
-                if(refs == null){
-                    return null;
-                }
-                return new OSGiReference(refs[0]);
-            }
-        };
+    public OSGiReference findSingle(Descriptor<String, String> desc) {
+        ServiceReference[] refs = myFinderBase.adapt(desc);
+        if(refs == null){
+            return null;
+        }
+        return new OSGiReference(refs[0]);
     }
 
     @Override
-    public Adapter<
-            Descriptor<String, String>, List<OSGiReference>> findAll() {
-        return new Adapter<
-                Descriptor<String, String>, List<OSGiReference>>() {
-            @Override
-            public List<OSGiReference> adapt(Descriptor<String, String> a) {
-                ServiceReference[] refs = myFinderBase.adapt(a);
-                if(refs == null){
-                    return null;
-                }
-                List<OSGiReference> list = 
-                        new ArrayList<OSGiReference>(refs.length);
-                for(ServiceReference ref : refs){
-                    list.add(new OSGiReference(ref));
-                }
-                return list;
-            }
-        };
+    public List<OSGiReference> findAll(Descriptor<String, String> desc) {
+        ServiceReference[] refs = myFinderBase.adapt(desc);
+        if(refs == null){
+            return null;
+        }
+        List<OSGiReference> list = 
+                new ArrayList<OSGiReference>(refs.length);
+        for(ServiceReference ref : refs){
+            list.add(new OSGiReference(ref));
+        }
+        return list;
     }
 
     @Override
-    public Adapter<Descriptor<String, String>, 
-            List<OSGiReference>> findCount(final int max) {
-        return new Adapter<
-                Descriptor<String, String>, List<OSGiReference>>() {
-            @Override
-            public List<OSGiReference> adapt(Descriptor<String, String> a) {
-                ServiceReference[] refs = myFinderBase.adapt(a);
-                if(refs == null){
-                    return null;
-                }
-                int c = Math.min(max, refs.length);
-                List<OSGiReference> list = 
-                        new ArrayList<OSGiReference>(c);
-                for(int i = 0; i < c; i++){
-                    list.add(new OSGiReference(refs[i]));
-                }
-                return list;
-            }
-        };
+    public List<OSGiReference> findCount(
+            final int max, Descriptor<String, String> desc) {
+        ServiceReference[] refs = myFinderBase.adapt(desc);
+        if(refs == null){
+            return null;
+        }
+        int c = Math.min(max, refs.length);
+        List<OSGiReference> list = 
+                new ArrayList<OSGiReference>(c);
+        for(int i = 0; i < c; i++){
+            list.add(new OSGiReference(refs[i]));
+        }
+        return list;
     }
 
     /**

@@ -8,7 +8,6 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Accessor;
 import org.jflux.api.registry.opt.Modification;
@@ -35,44 +34,26 @@ public class OSGiAccessor<
     }
 
     @Override
-    public Adapter<R, OSGiCertificate> register() {
-        return new Adapter<R, OSGiCertificate>() {
-
-            @Override
-            public OSGiCertificate adapt(R a) {
-                String[] classNames = a.getClassNames().toArray(new String[0]);
-                Dictionary<String,String> props = 
-                        new Hashtable<String, String>(a.getProperties());
-                Object item = a.getItem();
-                ServiceRegistration reg = 
-                        myContext.registerService(classNames, item, props);
-                return new OSGiCertificate(reg);
-            }
-        };
+    public OSGiCertificate register(R request) {
+        String[] classNames = request.getClassNames().toArray(new String[0]);
+        Dictionary<String,String> props = 
+                new Hashtable<String, String>(request.getProperties());
+        Object item = request.getItem();
+        ServiceRegistration reg = 
+                myContext.registerService(classNames, item, props);
+        return new OSGiCertificate(reg);
     }
 
     @Override
-    public Listener<OSGiCertificate> unregister() {
-        return new Listener<OSGiCertificate>() {
-
-            @Override
-            public void handleEvent(OSGiCertificate event) {
-                event.unregister();
-            }
-        };
+    public void unregister(OSGiCertificate cert) {
+        cert.unregister();
     }
 
     @Override
-    public Adapter<M, OSGiCertificate> modify() {
-        return new Adapter<M, OSGiCertificate>() {
-
-            @Override
-            public OSGiCertificate adapt(M a) {
-                OSGiCertificate cert = a.getCertificate();
-                cert.setProperties(new Hashtable(a.getProperties()));
-                return cert;
-            }
-        };
+    public OSGiCertificate modify(M request) {
+        OSGiCertificate cert = request.getCertificate();
+        cert.setProperties(new Hashtable(request.getProperties()));
+        return cert;
     }
 
     /**

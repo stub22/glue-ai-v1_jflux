@@ -209,7 +209,7 @@ public class OSGiUtils {
             Finder f = context.getRegistry().getFinder(context);
             props.put(key, val);
             Descriptor d = new DependencyDescriptor("", cls, props);
-            Object result = f.findSingle().adapt(d);
+            Object result = f.findSingle(d);
             if(result != null) {
                 return true;
             }
@@ -245,7 +245,7 @@ public class OSGiUtils {
                     "", service, props, cls);
         Accessor acc = context.getRegistry().getAccessor(context);
         
-        return (Certificate)acc.register().adapt(rr);
+        return (Certificate)acc.register(rr);
     }
     
     /**
@@ -326,7 +326,7 @@ public class OSGiUtils {
         try {
             Descriptor d = new DependencyDescriptor(
                     "", Class.forName(clazz), propMap);
-            Reference r = (Reference)fin.findSingle().adapt(d);
+            Reference r = (Reference)fin.findSingle(d);
             
             return r != null;
         } catch(Exception e) {
