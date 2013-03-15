@@ -15,9 +15,15 @@
  */
 package org.jflux.api.registry;
 
+import org.jflux.api.registry.opt.RegistrationRequest;
+import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.api.registry.opt.Modification;
+import org.jflux.api.registry.opt.Reference;
+import org.jflux.api.registry.opt.Certificate;
+import java.util.List;
+import org.jflux.api.core.Listener;
 import org.jflux.api.core.event.Event;
 import org.jflux.api.core.event.Header;
-import org.jflux.api.registry.opt.*;
 
 /**
  * Provides access to registry components based on the given context.
@@ -25,75 +31,93 @@ import org.jflux.api.registry.opt.*;
  * @param <Context> Provides registry permissions
  * @author Matthew Stevenson
  */
-public interface Registry<
-        Context,
-        F extends Finder, 
-        A extends Accessor, 
-        R extends Retriever,
-        M extends Monitor> {
+public interface Registry<Desc,Ref,Req,Cert,ModReq, Evt>{
     /**
-     * Returns a registry Finder matching the context permissions.
-     * @param context
-     * @return Finder matching the context permissions
+     * Returns the first reference matching the given description.  
+     * Returns null if no matching reference is found.
+     * @param desc
+     * @return first reference matching the given description.
      */
-    public F getFinder(Context context);
-    /**
-     * Returns a registry Monitor matching the context permissions.
-     * @param context
-     * @return Monitor matching the context permissions
-     */
-    public M getMonitor(Context context);
-    /**
-     * Returns a registry Accessor matching the context permissions.
-     * @param context
-     * @return
-     */
-    public A getAccessor(Context context);
-    /**
-     * Returns a registry Retriever matching the context permissions.
-     * @param context
-     * @return registry Retriever matching the context permissions
-     */
-    public R getRetriever(Context context);
+    public Ref findSingle(Desc desc);
     
     /**
-     * Registry using the message interfaces from org.jflux.api.regstry.opt.
-     * @param <Time> Timestamp type
-     * @param <CxtK> Registry context property key
-     * @param <CxtV> Registry context property value
-     * @param <K> property key
-     * @param <V> property value
+     * Returns all references matching the given description.  
+     * Returns null if no matching reference is found.
+     * @param desc
+     * @return all references matching the given description.
      */
-    public static interface RegistryTemplate<CxtK, CxtV, Time, K, V,
-            Cxt extends RegistryContext<
-                    ? extends Registry<Cxt,F,A,R,M>,CxtK,CxtV>,
-            Desc extends Descriptor<K,V>,
-            Ref extends Reference<K,V>,
-            Req extends RegistrationRequest<?,K,V>,
-            Cert extends Certificate<Ref>,
-            ModReq extends Modification<K,V>,
-            RefEvt extends Event<
-                    ? extends Header<? extends Registry,Time>,Ref>,
-            F extends Finder<Desc,Ref>,
-            A extends Accessor<Req,Cert,ModReq>, 
-            R extends Retriever<Ref>,
-            M extends Monitor<Desc,RefEvt>> extends Registry<Cxt,F,A,R,M>{
-    }
+    public List<Ref> findAll(Desc desc);
+    
+    /**
+     * Returns a list of references matching the given description whose size 
+     * is less than or equal to max.  
+     * Returns null if no matching reference is found.
+     * @param desc
+     * @param max
+     * @return list of references matching the given description.
+     */
+    public List<Ref> findCount( Desc desc, int max);
+    
+    
+    
+    /**
+     * Returns an Adapter for retrieving an item.
+     * @param clazz the item's class
+     * @return Adapter for retrieving an item
+     */
+    public <T> T retrieve(Class<T> clazz, Ref reference);
+    /**
+     * Returns an Adapter for retrieving an untyped item.
+     * @return Adapter for retrieving an untyped item
+     */
+    public Object retrieve(Ref reference);
+    /**
+     * Returns a Listener for releasing an item which was retrieved.
+     * @return Listener for releasing an item which was retrieved
+     */
+    public void release(Ref reference);
+    
+    
+    
+    /**
+     * Returns an Adapter for registering items.
+     * @return Adapter for registering items
+     */
+    public Cert register(Req request);
+    /**
+     * Returns a Listener for unregistering items.
+     * @return Listener for unregistering an items
+     */
+    public void unregister(Cert cert);
+    /**
+     * Returns an Adapter for modifying a registration.
+     * @return Adapter for modifying a registration
+     */
+    public void modify(Cert cert, ModReq request);
+    
+    
+    
+    /**
+     * Adds a Listener to be notified of events matching the description
+     * @param desc event filter
+     * @param listener the listener to be notified
+     */
+    public void addListener(Desc desc, Listener<Evt> listener);
+    /**
+     * Removes a Listener from being notified of any events
+     * @param listener the listener to be removed
+     */
+    public void removeListener(Listener<Evt> listener);
     
     /**
      * A basic kind of Registry
      */
-    public static interface BasicRegistry<CxtK,CxtV,Time,K,V> extends Registry<
-            RegistryContext<BasicRegistry<CxtK,CxtV,Time,K,V>,CxtK,CxtV>,
-            Finder<Descriptor<K,V>,Reference<K,V>>,
-            Accessor<
-                    RegistrationRequest<?,K,V>,
-                    Certificate<Reference<K,V>>,
-                    Modification<K,V>>,
-            Retriever<Reference<K,V>>,
-            Monitor<Descriptor<K,V>,
-                    Event<
-                        Header<? extends BasicRegistry<CxtK,CxtV,Time,K,V>,Time>, 
-                        Reference<K,V>>>> {
+    public static interface BasicRegistry<Time,K,V> extends Registry<
+            Descriptor<K,V>,
+            Reference<K,V>,
+            RegistrationRequest<?,K,V>,
+            Certificate<Reference<K,V>>,
+            Modification<K,V>,
+            Event<Header<? extends BasicRegistry<Time,K,V>,Time>,Reference<K,V>>> {
     }
 }
