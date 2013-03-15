@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.registry.opt.RegistryContext;
+import org.jflux.api.registry.Registry;
 import org.jflux.api.services.DependencyDescriptor;
 import org.jflux.api.services.DependencyDescriptor.DependencyType;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
@@ -58,7 +58,7 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
      */
     public final static String PROP_ALL_DEPENDENCIES_AVAILABLE = "allDependenciesAvailable";
     
-    private RegistryContext myContext;
+    private Registry myContext;
     private int myRequiredCount;
     private Map<String,SingleServiceListener> myDependencyTrackers;
     private Map<String,DependencyDescriptor> myDependencyDescMap;
@@ -70,7 +70,7 @@ public class ServiceDependenciesTracker extends PropertyChangeNotifier{
      * Creates an empty ServiceDependenciesTracker with the given BundleContext.
      * @param context 
      */
-    public ServiceDependenciesTracker(RegistryContext context){
+    public ServiceDependenciesTracker(Registry context){
         if(context == null){
             throw new NullPointerException();
         }

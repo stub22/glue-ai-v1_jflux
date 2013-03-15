@@ -19,16 +19,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map.Entry;
 import java.util.*;
-import org.jflux.api.registry.Accessor;
+import org.jflux.api.registry.Registry;
+import org.jflux.api.registry.opt.BasicRegistrationRequest;
 import org.jflux.api.registry.opt.Certificate;
 import org.jflux.api.registry.opt.RegistrationRequest;
-import org.jflux.api.registry.opt.RegistryContext;
 import org.jflux.api.services.DependencyDescriptor;
 import org.jflux.api.services.ManagedService;
 import org.jflux.api.services.ServiceLifecycleProvider;
 import org.jflux.api.services.ServiceLifecycleProvider.Validator;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
-import org.jflux.impl.registry.basic.opt.BasicRegistrationRequest;
 import org.jflux.impl.services.osgi.OSGiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +49,7 @@ import static org.jflux.impl.services.osgi.lifecycle.ServiceDependenciesTracker.
 public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedService<T> {
 
     private final static Logger theLogger = LoggerFactory.getLogger(OSGiComponent.class);
-    private RegistryContext myContext;
+    private Registry myContext;
     private ServiceLifecycleProvider<T> myLifecycleProvider;
     private LifecycleDependencyListener myLifecycleListener;
     private ServiceDependenciesTracker myDependenciesTracker;
@@ -70,7 +69,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
      * @param context BundleContext for accessing the OSGi Service Registry
      * @param lifecycle lifecycle provider for the managed service
      */
-    public OSGiComponent(RegistryContext context,
+    public OSGiComponent(Registry context,
             ServiceLifecycleProvider<T> lifecycle) {
         this(context, lifecycle, null, null, true);
     }
@@ -86,7 +85,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
      * the managed service to the OSGi Service Registry. These are combined with
      * any properties from the ServiceLifecycleProvider
      */
-    public OSGiComponent(RegistryContext context,
+    public OSGiComponent(Registry context,
             ServiceLifecycleProvider<T> lifecycle,
             Properties registrationProps) {
         this(context, lifecycle, registrationProps, null, true);
@@ -105,7 +104,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
      * @param selfRegister determines if this OSGiComponent should register
      * itself when started, by default this is true
      */
-    public OSGiComponent(RegistryContext context,
+    public OSGiComponent(Registry context,
             ServiceLifecycleProvider<T> lifecycle,
             Properties registrationProps, boolean selfRegister) {
         this(context, lifecycle, registrationProps, null, selfRegister);
@@ -124,7 +123,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
      * @param uniqueProps 
      * @param selfRegister  
      */
-    public OSGiComponent(RegistryContext context,
+    public OSGiComponent(Registry context,
             ServiceLifecycleProvider<T> lifecycle,
             Properties registrationProps,
             Properties uniqueProps,
@@ -275,9 +274,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
             RegistrationRequest<ManagedService, String, String> rr =
                     new BasicRegistrationRequest<ManagedService, String, String>(
                     "", this, props, classNames);
-            Accessor acc = myContext.getRegistry().getAccessor(myContext);
-
-            mySelfRegistration = (Certificate)acc.register(rr);
+            mySelfRegistration = (Certificate)myContext.register(rr);
         } catch(Exception e) {
             theLogger.error(e.getMessage());
         }
@@ -291,8 +288,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
             return;
         }
         try {
-            Accessor acc = myContext.getRegistry().getAccessor(myContext);
-            acc.unregister(mySelfRegistration);
+            myContext.unregister(mySelfRegistration);
         } catch(Exception e) {
             theLogger.error(e.getMessage());
         }
@@ -320,9 +316,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
         if(myServiceRegistration != null) {
             try {
                 try {
-                    Accessor acc = myContext.getRegistry().getAccessor(myContext);
-
-                    acc.unregister(myServiceRegistration);
+                    myContext.unregister(myServiceRegistration);
                 } catch(Exception e) {
                     theLogger.error(e.getMessage());
                 }
@@ -375,9 +369,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
             RegistrationRequest<T, String, String> rr =
                     new BasicRegistrationRequest<T, String, String>(
                     "", myService, propMap, classNames);
-            Accessor acc = myContext.getRegistry().getAccessor(myContext);
-
-            myServiceRegistration = (Certificate)acc.register(rr);
+            myServiceRegistration = (Certificate)myContext.register(rr);
         } catch(Exception e) {
             theLogger.error(e.getMessage());
         }
@@ -461,8 +453,7 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
             register();
             if(oldReg != null) {
                 try {
-                    Accessor acc = myContext.getRegistry().getAccessor(myContext);
-                    acc.unregister(oldReg);
+                    myContext.unregister(oldReg);
                 } catch(Exception e) {
                     theLogger.error(e.getMessage());
                 }
@@ -586,7 +577,6 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
             } catch(ClassCastException ex) {
                 getLogger().warn("Improper requirement Map type.", ex);
                 myInitializedFlag = false;
-                return;
             }
         }
     }
