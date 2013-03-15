@@ -15,15 +15,15 @@
  */
 package org.jflux.api.registry;
 
-import org.jflux.api.registry.opt.RegistrationRequest;
-import org.jflux.api.registry.opt.Descriptor;
-import org.jflux.api.registry.opt.Modification;
-import org.jflux.api.registry.opt.Reference;
-import org.jflux.api.registry.opt.Certificate;
 import java.util.List;
 import org.jflux.api.core.Listener;
 import org.jflux.api.core.event.Event;
 import org.jflux.api.core.event.Header;
+import org.jflux.api.registry.opt.Certificate;
+import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.api.registry.opt.Modification;
+import org.jflux.api.registry.opt.Reference;
+import org.jflux.api.registry.opt.RegistrationRequest;
 
 /**
  * Provides access to registry components based on the given context.
