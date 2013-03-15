@@ -15,9 +15,6 @@
  */
 package org.jflux.api.registry;
 
-import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Notifier;
-
 /**
  * Retrieves items using a Reference.
  * 
@@ -42,18 +39,18 @@ public interface Retriever<Ref> {
      * @return Listener for releasing an item which was retrieved
      */
     public void release(Ref reference);
-    
-    /**
-     * Returns an Adapter for retrieving an item asynchronously.
-     * @param clazz the item's class
-     * @return Adapter for retrieving an item
-     */
-    public <T> Adapter<Ref,Notifier<T>> retrieveAsync(Class<T> clazz);
-    
-    /**
-     * Returns a Listener for releasing an item which was retrieved
-     * asynchronously.
-     * @return Listener for releasing an item which was retrieved
-     */
-    public Adapter<Ref,Notifier<?>> retrieveAsync();
+//    
+//    /**
+//     * Returns an Adapter for retrieving an item asynchronously.
+//     * @param clazz the item's class
+//     * @return Adapter for retrieving an item
+//     */
+//    public <T> void retrieveAsync(Class<T> clazz, Ref reference, Listener<T> listener);
+//    
+//    /**
+//     * Returns a Listener for releasing an item which was retrieved
+//     * asynchronously.
+//     * @return Listener for releasing an item which was retrieved
+//     */
+//    public void retrieveAsync(Ref reference, Listener listener);
 }

@@ -15,6 +15,12 @@
  */
 package org.jflux.impl.registry.osgi.direct;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
@@ -33,11 +39,14 @@ import org.osgi.framework.ServiceListener;
  * @author Matthew Stevenson
  */
 public class DirectMonitor<Time> implements Monitor<
-        Descriptor<String,String>, ServiceEvent, ServiceEventNotifier> {
+        Descriptor<String,String>, ServiceEvent> {
     private final static Logger theLogger = Logger.getLogger(DirectMonitor.class.getName());
     private BundleContext myContext;
+    private Map<Listener<ServiceEvent>,Map<Descriptor<String,String>,ServiceEventNotifier>> myListenerDescriptorMap;
+    private Map<Descriptor<String,String>,ServiceEventNotifier> myDescriptorNotifierMap;
+    private Map<ServiceEventNotifier,List<Descriptor<String,String>>> myNotifierUseMap;
     
-    DirectMonitor(BundleContext context){
+    public DirectMonitor(BundleContext context){
         if(context == null){
             throw new NullPointerException();
         }
@@ -45,28 +54,77 @@ public class DirectMonitor<Time> implements Monitor<
     }
 
     @Override
-    public ServiceEventNotifier getNotifier(
-            Descriptor<String,String> desc) {
-        String filter = OSGiRegistryUtil.getFullFilter(desc);
-        return new ServiceEventNotifier(myContext, filter);
+    public synchronized void addListener(Descriptor<String, String> desc, Listener<ServiceEvent> listener) {
+        ServiceEventNotifier n = myDescriptorNotifierMap.get(desc);
+        if(n == null){
+            String filter = OSGiRegistryUtil.getFullFilter(desc);
+            n = new ServiceEventNotifier(myContext, filter);
+            myDescriptorNotifierMap.put(desc, n);
+        }
+        Map<Descriptor<String,String>,ServiceEventNotifier> m = myListenerDescriptorMap.get(listener);
+        if(m == null){
+            m = new HashMap<Descriptor<String, String>, ServiceEventNotifier>();
+            myListenerDescriptorMap.put(listener, m);
+        }
+        if(m.containsKey(desc)){
+            return;
+        }
+        m.put(desc, n);
+        n.addListener(listener);
+        List<Descriptor<String,String>> l = myNotifierUseMap.get(n);
+        if(l == null){
+            l = new ArrayList<Descriptor<String, String>>();
+            myNotifierUseMap.put(n, l);
+            n.start();
+        }
+        l.add(desc);
+        
     }
 
     @Override
-    public Listener<ServiceEventNotifier> releaseNotifier() {
-        return new Listener<ServiceEventNotifier>() {
-
-            @Override
-            public void handleEvent(ServiceEventNotifier event) {
-                if(event == null){
-                    return;
-                }
-                if(!event.stop()){
-                    theLogger.warning("Unable to stop notifier");
-                    return;
-                }
-                event.myContext = null;
+    public synchronized void removeListener(Descriptor<String, String> desc, Listener<ServiceEvent> listener) {
+        Map<Descriptor<String,String>,ServiceEventNotifier> m = myListenerDescriptorMap.get(listener);
+        if(m == null){
+            return;
+        }
+        ServiceEventNotifier n = m.get(desc);
+        if(n == null){
+            return;
+        }
+        n.removeListener(listener);
+        m.remove(desc);
+        if(m.isEmpty()){
+            myListenerDescriptorMap.remove(listener);
+        }
+        List<Descriptor<String,String>> l = myNotifierUseMap.get(n);
+        if(l != null){
+            l.remove(desc);
+            if(!l.contains(desc)){
+                myDescriptorNotifierMap.remove(desc);
             }
-        };
+        }if(l == null || l.isEmpty()){
+            myNotifierUseMap.remove(n);
+            n.stop();
+        }
+    }
+
+    @Override
+    public synchronized void removeListener(Listener<ServiceEvent> listener) {
+        Map<Descriptor<String,String>,ServiceEventNotifier> m = myListenerDescriptorMap.get(listener);
+        if(m == null){
+            return;
+        }else if(m.isEmpty()){
+            myListenerDescriptorMap.remove(listener);
+            return;
+        }
+        Set<Descriptor<String,String>> ds = 
+                new TreeSet<Descriptor<String, String>>(m.keySet());
+        for(Descriptor<String,String> d : ds){
+            if(d == null){
+                continue;
+            }
+            removeListener(d, listener);
+        }
     }
     
     /**

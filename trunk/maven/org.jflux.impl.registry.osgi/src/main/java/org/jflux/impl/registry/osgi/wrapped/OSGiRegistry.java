@@ -18,7 +18,7 @@ public class OSGiRegistry<Time> implements Registry<
         OSGiContext<OSGiRegistry<Time>>, 
         OSGiFinder, 
         OSGiAccessor<RegistrationRequest<?, String, String>,
-                Modification<OSGiCertificate, String ,String>>, 
+                Modification<String ,String>>, 
         OSGiRetriever<OSGiReference>, 
         OSGiMonitor<OSGiRegistry<Time>, Time>> {
     private OSGiDirectRegistry<Time> myDirectRegistry;
@@ -62,11 +62,11 @@ public class OSGiRegistry<Time> implements Registry<
     @Override
     public OSGiAccessor<
             RegistrationRequest<?, String, String>, 
-            Modification<OSGiCertificate, String, String>> getAccessor(
+            Modification<String, String>> getAccessor(
                     OSGiContext<OSGiRegistry<Time>> context) {
         return new OSGiAccessor<
                 RegistrationRequest<?, String, String>, 
-                Modification<OSGiCertificate, String, String>>(context);
+                Modification<String, String>>(context);
     }
 
     @Override

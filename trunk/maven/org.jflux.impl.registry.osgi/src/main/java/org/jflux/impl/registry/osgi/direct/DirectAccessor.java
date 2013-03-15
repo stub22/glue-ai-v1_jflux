@@ -18,8 +18,6 @@ package org.jflux.impl.registry.osgi.direct;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.logging.Logger;
-import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Accessor;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
@@ -33,11 +31,11 @@ import org.osgi.framework.ServiceRegistration;
 public class DirectAccessor implements Accessor<
             RegistrationRequest<?, String, String>, 
             ServiceRegistration, 
-            Modification<ServiceRegistration, String, String>>{
+            Modification<String, String>>{
     private final static Logger theLogger = Logger.getLogger(DirectAccessor.class.getName());
     private BundleContext myContext;
     
-    DirectAccessor(BundleContext context){
+    public DirectAccessor(BundleContext context){
         if(context == null){
             throw new NullPointerException();
         }
@@ -59,30 +57,11 @@ public class DirectAccessor implements Accessor<
     }
 
     @Override
-    public ServiceRegistration modify(
-            Modification<ServiceRegistration, String, String> request) {
-        ServiceRegistration reg = request.getCertificate();
+    public void modify(
+            ServiceRegistration cert,
+            Modification<String, String> request) {
         Dictionary<String,String> props = 
                 new Hashtable<String, String>(request.getProperties());
-        reg.setProperties(props);
-        return reg;
-    }
-
-    /**
-     * Not supported yet.
-     * @return
-     */
-    @Override
-    public Adapter<RegistrationRequest<?, String, String>, Notifier<ServiceRegistration>> registerAsync() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * Not supported yet.
-     * @return
-     */
-    @Override
-    public Adapter<Modification<ServiceRegistration, String, String>, Notifier<ServiceRegistration>> modifyAsync() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        cert.setProperties(props);
     }
 }

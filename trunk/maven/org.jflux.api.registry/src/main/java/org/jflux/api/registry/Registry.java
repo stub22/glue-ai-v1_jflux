@@ -17,7 +17,6 @@ package org.jflux.api.registry;
 
 import org.jflux.api.core.event.Event;
 import org.jflux.api.core.event.Header;
-import org.jflux.api.core.playable.PlayableNotifier;
 import org.jflux.api.registry.opt.*;
 
 /**
@@ -72,14 +71,13 @@ public interface Registry<
             Ref extends Reference<K,V>,
             Req extends RegistrationRequest<?,K,V>,
             Cert extends Certificate<Ref>,
-            ModReq extends Modification<Cert,K,V>,
+            ModReq extends Modification<K,V>,
             RefEvt extends Event<
                     ? extends Header<? extends Registry,Time>,Ref>,
-            N extends PlayableNotifier<RefEvt>,
             F extends Finder<Desc,Ref>,
             A extends Accessor<Req,Cert,ModReq>, 
             R extends Retriever<Ref>,
-            M extends Monitor<Desc,RefEvt,N>> extends Registry<Cxt,F,A,R,M>{
+            M extends Monitor<Desc,RefEvt>> extends Registry<Cxt,F,A,R,M>{
     }
     
     /**
@@ -91,14 +89,11 @@ public interface Registry<
             Accessor<
                     RegistrationRequest<?,K,V>,
                     Certificate<Reference<K,V>>,
-                    Modification<Certificate<Reference<K,V>>,K,V>>,
+                    Modification<K,V>>,
             Retriever<Reference<K,V>>,
             Monitor<Descriptor<K,V>,
                     Event<
                         Header<? extends BasicRegistry<CxtK,CxtV,Time,K,V>,Time>, 
-                        Reference<K,V>>,
-                    PlayableNotifier<Event<
-                        Header<? extends BasicRegistry<CxtK,CxtV,Time,K,V>,Time>, 
-                        Reference<K,V>>>>> {
+                        Reference<K,V>>>> {
     }
 }

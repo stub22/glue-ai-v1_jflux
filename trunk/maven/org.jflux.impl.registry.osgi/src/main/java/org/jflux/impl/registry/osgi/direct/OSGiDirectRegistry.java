@@ -23,7 +23,6 @@ import org.jflux.api.registry.Retriever;
 import org.jflux.api.registry.opt.Descriptor;
 import org.jflux.api.registry.opt.Modification;
 import org.jflux.api.registry.opt.RegistrationRequest;
-import org.jflux.impl.registry.osgi.direct.DirectMonitor.ServiceEventNotifier;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
@@ -38,9 +37,9 @@ public class OSGiDirectRegistry<Time> implements Registry<
         Finder<Descriptor<String,String>, ServiceReference>,
         Accessor<RegistrationRequest<?, String, String>,
                 ServiceRegistration,
-                Modification<ServiceRegistration, String ,String>>, 
+                Modification<String ,String>>, 
         Retriever<ServiceReference>, 
-        Monitor<Descriptor<String,String>, ServiceEvent, ServiceEventNotifier>> {
+        Monitor<Descriptor<String,String>, ServiceEvent>> {
 
     @Override
     public Finder<Descriptor<String, String>, ServiceReference> 
@@ -52,7 +51,7 @@ public class OSGiDirectRegistry<Time> implements Registry<
     public Accessor<
             RegistrationRequest<?, String, String>, 
             ServiceRegistration, 
-            Modification<ServiceRegistration, String, String>> 
+            Modification<String, String>> 
             getAccessor(BundleContext context) {
         return new DirectAccessor(context);
     }
@@ -64,7 +63,7 @@ public class OSGiDirectRegistry<Time> implements Registry<
 
     @Override
     public Monitor<
-            Descriptor<String,String>, ServiceEvent, ServiceEventNotifier> 
+            Descriptor<String,String>, ServiceEvent> 
             getMonitor(BundleContext context) {
         return new DirectMonitor<Time>(context);
     }
