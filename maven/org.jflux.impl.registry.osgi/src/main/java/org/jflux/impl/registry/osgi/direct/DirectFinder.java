@@ -17,9 +17,10 @@ package org.jflux.impl.registry.osgi.direct;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Listener;
 import org.jflux.api.core.playable.PlayableNotifier;
 import org.jflux.api.registry.Finder;
 import org.jflux.api.registry.opt.Descriptor;
@@ -36,19 +37,18 @@ public class DirectFinder implements
         Finder<Descriptor<String,String>, ServiceReference> {
     private final static Logger theLogger = Logger.getLogger(DirectFinder.class.getName());
     private BundleContext myContext;
-    private FinderBase myFinderBase;
+    private Map<Listener,List<PlayableNotifier>> myAsyncMap;
     
-    DirectFinder(BundleContext context){
+    public DirectFinder(BundleContext context){
         if(context == null){
             throw new NullPointerException();
         }
         myContext = context;
-        myFinderBase = new FinderBase();
     }
     
     @Override
     public ServiceReference findSingle(Descriptor<String, String> desc) {
-        ServiceReference[] refs = myFinderBase.adapt(desc);
+        ServiceReference[] refs = find(desc);
         if(refs == null){
             return null;
         }
@@ -57,7 +57,7 @@ public class DirectFinder implements
 
     @Override
     public List<ServiceReference> findAll(Descriptor<String, String> desc) {
-        ServiceReference[] refs = myFinderBase.adapt(desc);
+        ServiceReference[] refs = find(desc);
         if(refs == null){
             return null;
         }
@@ -66,81 +66,86 @@ public class DirectFinder implements
 
     @Override
     public List<ServiceReference> findCount(
-            final int max, Descriptor<String, String> desc) {
-        return DefaultFinderProvider.findCount(this, max, desc);
+            Descriptor<String, String> desc, int max) {
+        return DefaultFinderProvider.findCount(this, desc, max);
     }
-
-    /**
-     * Returns an Adapter for finding a single reference from a description
-     * asynchronously.
-     * @return Adapter for finding a single reference from a description
-     */
-    @Override
-    public Adapter<Descriptor<String, String>, 
-            PlayableNotifier<ServiceReference>> findSingleAsync() {
-        return DefaultFinderProvider.findSingleAsync(this);
-    }
-
-    /**
-        * Returns an Adapter for finding a continuous reference from a description
-        * asynchronously.
-        * @return Adapter for finding a continuous reference from a description
-     */
-    @Override
-    public Adapter<Descriptor<String, String>, 
-            PlayableNotifier<ServiceReference>> findContinuousAsync() {
-        return DefaultFinderProvider.findContinuousAsync(this);
-    }
-
-    /**
-     * Returns an Adapter for finding a continuous reference from a description
-     * asynchronously.
-     * @param max the maximum number of parameters
-     * @return Adapter for finding a continuous reference from a description
-     */
-    @Override
-    public Adapter<Descriptor<String, String>, 
-            PlayableNotifier<ServiceReference>> findContinuousAsync(int max) {
-        return DefaultFinderProvider.findContinuousAsync(this, max);
-    }
-
-    /**
-     * Returns an Adapter for finding all references matching a description
-     * asynchronously.
-     * @return Adapter for finding all references matching a description.
-     */
-    @Override
-    public Adapter<Descriptor<String, String>, 
-            PlayableNotifier<List<ServiceReference>>> findAllAsync() {
-        return DefaultFinderProvider.findAllAsync(this);
-    }
-
-    /**
-     * Returns an Adapter for finding the number of references matching a
-     * description asynchronously.
-     * @param max the maximum number of parameters
-     * @return Adapter for finding the number of references matching a
-     * description.
-     */
-    @Override
-    public Adapter<Descriptor<String, String>, 
-            PlayableNotifier<List<ServiceReference>>> findCountAsync(int max) {
-        return DefaultFinderProvider.findCountAsync(this, max);
-    }
-    
-    private class FinderBase implements 
-            Adapter<Descriptor<String, String>, ServiceReference[]> {
-        
-        @Override
-        public ServiceReference[] adapt(Descriptor<String, String> a) {
-            String className = a.getClassName();
-            String filter = OSGiRegistryUtil.getPropertiesFilter(a);
-            try{
-                return myContext.getServiceReferences(className, filter);
-            }catch(InvalidSyntaxException ex){
-                theLogger.log(Level.SEVERE, "Invalid LDAP filter: " + filter, ex);
-                return null;
-            }
+//
+//    /**
+//     * Returns an Adapter for finding a single reference from a description
+//     * asynchronously.
+//     * @return Adapter for finding a single reference from a description
+//     */
+//    @Override
+//    public void findSingleAsync(
+//            Descriptor<String, String> desc, 
+//            Listener<ServiceReference> listener) {
+//        PlayableNotifier<ServiceReference> n = 
+//                DefaultFinderProvider.findSingleAsync(this, desc, listener);
+//        addAsyncListener(listener, n);
+//    }
+//
+//    /**
+//     * Returns an Adapter for finding all references matching a description
+//     * asynchronously.
+//     * @return Adapter for finding all references matching a description.
+//     */
+//    @Override
+//    public void findAllAsync(
+//            Descriptor<String, String> desc, 
+//            Listener<List<ServiceReference>> listener) {
+//        PlayableNotifier<List<ServiceReference>> n = 
+//                DefaultFinderProvider.findAllAsync(this, desc, listener);
+//        addAsyncListener(listener, n);
+//    }
+//
+//    /**
+//     * Returns an Adapter for finding the number of references matching a
+//     * description asynchronously.
+//     * @param max the maximum number of parameters
+//     * @return Adapter for finding the number of references matching a
+//     * description.
+//     */
+//    @Override
+//    public void findCountAsync(
+//            Descriptor<String, String> desc, int max,
+//            Listener<List<ServiceReference>> listener) {
+//        PlayableNotifier<List<ServiceReference>> n = 
+//                DefaultFinderProvider.findCountAsync(this, desc, max, listener);
+//        addAsyncListener(listener, n);
+//    }
+//    
+//    private synchronized void addAsyncListener(Listener l, PlayableNotifier n){
+//        List<PlayableNotifier> ns = myAsyncMap.get(l);
+//        if(ns == null){
+//            ns = new ArrayList<PlayableNotifier>();
+//            myAsyncMap.put(l, ns);
+//        }
+//        ns.add(n);
+//    }
+//
+//    @Override
+//    public synchronized void removeAsyncListener(Listener listener) {
+//        List<PlayableNotifier> ns = myAsyncMap.remove(listener);
+//        if(ns == null){
+//            return;
+//        }
+//        for(PlayableNotifier n : ns){
+//            if(n == null){
+//                continue;
+//            }
+//            n.stop();
+//            n.removeListener(listener);
+//        }
+//    }
+//    
+    public ServiceReference[] find(Descriptor<String, String> a) {
+        String className = a.getClassName();
+        String filter = OSGiRegistryUtil.getPropertiesFilter(a);
+        try{
+            return myContext.getServiceReferences(className, filter);
+        }catch(InvalidSyntaxException ex){
+            theLogger.log(Level.SEVERE, "Invalid LDAP filter: " + filter, ex);
+            return null;
         }
-    } 
+    }
 }

@@ -17,8 +17,6 @@ package org.jflux.impl.registry.osgi.direct;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.core.Adapter;
-import org.jflux.api.core.Notifier;
 import org.jflux.api.registry.Retriever;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -32,7 +30,7 @@ public class DirectRetriever implements
     private final static Logger theLogger = Logger.getLogger(DirectRetriever.class.getName());
     BundleContext myContext;
     
-    DirectRetriever(BundleContext context){
+    public DirectRetriever(BundleContext context){
         if(context == null){
             throw new NullPointerException();
         }
@@ -40,7 +38,7 @@ public class DirectRetriever implements
     }
     
     @Override
-    public <T> T retrieve(final Class<T> clazz, ServiceReference reference) {
+    public <T> T retrieve(Class<T> clazz, ServiceReference reference) {
         Object obj = myContext.getService(reference);
         if(obj == null){
             return null;
@@ -64,24 +62,5 @@ public class DirectRetriever implements
     @Override
     public void release(ServiceReference reference) {
         myContext.ungetService(reference);
-    }
-
-    /**
-     * Not supported yet.
-     * @param clazz
-     * @return
-     */
-    @Override
-    public <T> Adapter<ServiceReference, Notifier<T>> retrieveAsync(Class<T> clazz) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * Not supported yet.
-     * @return
-     */
-    @Override
-    public Adapter<ServiceReference, Notifier<?>> retrieveAsync() {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -17,6 +17,7 @@ package org.jflux.api.registry;
 
 import java.util.List;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Listener;
 import org.jflux.api.core.playable.PlayableNotifier;
 import org.jflux.api.data.concurrent.AsyncAdapter;
 
@@ -30,64 +31,66 @@ import org.jflux.api.data.concurrent.AsyncAdapter;
  */
 public interface Finder<Desc,Ref> {
     /**
-     * Returns an Adapter for finding a single reference from a description.
-     * @return Adapter for finding a single reference from a description
+     * Returns the first reference matching the given description.  
+     * Returns null if no matching reference is found.
+     * @param desc
+     * @return first reference matching the given description.
      */
     public Ref findSingle(Desc desc);
     
     /**
-     * Returns an Adapter for finding all references matching a description.
-     * @return Adapter for finding all references matching a description.
+     * Returns all references matching the given description.  
+     * Returns null if no matching reference is found.
+     * @param desc
+     * @return all references matching the given description.
      */
     public List<Ref> findAll(Desc desc);
     
     /**
-     * Returns an Adapter for finding all references matching a description.
-     * @param max the maximum number of parameters
-     * @return Adapter for finding all references matching a description.
+     * Returns a list of references matching the given description whose size 
+     * is less than or equal to max.  
+     * Returns null if no matching reference is found.
+     * @param desc
+     * @param max
+     * @return list of references matching the given description.
      */
-    public List<Ref> findCount(int max, Desc desc);
-    
+    public List<Ref> findCount( Desc desc, int max);
+//    
+//    /**
+//     * Asynchronously finds the first reference matching the description and 
+//     * notifies the listener.  If no reference is found, null is passed to the 
+//     * listener
+//     * @param desc 
+//     * @param listener 
+//     */
+//    public void findSingleAsync(Desc desc, Listener<Ref> listener);
+//    
+//    /**
+//     * Asynchronously finds all references matching the description and 
+//     * notifies the listener.  If no reference is found, null is passed to the 
+//     * listener
+//     * @param desc 
+//     * @param listener 
+//     */
+//    public void findAllAsync(Desc desc, Listener<List<Ref>> listener);
+//    
+//    /**
+//     * Asynchronously finds all references matching the description up to max 
+//     * and notifies the listener.  If no reference is found, null is passed to 
+//     * the listener
+//     * @param desc 
+//     * @param listener 
+//     */
+//    public void findCountAsync(Desc desc, int max, Listener<List<Ref>> listener);
+//    
+//    /**
+//     * All asynchronous actions associated with the given listener are stopped.
+//     * @param listener 
+//     */
+//    public void removeAsyncListener(Listener listener);
+//    
     /**
-     * Returns an Adapter for finding a single reference from a description
-     * asynchronously.
-     * @return Adapter for finding a single reference from a description
-     */
-    public Adapter<Desc,PlayableNotifier<Ref>> findSingleAsync();
-    
-    /**
-     * Returns an Adapter for finding a continuous reference from a description
-     * asynchronously.
-     * @return Adapter for finding a continuous reference from a description
-     */
-    public Adapter<Desc,PlayableNotifier<Ref>> findContinuousAsync();
-    
-    /**
-     * Returns an Adapter for finding a continuous reference from a description
-     * asynchronously.
-     * @param max the maximum number of parameters
-     * @return Adapter for finding a continuous reference from a description
-     */
-    public Adapter<Desc,PlayableNotifier<Ref>> findContinuousAsync(int max);
-    
-    /**
-     * Returns an Adapter for finding all references matching a description
-     * asynchronously.
-     * @return Adapter for finding all references matching a description.
-     */
-    public Adapter<Desc,PlayableNotifier<List<Ref>>> findAllAsync();
-    
-    /**
-     * Returns an Adapter for finding the number of references matching a
-     * description asynchronously.
-     * @param max the maximum number of parameters
-     * @return Adapter for finding the number of references matching a
-     * description.
-     */
-    public Adapter<Desc,PlayableNotifier<List<Ref>>> findCountAsync(int max);
-    
-    /**
-     * A basic Finder backend.
+     * A basic Finder backend requiring a finder with only findAll.
      */
     public static class DefaultFinderProvider {
         /**
@@ -109,20 +112,8 @@ public interface Finder<Desc,Ref> {
          * @param max the maximum number of parameters
          * @return Adapter for finding all references.
          */
-        public static <D,R> List<R> findAll(
-                Finder<D,R> finder, D desc) {
-            final List<R> find = finder.findAll(desc);
-            return find;
-        }
-        
-        /**
-         * Returns an Adapter for finding all references.
-         * @param finder the Finder frontend
-         * @param max the maximum number of parameters
-         * @return Adapter for finding all references.
-         */
         public static <D,R> List<R> findCount(
-                Finder<D,R> finder, final int max, D desc) {
+                Finder<D,R> finder, D desc, final int max) {
             final List<R> find = finder.findAll(desc);
             if(find == null || find.size() <= max){
                 return find;
@@ -135,58 +126,39 @@ public interface Finder<Desc,Ref> {
          * @param finder the Finder frontend
          * @return Adapter for finding a single reference
          */
-        public static <D,R> Adapter<D,PlayableNotifier<R>> findSingleAsync(
-                final Finder<D,R> finder){
+        public static <D,R> PlayableNotifier<R> findSingleAsync(
+                final Finder<D,R> finder, D desc, Listener<R> listener){
             if(finder == null){
                 return null;
             }
-            return new AsyncAdapter<D,R>(new Adapter<D, R>() {
-
-                        @Override
-                        public R adapt(D a) {
+            PlayableNotifier<R> pn = 
+                    new AsyncAdapter<D,R>(new Adapter<D, R>() {
+                        @Override public R adapt(D a) {
                             return findSingle(finder, a);
-                        }
-                    });
+                        }}).adapt(desc);
+            pn.addListener(listener);
+            pn.start();
+            return pn;
         }
-
-        /**
-         * Returns an Adapter for finding a continuous reference asynchronously.
-         * @param finder the Finder frontend
-         * @return Adapter for finding a continuous reference
-         */
-        public static <D,R> Adapter<D,PlayableNotifier<R>> findContinuousAsync(
-                Finder<D,R> finder){
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        /**
-         * Returns an Adapter for finding a continuous reference asynchronously.
-         * @param finder the Finder frontend
-         * @param max the maximum number of parameters
-         * @return Adapter for finding a continuous reference
-         */
-        public static <D,R> Adapter<D,PlayableNotifier<R>> findContinuousAsync(
-                Finder<D,R> finder, int max){
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
+        
         /**
          * Returns an Adapter for finding all references asynchronously.
          * @param finder the Finder frontend
          * @return Adapter for finding all references
          */
-        public static <D,R> Adapter<D,PlayableNotifier<List<R>>> findAllAsync(
-                final Finder<D,R> finder){
+        public static <D,R> PlayableNotifier<List<R>> findAllAsync(
+                final Finder<D,R> finder, D desc, Listener<List<R>> listener){
             if(finder == null){
                 return null;
             }
-            return new AsyncAdapter<D,List<R>>(new Adapter<D, List<R>>() {
-
-                        @Override
-                        public List<R> adapt(D a) {
-                            return findAll(finder, a);
-                        }
-                    });
+            PlayableNotifier<List<R>> pn = new AsyncAdapter<D,List<R>>(
+                    new Adapter<D, List<R>>() {
+                        @Override public List<R> adapt(D a) {
+                            return finder.findAll(a);
+                        }}).adapt(desc);
+            pn.addListener(listener);
+            pn.start();
+            return pn;
         }
 
         /**
@@ -196,20 +168,20 @@ public interface Finder<Desc,Ref> {
          * @param max the maximum number of parameters
          * @return Adapter for finding the number of references
          */
-        public static <D,R> Adapter<D,PlayableNotifier<List<R>>> findCountAsync(
-                final Finder<D,R> finder, final int max){
+        public static <D,R> PlayableNotifier<List<R>> findCountAsync(
+                final Finder<D,R> finder, D desc, final int max, 
+                Listener<List<R>> listener){
             if(finder == null){
                 return null;
             }
-            return new AsyncAdapter<D,List<R>>(new Adapter<D, List<R>>() {
-
-                        @Override
-                        public List<R> adapt(D a) {
-                            return findCount(finder, max, a);
-                        }
-                    });
+            PlayableNotifier<List<R>> pn = new AsyncAdapter<D,List<R>>(
+                    new Adapter<D, List<R>>() {
+                        @Override public List<R> adapt(D a) {
+                            return findCount(finder, a, max);
+                        }}).adapt(desc);
+            pn.addListener(listener);
+            pn.start();
+            return pn;
         }
-        
-        
     }
 }

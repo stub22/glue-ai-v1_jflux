@@ -22,12 +22,7 @@ import java.util.Map;
  * 
  * @author Matthew Stevenson
  */
-public interface Modification<Cert,K,V> {
-    /**
-     * Gets the certificate needed for the modification to be accepted.
-     * @return the certificate
-     */
-    public Cert getCertificate();
+public interface Modification<K,V> {
     /**
      * Gets the properties needed to be changed.
      * @return the properties

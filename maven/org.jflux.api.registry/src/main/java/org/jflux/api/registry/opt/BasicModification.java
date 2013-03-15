@@ -10,20 +10,10 @@ import java.util.Map;
  * Basic implementation of Modification
  * @author Matthew Stevenson
  */
-public class BasicModification<Cert, K, V> implements 
-        Modification<Cert, K, V> {
-    private Cert myCertificate;
+public class BasicModification<K, V> implements 
+        Modification<K, V> {
     private Map<K,V> myProperties;
     
-    /**
-     * Gets the Certificate associated with the modification
-     * @return the Certificate
-     */
-    @Override
-    public Cert getCertificate() {
-        return myCertificate;
-    }
-
     /**
      * Gets the properties to be modified
      * @return the properties

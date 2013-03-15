@@ -140,19 +140,14 @@ public class OSGiReference implements Reference<String, String>, ServiceReferenc
         return myReference.compareTo(reference);
     }
     
-    /**
-     * Wraps an OSGi ServiceReference to a JFlux Reference
-     */
-    public static class ServiceReferenceWrapper implements 
-            Adapter<ServiceReference,OSGiReference> {
-        /**
-         * Converts an OSGi ServiceReference to a JFlux Reference
-         * @param a the ServiceReference
-         * @return the Reference
-         */
-        @Override
-        public OSGiReference adapt(ServiceReference a) {
-            return new OSGiReference(a);
-        }        
+    private static Adapter<ServiceReference,OSGiReference> theReferenceApadter;
+    public static Adapter<ServiceReference,OSGiReference> getReferenceAdapter(){
+        if(theReferenceApadter == null){
+            theReferenceApadter = new Adapter<ServiceReference,OSGiReference>() {
+                @Override public OSGiReference adapt(ServiceReference a) {
+                    return a == null ? null : new OSGiReference(a);
+                }};
+        }
+        return theReferenceApadter;
     }
 }

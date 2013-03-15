@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
-import org.jflux.api.core.Notifier;
 import org.jflux.api.core.event.Event;
 import org.jflux.api.core.event.Header;
 import org.jflux.api.registry.Finder;
@@ -64,7 +63,6 @@ public class SingleServiceListener<T>
     private RegistryContext myContext;
     private List<Reference> myReferences;
     private boolean myStartFlag;
-    private Notifier myNotifier;
 
     /**
      * Creates a new SingleServiceListener.
@@ -159,8 +157,7 @@ public class SingleServiceListener<T>
     
     private boolean startListening(){
         Monitor mon = myContext.getRegistry().getMonitor(myContext);
-        myNotifier = mon.getNotifier(myDescriptor);
-        myNotifier.addListener(this);
+        mon.addListener(myDescriptor, this);
         return true;
     }
     
@@ -201,7 +198,7 @@ public class SingleServiceListener<T>
     private void stopListening(){
         try{
             Monitor mon = myContext.getRegistry().getMonitor(myContext);
-            mon.releaseNotifier().handleEvent(myNotifier);
+            mon.removeListener(this);
         }catch(IllegalStateException ex){
             theLogger.log(Level.WARNING, "BundleContext not valid.", ex);
         }

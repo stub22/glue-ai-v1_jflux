@@ -16,7 +16,6 @@
 package org.jflux.api.registry;
 
 import org.jflux.api.core.Listener;
-import org.jflux.api.core.playable.PlayableNotifier;
 
 /**
  * Provides notifications of registry changes.
@@ -27,16 +26,22 @@ import org.jflux.api.core.playable.PlayableNotifier;
  * 
  * @author Matthew Stevenson
  */
-public interface Monitor<Desc, Evt, N extends PlayableNotifier<Evt>> {
+public interface Monitor<Desc, Evt>{
     /**
-     * Returns a Notifier which filters registry events.
+     * Adds a Listener to be notified of events matching the description
      * @param desc event filter
-     * @return Notifier which filters registry events
+     * @param listener the listener to be notified
      */
-    public N getNotifier(Desc desc);
+    public void addListener(Desc desc, Listener<Evt> listener);
     /**
-     * Returns a Listener for completely releasing a notifier.
-     * @return Listener for completely releasing a notifier
+     * Removes a Listener from being notified of events matching the description
+     * @param desc event filter
+     * @param listener the listener to be removed
      */
-    public Listener<N> releaseNotifier();
+    public void removeListener(Desc desc, Listener<Evt> listener);
+    /**
+     * Removes a Listener from being notified of any events
+     * @param listener the listener to be removed
+     */
+    public void removeListener(Listener<Evt> listener);
 }
