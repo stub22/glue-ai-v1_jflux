@@ -43,6 +43,9 @@ public abstract class AbstractConfiguration<K> implements Configuration<K> {
             throw new NullPointerException();
         }
         ConfigProperty prop = getConfigProperty(key);
+        if(prop == null){
+            return null;
+        }
         Class actualClass = prop.getPropertyClass();
         if(actualClass == null || !propertyClass.isAssignableFrom(actualClass)){
             return null;
