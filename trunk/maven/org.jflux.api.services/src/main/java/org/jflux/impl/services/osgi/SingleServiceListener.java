@@ -15,7 +15,6 @@
  */
 package org.jflux.impl.services.osgi;
 
-import java.sql.Time;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,15 +22,11 @@ import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
 import org.jflux.api.core.event.Event;
 import org.jflux.api.core.event.Header;
-import org.jflux.api.registry.Finder;
-import org.jflux.api.registry.Monitor;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.registry.Retriever;
 import org.jflux.api.registry.opt.Descriptor;
 import org.jflux.api.registry.opt.Reference;
-import org.jflux.api.registry.opt.RegistryContext;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
-import org.jflux.impl.registry.osgi.wrapped.OSGiMonitor;
+import org.jflux.impl.registry.osgi.util.ServiceEventAdapter;
 
 /**
  * Listens to the OSGi Service Registry for a single service, and provides
@@ -40,7 +35,7 @@ import org.jflux.impl.registry.osgi.wrapped.OSGiMonitor;
  * @param <T> type of service to listen for
  * @author Matthew Stevenson <www.robokind.org>
  */
-public class SingleServiceListener<T> 
+public class SingleServiceListener<T, Time> 
         extends PropertyChangeNotifier implements Listener<Event<Header<Registry, Time>, Reference>>{
     private final static Logger theLogger = Logger.getLogger(SingleServiceListener.class.getName());
     
@@ -60,7 +55,7 @@ public class SingleServiceListener<T>
     private Descriptor<String, String> myDescriptor;
     private T myTrackedClass;
     private Reference myReference;
-    private RegistryContext myContext;
+    private Registry myContext;
     private List<Reference> myReferences;
     private boolean myStartFlag;
 
@@ -71,7 +66,7 @@ public class SingleServiceListener<T>
      * @throws NullPointerException if descriptor or context are null
      */
     public SingleServiceListener(
-            RegistryContext context, Descriptor<String, String> descriptor){
+            Registry context, Descriptor<String, String> descriptor){
         if(descriptor == null || context == null){
             throw new NullPointerException();
         }
@@ -156,15 +151,12 @@ public class SingleServiceListener<T>
     }
     
     private boolean startListening(){
-        Monitor mon = myContext.getRegistry().getMonitor(myContext);
-        mon.addListener(myDescriptor, this);
+        myContext.addListener(myDescriptor, this);
         return true;
     }
     
     private boolean collectServiceReferences(){
-        List<Reference> refs;
-        Finder<Descriptor,Reference> fin = myContext.getRegistry().getFinder(myContext);
-        refs = fin.findAll(myDescriptor);
+        List<Reference> refs = myContext.findAll(myDescriptor);
         if(refs == null){
             return true;
         }
@@ -197,8 +189,7 @@ public class SingleServiceListener<T>
 
     private void stopListening(){
         try{
-            Monitor mon = myContext.getRegistry().getMonitor(myContext);
-            mon.removeListener(this);
+            myContext.removeListener(this);
         }catch(IllegalStateException ex){
             theLogger.log(Level.WARNING, "BundleContext not valid.", ex);
         }
@@ -210,12 +201,12 @@ public class SingleServiceListener<T>
      */
     @Override
     public void handleEvent(Event<Header<Registry, Time>, Reference> input) {
-        if(input.getHeader().getEventType().equals(OSGiMonitor.REGISTERED)) {
+        if(input.getHeader().getEventType().equals(ServiceEventAdapter.REGISTERED)) {
             addService(input.getData());
-        } else if(input.getHeader().getEventType().equals(OSGiMonitor.UNREGISTERING)
-                || input.getHeader().getEventType().equals(OSGiMonitor.MODIFIED_ENDMATCH)) {
+        } else if(input.getHeader().getEventType().equals(ServiceEventAdapter.UNREGISTERING)
+                || input.getHeader().getEventType().equals(ServiceEventAdapter.MODIFIED_ENDMATCH)) {
             removeService(input.getData());
-        } else if(input.getHeader().getEventType().equals(OSGiMonitor.MODIFIED)) {
+        } else if(input.getHeader().getEventType().equals(ServiceEventAdapter.MODIFIED)) {
             modified(input.getData());
         }
     }
@@ -250,9 +241,7 @@ public class SingleServiceListener<T>
             return;
         }
         try{
-            Retriever ret = myContext.getRegistry().getRetriever(myContext);
-                    
-            ret.release(myReference);
+            myContext.release(myReference);
         }catch(Exception ex){
             theLogger.log(Level.WARNING, "Error ungetting service", ex);
         }
@@ -267,9 +256,7 @@ public class SingleServiceListener<T>
             return;
         }
         try{
-            Retriever ret = myContext.getRegistry().getRetriever(myContext);
-                    
-            ret.release(myReference);
+            myContext.release(myReference);
         }catch(Exception ex){
             theLogger.log(Level.WARNING, "Error ungetting service", ex);
         }
@@ -284,8 +271,7 @@ public class SingleServiceListener<T>
         if(ref.equals(myReference)){
             return true;
         }
-        Retriever ret = myContext.getRegistry().getRetriever(myContext);
-        T tracked = (T)ret.retrieve(ref);
+        T tracked = (T)myContext.retrieve(ref);
         if(tracked == null){
             return false;
         }

@@ -15,18 +15,21 @@
  */
 package org.jflux.impl.services.osgi;
 
+import org.jflux.api.registry.opt.RegistrationRequest;
+import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.api.registry.opt.Certificate;
+import org.jflux.api.registry.opt.Reference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.registry.Accessor;
-import org.jflux.api.registry.Finder;
-import org.jflux.api.registry.opt.*;
+import org.jflux.api.core.util.DefaultTimestampSource;
+import org.jflux.api.registry.Registry;
+import org.jflux.api.registry.opt.BasicRegistrationRequest;
 import org.jflux.api.services.DependencyDescriptor;
-import org.jflux.impl.registry.basic.opt.BasicRegistrationRequest;
-import org.jflux.impl.registry.osgi.wrapped.OSGiContext.BundleContextWrapper;
+import org.jflux.impl.registry.OSGiRegistry;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
@@ -89,27 +92,25 @@ public class OSGiUtils {
      * @param clazz
      * @return a registry context
      */
-    public static RegistryContext getRegistryContext(Class clazz){
+    public static OSGiRegistry getOSGiRegistry(Class clazz){
         BundleContext context = getBundleContext(clazz);
         if(context == null){
             return null;
         }
-        RegistryContext rc = new BundleContextWrapper().adapt(context);
-        return rc;
+        return new OSGiRegistry(context, new DefaultTimestampSource());
     }
     
     /**
      * Convert an OSGi bundle context into a non-OSGi-specific generic registry
      * context.
      * @param context
-     * @return the input in RegistryContext form
+     * @return the input in OSGiRegistry form
      */
-    public static RegistryContext getRegistryContext(BundleContext context){
+    public static OSGiRegistry getOSGiRegistry(BundleContext context){
         if(context == null){
             return null;
         }
-        RegistryContext rc = new BundleContextWrapper().adapt(context);
-        return rc;
+        return new OSGiRegistry(context, new DefaultTimestampSource());
     }
     
     /**
@@ -175,7 +176,7 @@ public class OSGiUtils {
      * @return true if the unique properties are not in use
      */
     public static boolean uniquePropertiesAvailable(
-            RegistryContext context, Properties uniqueProperties,
+            Registry context, Properties uniqueProperties,
             String[] registrationClassNames) {
         if(uniqueProperties == null) {
             return true;
@@ -202,14 +203,13 @@ public class OSGiUtils {
     }
     
     private static boolean scanClassForProps(
-            RegistryContext context, String clsName, String key, String val) {
+            Registry context, String clsName, String key, String val) {
         try {
             Class cls = Class.forName(clsName);
             Map<String, String> props = new HashMap();
-            Finder f = context.getRegistry().getFinder(context);
             props.put(key, val);
             Descriptor d = new DependencyDescriptor("", cls, props);
-            Object result = f.findSingle(d);
+            Object result = context.findSingle(d);
             if(result != null) {
                 return true;
             }
@@ -230,7 +230,7 @@ public class OSGiUtils {
      * @return the Certificate, or null if a service exists
      */
     public static Certificate registerUniqueService(
-            RegistryContext context, String cls,
+            OSGiRegistry context, String cls,
             Properties uniqueProperties, Object service,
             Map<String, String> props) {
         String[] classNames = new String[1];
@@ -243,9 +243,7 @@ public class OSGiUtils {
         RegistrationRequest<Object, String, String> rr =
                     new BasicRegistrationRequest<Object, String, String>(
                     "", service, props, cls);
-        Accessor acc = context.getRegistry().getAccessor(context);
-        
-        return (Certificate)acc.register(rr);
+        return context.register(rr);
     }
     
     /**
@@ -253,33 +251,28 @@ public class OSGiUtils {
      * given id.
      * @param context the registry context for the service
      * @param cls the service class name
-     * @param uniqueProperties the service's unique properties
+     * @param uniqProps the service's unique properties
      * @param service the service to register
      * @param props the service's non-unique properties
      * @return the Certificate, or null if a service exists
      */
     public static Certificate registerUniqueService(
-            RegistryContext context, String cls,
-            Properties uniqueProperties, Object service,
+            OSGiRegistry context, String cls,
+            Properties uniqProps, Object service,
             Properties props) {
-        String[] classNames = new String[1];
         Map<String, String> propMap = new HashMap<String, String>();
-        classNames[0] = cls;
-        
         if(props != null) {
             for(Entry e: props.entrySet()) {
                 propMap.put(e.getKey().toString(), e.getValue().toString());
             }
         }
-        
-        return registerUniqueService(
-                context, cls, uniqueProperties, service, propMap);
+        return registerUniqueService(context, cls, uniqProps, service, propMap);
     }
     
     /**
      * Checks the OSGi Service Registry for a Service with the given class and
      * matching the given properties.
-     * @param context RegistryContext to use
+     * @param context OSGiRegistry to use
      * @param clazz Class name to match
      * @param idPropertyName name of an additional property to use
      * @param idString value of an additional property to use
@@ -289,23 +282,19 @@ public class OSGiUtils {
      */
 
     public static boolean serviceExists(
-            RegistryContext context, String clazz, String idPropertyName,
-            String idString, Properties props) {
-        Finder fin = context.getRegistry().getFinder(context);
-        
+            OSGiRegistry context, String clazz, String idPropertyName,
+            String idString, Properties props) {        
         if(props == null) {
             props = new Properties();
-        }
-        
+        }        
         props.put(idPropertyName, idString);
-        
         return serviceExists(context, clazz, props);
     }
     
     /**
      * Checks the OSGi Service Registry for a Service with the given class and
      * matching the given filter.
-     * @param context RegistryContext to use
+     * @param context OSGiRegistry to use
      * @param clazz Class name to match
      * @param props the properties to use
      * @return true if a matching ServiceReference is found, returns null if 
@@ -313,21 +302,17 @@ public class OSGiUtils {
      */
 
     public static boolean serviceExists(
-            RegistryContext context, String clazz, Properties props) {
-        Finder fin = context.getRegistry().getFinder(context);
-        Map<String, String> propMap = new HashMap<String, String>();
-        
+            OSGiRegistry context, String clazz, Properties props) {
+        Map<String, String> propMap = new HashMap<String, String>();        
         if(props != null) {
             for(Entry e: props.entrySet()) {
                 propMap.put(e.getKey().toString(), e.getValue().toString());
             }
-        }
-        
+        }        
         try {
             Descriptor d = new DependencyDescriptor(
                     "", Class.forName(clazz), propMap);
-            Reference r = (Reference)fin.findSingle(d);
-            
+            Reference r = context.findSingle(d);
             return r != null;
         } catch(Exception e) {
             theLogger.log(Level.SEVERE, e.getMessage());
