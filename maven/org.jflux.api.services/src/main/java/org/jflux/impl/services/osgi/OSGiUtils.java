@@ -15,20 +15,19 @@
  */
 package org.jflux.impl.services.osgi;
 
-import org.jflux.api.registry.opt.RegistrationRequest;
-import org.jflux.api.registry.opt.Descriptor;
-import org.jflux.api.registry.opt.Certificate;
-import org.jflux.api.registry.opt.Reference;
+import org.jflux.api.registry.RegistrationRequest;
+import org.jflux.api.registry.Descriptor;
+import org.jflux.api.registry.Certificate;
+import org.jflux.api.registry.Reference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jflux.api.core.util.DefaultTimestampSource;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.registry.opt.BasicRegistrationRequest;
-import org.jflux.api.services.DependencyDescriptor;
+import org.jflux.api.registry.basic.BasicRegistrationRequest;
+import org.jflux.api.services.dep.DependencyDescriptor;
 import org.jflux.impl.registry.OSGiRegistry;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -97,7 +96,7 @@ public class OSGiUtils {
         if(context == null){
             return null;
         }
-        return new OSGiRegistry(context, new DefaultTimestampSource());
+        return new OSGiRegistry(context);
     }
     
     /**
@@ -110,7 +109,7 @@ public class OSGiUtils {
         if(context == null){
             return null;
         }
-        return new OSGiRegistry(context, new DefaultTimestampSource());
+        return new OSGiRegistry(context);
     }
     
     /**
@@ -240,8 +239,8 @@ public class OSGiUtils {
             return null;
         }
         
-        RegistrationRequest<Object, String, String> rr =
-                    new BasicRegistrationRequest<Object, String, String>(
+        RegistrationRequest<Object> rr =
+                    new BasicRegistrationRequest<Object>(
                     "", service, props, cls);
         return context.register(rr);
     }

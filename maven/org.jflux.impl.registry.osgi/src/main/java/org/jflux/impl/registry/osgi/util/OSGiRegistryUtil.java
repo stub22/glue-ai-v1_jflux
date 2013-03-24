@@ -4,7 +4,7 @@
  */
 package org.jflux.impl.registry.osgi.util;
 
-import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.api.registry.Descriptor;
 
 /**
  *
@@ -16,7 +16,7 @@ public class OSGiRegistryUtil {
      * @param desc the descriptor
      * @return an OSGi filter string
      */
-    public static String getPropertiesFilter(Descriptor<String,String> desc){
+    public static String getPropertiesFilter(Descriptor desc){
         return DescriptorFilterAdapter.getPropertiesFilter(desc);
     }
     /**
@@ -24,7 +24,7 @@ public class OSGiRegistryUtil {
      * @param desc the descriptor
      * @return an OSGi filter string
      */
-    public static String getFullFilter(Descriptor<String,String> desc){
+    public static String getFullFilter(Descriptor desc){
         return DescriptorFilterAdapter.getFullFilter(desc);
     }
 }

@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.services.DependencyDescriptor;
-import org.jflux.api.services.DependencyDescriptor.DependencyType;
+import org.jflux.api.services.dep.DependencyDescriptor;
+import org.jflux.api.services.dep.DependencyDescriptor.DependencyType;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
 import org.jflux.impl.services.osgi.SingleServiceListener;
 

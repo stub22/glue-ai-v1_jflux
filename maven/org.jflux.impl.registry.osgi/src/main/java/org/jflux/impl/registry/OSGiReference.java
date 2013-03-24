@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.registry.opt.Reference;
+import org.jflux.api.registry.Reference;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
 
@@ -16,7 +16,7 @@ import org.osgi.framework.ServiceReference;
  * Reference implementation for OSGi
  * @author Matthew Stevenson
  */
-public class OSGiReference implements Reference<String, String>, ServiceReference {
+public class OSGiReference implements Reference, ServiceReference {
 
     /**
      * The reference's property name

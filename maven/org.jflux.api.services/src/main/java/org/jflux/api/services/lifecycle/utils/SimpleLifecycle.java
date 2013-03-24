@@ -20,8 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.jflux.api.services.DependencyDescriptor;
-import org.jflux.api.services.ServiceLifecycleProvider;
+import org.jflux.api.services.dep.DependencyDescriptor;
+import org.jflux.api.services.dep.ServiceLifecycleProvider;
 
 /**
  * Defines an empty lifecycle for managing a service with no dependencies.

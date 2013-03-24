@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jflux.api.registry.opt;
+package org.jflux.api.registry.basic;
 
+import org.jflux.api.registry.Descriptor;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,9 +12,9 @@ import java.util.Set;
  * A basic implementation of Descriptor
  * @author Matthew Stevenson
  */
-public class BasicDescriptor<K,V> implements Descriptor<K, V> {
+public class BasicDescriptor implements Descriptor {
     private String myName;
-    private Map<K,V> myProperties;
+    private Map<String,String> myProperties;
     private String myClassName;
     
     /**
@@ -31,7 +32,7 @@ public class BasicDescriptor<K,V> implements Descriptor<K, V> {
      * @return the property value
      */
     @Override
-    public V getProperty(K key) {
+    public String getProperty(String key) {
         return myProperties.get(key);
     }
 
@@ -40,7 +41,7 @@ public class BasicDescriptor<K,V> implements Descriptor<K, V> {
      * @return a set of property names
      */
     @Override
-    public Set<K> getPropertyKeys() {
+    public Set<String> getPropertyKeys() {
         return myProperties.keySet();
     }
 

@@ -4,24 +4,31 @@
  */
 package org.jflux.impl.registry;
 
+import java.util.Arrays;
+import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
-import org.jflux.api.core.Source;
-import org.jflux.api.core.chain.ListenerChain;
-import org.jflux.api.core.event.BasicMutableHeader;
-import org.jflux.api.core.event.Event;
-import org.jflux.api.core.event.Header;
 import org.jflux.api.core.util.BatchAdapter;
+import org.jflux.api.registry.Certificate;
+import org.jflux.api.registry.Descriptor;
+import org.jflux.api.registry.Modification;
+import org.jflux.api.registry.Reference;
+import org.jflux.api.registry.RegistrationRequest;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.registry.opt.Descriptor;
-import org.jflux.api.registry.opt.Modification;
-import org.jflux.api.registry.opt.RegistrationRequest;
-import org.jflux.impl.registry.osgi.util.ServiceEventAdapter;
+import org.jflux.api.registry.RegistryEvent;
+import org.jflux.api.registry.basic.BasicRegistryEvent;
+import org.jflux.api.registry.util.FinderUtils;
+import org.jflux.impl.registry.osgi.util.OSGiRegistryUtil;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
+import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
@@ -29,129 +36,164 @@ import org.osgi.framework.ServiceRegistration;
  * Registry implementation for OSGi
  * @author Matthew Stevenson
  */
-public class OSGiRegistry<Time> implements Registry<
-        Descriptor<String,String>, 
-        OSGiReference, 
-        RegistrationRequest<Time, String, String>,
-        OSGiCertificate,
-        Modification<String ,String>, 
-        Event<Header<OSGiRegistry<Time>, Time>, OSGiReference>> {
-    private OSGiDirectRegistry<Time> myDirectRegistry;
-    private Source<Time> myTimestampSource;
-    private ServiceEventAdapter myEventAdapter;
-    private Map<Listener<Event<Header<OSGiRegistry<Time>, Time>, OSGiReference>>, Listener<ServiceEvent>> myListenerMap;
+public class OSGiRegistry implements Registry {
+    private final static Logger theLogger = Logger.getLogger(OSGiRegistry.class.getName());
+    private BundleContext myContext;
+    private Map<Listener<RegistryEvent>, ServiceListener> myListenerMap;
     
     /**
      * Creates a timestamped OSGi registry with a timestamp.
      * @param timestampSource the timestamp
      */
-    public OSGiRegistry(BundleContext context, Source<Time> timestampSource){
-        if(context == null || timestampSource == null){
+    public OSGiRegistry(BundleContext context){
+        if(context == null){
             throw new NullPointerException();
         }
-        myDirectRegistry = new OSGiDirectRegistry<Time>(context);
-        myTimestampSource = timestampSource;
-        myEventAdapter = new ServiceEventAdapter(
-                new BasicMutableHeader.MutableHeaderSource<OSGiRegistry<Time>, Time>(null, myTimestampSource, "", null));
-        myListenerMap = new HashMap<Listener<Event<Header<OSGiRegistry<Time>, Time>, OSGiReference>>, Listener<ServiceEvent>>();
+        myContext = context;
+        myListenerMap = new HashMap<Listener<RegistryEvent>, ServiceListener>();
     }
     
-    /**
-     * Creates a timestamped OSGiRegistry from a direct registry.
-     * @param directRegistry the direct registry
-     * @param timestampSource the timestamp
-     */
-    public OSGiRegistry(OSGiDirectRegistry<Time> directRegistry, Source<Time> timestampSource){
-        if(directRegistry == null || timestampSource == null){
-            throw new NullPointerException();
+    @Override
+    public OSGiReference findSingle(Descriptor desc) {
+        ServiceReference[] refs = find(desc);
+        if(refs == null){
+            return null;
         }
-        myDirectRegistry = directRegistry;
-        myTimestampSource = timestampSource;
-        myEventAdapter = new ServiceEventAdapter(
-                new BasicMutableHeader.MutableHeaderSource<OSGiRegistry<Time>, Time>(null, myTimestampSource, "", null));
-        myListenerMap = new HashMap<Listener<Event<Header<OSGiRegistry<Time>, Time>, OSGiReference>>, Listener<ServiceEvent>>();
+        return new OSGiReference(refs[0]);
+    }
+
+    @Override
+    public List<Reference> findAll(Descriptor desc) {
+        ServiceReference[] refs = find(desc);
+        if(refs == null){
+            return null;
+        }
+        return getRefListAdapter().adapt(Arrays.asList(refs));
+    }
+
+    @Override
+    public List<Reference> findCount(
+            Descriptor desc, int max) {
+        return FinderUtils.findCount(this, desc, max);
+    }
+    
+    private ServiceReference[] find(Descriptor a) {
+        String className = a.getClassName();
+        String filter = OSGiRegistryUtil.getPropertiesFilter(a);
+        try{
+            return myContext.getServiceReferences(className, filter);
+        }catch(InvalidSyntaxException ex){
+            theLogger.log(Level.SEVERE, "Invalid LDAP filter: " + filter, ex);
+            return null;
+        }
     }
     
     @Override
-    public OSGiReference findSingle(Descriptor<String, String> desc) {
-        ServiceReference ref = myDirectRegistry.findSingle(desc);
-        return ref == null ? null : new OSGiReference(ref);
+    public <T> T retrieve(final Class<T> clazz, Reference reference) {
+        if(!(reference instanceof OSGiReference)){
+            return null;
+        }
+        Object obj = myContext.getService((OSGiReference)reference);
+        if(obj == null){
+            return null;
+        }
+        try{
+            return (T)obj;
+        }catch(ClassCastException ex){
+            theLogger.log(Level.SEVERE, 
+                    "Unable to cast item to specified type.  "
+                    + "Expected: " + clazz.getName() + ",  "
+                    + "Found: " + obj.getClass().getName(), ex);
+            return null;
+        }
     }
 
     @Override
-    public List<OSGiReference> findAll(Descriptor<String, String> desc) {
-        return getRefListAdapter().adapt(myDirectRegistry.findAll(desc));
+    public Object retrieve(Reference reference) {
+        if(!(reference instanceof OSGiReference)){
+            return null;
+        }
+        return myContext.getService((OSGiReference)reference);
     }
 
     @Override
-    public List<OSGiReference> findCount(
-            Descriptor<String, String> desc, int max) {
-        return getRefListAdapter().adapt(myDirectRegistry.findCount(desc, max));
-    }
-    
-    @Override
-    public <T> T retrieve(final Class<T> clazz, OSGiReference reference) {
-        return myDirectRegistry.retrieve(clazz, reference);
+    public void release(Reference reference) {
+        if(!(reference instanceof OSGiReference)){
+            return;
+        }
+        myContext.ungetService((OSGiReference)reference);
     }
 
     @Override
-    public Object retrieve(OSGiReference reference) {
-        return myDirectRegistry.retrieve(reference);
-    }
-
-    @Override
-    public void release(OSGiReference reference) {
-        myDirectRegistry.release(reference);
-    }
-
-    @Override
-    public OSGiCertificate register(RegistrationRequest<Time, String, String> request) {
-        ServiceRegistration reg = myDirectRegistry.register(request);
+    public OSGiCertificate register(RegistrationRequest request) {
+        String[] classNames = null;
+        Dictionary props = null;
+        Object item = request.getItem();
+        ServiceRegistration reg =  myContext.registerService(classNames, item, props);
         return reg == null ? null : new OSGiCertificate(reg);
     }
 
     @Override
-    public void unregister(OSGiCertificate cert) {
-        myDirectRegistry.unregister(cert);
+    public void unregister(Certificate cert) {
+        if(!(cert instanceof OSGiCertificate)){
+            return;
+        }
+        ((OSGiCertificate)cert).unregister();
     }
 
     @Override
-    public void modify(OSGiCertificate cert, Modification<String, String> request) {
-        myDirectRegistry.modify(cert, request);
+    public void modify(Certificate cert, Modification request) {
+        if(!(cert instanceof OSGiCertificate)){
+            return;
+        }
+        Dictionary<String,String> props = 
+                new Hashtable<String, String>(request.getProperties());
+        ((OSGiCertificate)cert).setProperties(props);
     }
 
     @Override
-    public void addListener(Descriptor<String, String> desc, Listener<Event<Header<OSGiRegistry<Time>, Time>, OSGiReference>> listener) {
-        myDirectRegistry.addListener(desc, getWrappedListener(listener));
+    public void addListener(Descriptor desc, Listener<RegistryEvent> listener) {
+        String filter = OSGiRegistryUtil.getFullFilter(desc);
+        ServiceListener sl = getWrappedListener(listener);
+        try{
+            myContext.addServiceListener(sl, filter);
+        }catch(InvalidSyntaxException ex){
+            theLogger.log(Level.SEVERE, 
+                    "Invalid LDAP filter: " + filter, ex);
+        }
     }
 
     @Override
-    public void removeListener(Listener<Event<Header<OSGiRegistry<Time>, Time>, OSGiReference>> listener) {
-        myDirectRegistry.removeListener(getWrappedListener(listener));
+    public void removeListener(Listener<RegistryEvent> listener) {
+        ServiceListener sl = getWrappedListener(listener);
+        if(sl != null){
+            myContext.removeServiceListener(sl);
+        }
     }
     
-    private Listener<ServiceEvent> getWrappedListener(Listener<Event<Header<OSGiRegistry<Time>, Time>, OSGiReference>> listener){
-        Listener<ServiceEvent> l = myListenerMap.get(listener);
+    private ServiceListener getWrappedListener(final Listener<RegistryEvent> listener){
+        ServiceListener l = myListenerMap.get(listener);
         if(l == null){
-            l = new ListenerChain<ServiceEvent, Event<Header<OSGiRegistry<Time>, Time>, OSGiReference>>(myEventAdapter, listener);
+            l = new ServiceListener() {
+                @Override public void serviceChanged(ServiceEvent se) {
+                    if(se == null || se.getServiceReference() == null){
+                        return;
+                    }
+                    RegistryEvent e = new BasicRegistryEvent(
+                            se.getType(), new OSGiReference(se.getServiceReference()));
+                    listener.handleEvent(e);
+                }};
             myListenerMap.put(listener, l);
         }
         return l;
     }
-    /**
-     * Gets the underlying direct registry
-     * @return the direct registry
-     */
-    public OSGiDirectRegistry getDirectRegistry(){
-        return myDirectRegistry;
-    }
     
-    private static Adapter<List<ServiceReference>, List<OSGiReference>> getRefListAdapter(){
+    private static Adapter<List<ServiceReference>, List<Reference>> getRefListAdapter(){
         if(theRefListAdapter == null){
             theRefListAdapter = new BatchAdapter(OSGiReference.getReferenceAdapter());
         }
         return theRefListAdapter;
     }
-    private static Adapter<List<ServiceReference>, List<OSGiReference>> theRefListAdapter;
+    private static Adapter<List<ServiceReference>, List<Reference>> theRefListAdapter;
     
 }

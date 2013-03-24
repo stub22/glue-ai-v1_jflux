@@ -20,6 +20,8 @@ import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
 import org.jflux.api.core.playable.PlayableNotifier;
 import org.jflux.api.data.concurrent.AsyncAdapter;
+import org.jflux.api.registry.Descriptor;
+import org.jflux.api.registry.Reference;
 import org.jflux.api.registry.Registry;
 
 /**
@@ -34,8 +36,8 @@ public class FinderUtils {
      * @param registry the Registry
      * @return Adapter for finding a single reference
      */
-    public static <D,R> R findSingle(Registry<D,R,?,?,?,?> registry, D desc) {
-        final List<R> find = registry.findAll(desc);
+    public static Reference findSingle(Registry registry, Descriptor desc) {
+        final List<Reference> find = registry.findAll(desc);
         if(find == null || find.isEmpty()){
             return null;
         }
@@ -48,9 +50,9 @@ public class FinderUtils {
      * @param max the maximum number of parameters
      * @return Adapter for finding all references.
      */
-    public static <D,R> List<R> findCount(
-            Registry<D,R,?,?,?,?> registry, D desc, final int max) {
-        final List<R> find = registry.findAll(desc);
+    public static List<Reference> findCount(
+            Registry registry, Descriptor desc, final int max) {
+        final List<Reference> find = registry.findAll(desc);
         if(find == null || find.size() <= max){
             return find;
         }
@@ -62,14 +64,14 @@ public class FinderUtils {
      * @param registry the Registry
      * @return Adapter for finding a single reference
      */
-    public static <D,R> PlayableNotifier<R> findSingleAsync(
-            final Registry<D,R,?,?,?,?> registry, D desc, Listener<R> listener){
+    public static PlayableNotifier<Reference> findSingleAsync(
+            final Registry registry, Descriptor desc, Listener<Reference> listener){
         if(registry == null){
             return null;
         }
-        PlayableNotifier<R> pn = 
-                new AsyncAdapter<D,R>(new Adapter<D, R>() {
-                    @Override public R adapt(D a) {
+        PlayableNotifier<Reference> pn = 
+                new AsyncAdapter<Descriptor,Reference>(new Adapter<Descriptor, Reference>() {
+                    @Override public Reference adapt(Descriptor a) {
                         return findSingle(registry, a);
                     }}).adapt(desc);
         pn.addListener(listener);
@@ -82,14 +84,14 @@ public class FinderUtils {
      * @param registry the Registry
      * @return Adapter for finding all references
      */
-    public static <D,R> PlayableNotifier<List<R>> findAllAsync(
-            final Registry<D,R,?,?,?,?> registry, D desc, Listener<List<R>> listener){
+    public static PlayableNotifier<List<Reference>> findAllAsync(
+            final Registry registry, Descriptor desc, Listener<List<Reference>> listener){
         if(registry == null){
             return null;
         }
-        PlayableNotifier<List<R>> pn = new AsyncAdapter<D,List<R>>(
-                new Adapter<D, List<R>>() {
-                    @Override public List<R> adapt(D a) {
+        PlayableNotifier<List<Reference>> pn = new AsyncAdapter<Descriptor,List<Reference>>(
+                new Adapter<Descriptor, List<Reference>>() {
+                    @Override public List<Reference> adapt(Descriptor a) {
                         return registry.findAll(a);
                     }}).adapt(desc);
         pn.addListener(listener);
@@ -104,15 +106,15 @@ public class FinderUtils {
      * @param max the maximum number of parameters
      * @return Adapter for finding the number of references
      */
-    public static <D,R> PlayableNotifier<List<R>> findCountAsync(
-            final Registry<D,R,?,?,?,?> registry, D desc, final int max, 
-            Listener<List<R>> listener){
+    public static PlayableNotifier<List<Reference>> findCountAsync(
+            final Registry registry, Descriptor desc, final int max, 
+            Listener<List<Reference>> listener){
         if(registry == null){
             return null;
         }
-        PlayableNotifier<List<R>> pn = new AsyncAdapter<D,List<R>>(
-                new Adapter<D, List<R>>() {
-                    @Override public List<R> adapt(D a) {
+        PlayableNotifier<List<Reference>> pn = new AsyncAdapter<Descriptor,List<Reference>>(
+                new Adapter<Descriptor, List<Reference>>() {
+                    @Override public List<Reference> adapt(Descriptor a) {
                         return findCount(registry, a, max);
                     }}).adapt(desc);
         pn.addListener(listener);

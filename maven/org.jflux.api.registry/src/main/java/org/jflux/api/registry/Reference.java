@@ -13,35 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.registry.opt;
+package org.jflux.api.registry;
 
 import java.util.Set;
 
 /**
- * A Descriptor describes one or more items in the registry.
- * Descriptors are used to retrieve references and filter reference events.
- * @author Matthew Stevenson <www.jflux.org>
+ * A Reference points to an item in a registry and provides registration 
+ * details.
+ * 
+ * @author Matthew Stevenson
  */
-public interface Descriptor<K,V> {
+public interface Reference {
     /**
-     * Gets the descriptor's name
-     * @return the descriptor's name
+     * Gets the reference's name
+     * @return the reference's name
      */
-    public String getDescriptorName();
+    public String getName();
     /**
-     * Gets one of the descriptor's properties by name
+     * Gets a property of the reference by name
      * @param key the property name
      * @return the property value
      */
-    public V getProperty(K key);
+    public String getProperty(String key);
     /**
-     * Gets all of the descriptor's properties
+     * Gets all properties of the reference
      * @return a set of property names
      */
-    public Set<K> getPropertyKeys();
-    /**
-     * Gets the name of the class associated with the descriptor
-     * @return the class name
-     */
-    public String getClassName();
+    public Set<String> getPropertyKeySet();
 }

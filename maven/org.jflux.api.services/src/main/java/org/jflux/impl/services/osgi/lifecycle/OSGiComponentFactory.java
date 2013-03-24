@@ -17,8 +17,8 @@ package org.jflux.impl.services.osgi.lifecycle;
 
 import java.util.Properties;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.services.ManagedService;
-import org.jflux.api.services.ServiceLifecycleProvider;
+import org.jflux.api.services.dep.ManagedService;
+import org.jflux.api.services.dep.ServiceLifecycleProvider;
 import org.jflux.api.services.lifecycle.utils.ManagedServiceFactory;
 
 /**
