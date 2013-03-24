@@ -126,6 +126,7 @@ public class Manager<T> {
         if(t == null){
             return;
         }
+        myService = t;
         myRegistrationStrategy.register(myService, myBindings);
     }
     
