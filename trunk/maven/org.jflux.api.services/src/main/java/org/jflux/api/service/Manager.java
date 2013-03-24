@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import org.jflux.api.core.Source;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.registry.Reference;
 import org.jflux.api.service.DependencySpec.Cardinality;
 import org.jflux.api.service.binding.BindingSpec;
 import org.jflux.api.service.binding.BindingSpec.BindingStrategy;
@@ -35,16 +34,29 @@ import org.jflux.api.service.binding.SingleDepencyTracker;
  * @author matt
  */
 public class Manager<T> {
-    private Map<String,Object> myCachedDependencies;
     private ServiceLifecycle<T> myLifecycle;
-    private T myService;
     private Map<String,BindingSpec> myBindings;
+    private Map<String,Object> myCachedDependencies;
+    private T myService;
     private Map<BindingSpec,DependencyTracker> myTrackerMap;
     private RegistrationStrategy myRegistrationStrategy;
     private Source<Boolean> myServiceCreatedSource;
     private DependencyChangeListener myChangeListener;
+    private boolean myStartFlag;
+    private boolean myListenFlag;
     
-    public Manager(){
+    public Manager(ServiceLifecycle<T> lifecycle, 
+            Map<String,BindingSpec> bindings, 
+            RegistrationStrategy<T> registration){
+        if(lifecycle == null || bindings == null || registration == null){
+            throw new NullPointerException();
+        }
+        myLifecycle = lifecycle;
+        myBindings = bindings;
+        myRegistrationStrategy = registration;
+        myStartFlag = false;
+        myListenFlag = false;
+        myTrackerMap = new HashMap<BindingSpec, DependencyTracker>();
         myChangeListener = new DependencyChangeListener();
         myServiceCreatedSource = new Source<Boolean>() {
             @Override  public Boolean getValue() {
@@ -53,7 +65,27 @@ public class Manager<T> {
         };
     }
     
+    public synchronized void start(Registry registry){
+        if(myStartFlag){
+            return;
+        }
+        bindDependencies(registry);
+        myStartFlag = true;
+    }
+    
+    public synchronized void stop(){
+        if(!myStartFlag){
+            return;
+        }
+        myRegistrationStrategy.unregister(myService);
+        unbindDependencies();
+        myStartFlag = false;
+    }
+    
     private void bindDependencies(Registry registry){
+        if(myStartFlag){
+            return;
+        }
         for(BindingSpec s : myBindings.values()){
             String name = s.getDependencyName();
             Cardinality c = s.getDependencySpec().getCardinality();
@@ -65,6 +97,36 @@ public class Manager<T> {
             myTrackerMap.put(s, t);
             t.start(registry, s.getDescriptor());
         }
+        myListenFlag = true;
+        tryCreate();
+    }
+    
+    private void unbindDependencies(){
+        if(!myStartFlag){
+            return;
+        }
+        myListenFlag = false;
+        myRegistrationStrategy.unregister(myService);
+        myLifecycle.disposeService(myService, myCachedDependencies);
+        for(Entry<BindingSpec,DependencyTracker> e : myTrackerMap.entrySet()){
+            BindingSpec s = e.getKey();
+            DependencyTracker t = e.getValue();
+            t.stop();
+            t.removePropertyChangeListener(myChangeListener);
+            myTrackerMap.remove(s);
+        }
+    }
+    
+    private void tryCreate(){
+        if(!isSatisfied()){
+            return;
+        }
+        updateDependencyCache();
+        T t = myLifecycle.createService(myCachedDependencies);
+        if(t == null){
+            return;
+        }
+        myRegistrationStrategy.register(myService, myBindings);
     }
     
     private void updateDependency(int changeType, String dependencyName, Object dependency){
@@ -129,21 +191,19 @@ public class Manager<T> {
         return true;
     }
     
-    
     class DependencyChangeListener implements PropertyChangeListener {
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            String depName = (String)evt.getSource();
-            T oldVal = evt.getOldValue() == null ? null : (T)evt.getOldValue();
-            T newVal = evt.getNewValue() == null ? null : (T)evt.getNewValue();
-            if(oldVal == null){
-                //added
-            }else if(newVal == null){
-                    //item removed
-            }else{
-                //change
+            if(!myListenFlag){
+                return;
             }
+            if(myService == null){
+                tryCreate();
+                return;
+            }
+            String depName = (String)evt.getSource();
+            updateDependency(0, depName, evt.getNewValue());
         }
     }
 }
