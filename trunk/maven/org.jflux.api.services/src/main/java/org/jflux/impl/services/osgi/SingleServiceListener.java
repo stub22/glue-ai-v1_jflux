@@ -20,13 +20,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
-import org.jflux.api.core.event.Event;
-import org.jflux.api.core.event.Header;
+import org.jflux.api.registry.basic.BasicRegistryEvent;
+import org.jflux.api.registry.Descriptor;
+import org.jflux.api.registry.Reference;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.registry.opt.Descriptor;
-import org.jflux.api.registry.opt.Reference;
+import org.jflux.api.registry.RegistryEvent;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
-import org.jflux.impl.registry.osgi.util.ServiceEventAdapter;
 
 /**
  * Listens to the OSGi Service Registry for a single service, and provides
@@ -35,8 +34,8 @@ import org.jflux.impl.registry.osgi.util.ServiceEventAdapter;
  * @param <T> type of service to listen for
  * @author Matthew Stevenson <www.robokind.org>
  */
-public class SingleServiceListener<T, Time> 
-        extends PropertyChangeNotifier implements Listener<Event<Header<Registry, Time>, Reference>>{
+public class SingleServiceListener<T> 
+        extends PropertyChangeNotifier implements Listener<RegistryEvent>{
     private final static Logger theLogger = Logger.getLogger(SingleServiceListener.class.getName());
     
     /**
@@ -52,7 +51,7 @@ public class SingleServiceListener<T, Time>
      */
     public final static String PROP_SERVICE_REMOVED = "serviceRemoved";
     
-    private Descriptor<String, String> myDescriptor;
+    private Descriptor myDescriptor;
     private T myTrackedClass;
     private Reference myReference;
     private Registry myContext;
@@ -66,7 +65,7 @@ public class SingleServiceListener<T, Time>
      * @throws NullPointerException if descriptor or context are null
      */
     public SingleServiceListener(
-            Registry context, Descriptor<String, String> descriptor){
+            Registry context, Descriptor descriptor){
         if(descriptor == null || context == null){
             throw new NullPointerException();
         }
@@ -91,7 +90,7 @@ public class SingleServiceListener<T, Time>
      * Returns the descriptor of the service 
      * @return descriptor of the service
      */
-    public Descriptor<String, String> getServiceDescriptor(){
+    public Descriptor getServiceDescriptor(){
         return myDescriptor;
     }
     
@@ -200,14 +199,18 @@ public class SingleServiceListener<T, Time>
      * @param input the state change
      */
     @Override
-    public void handleEvent(Event<Header<Registry, Time>, Reference> input) {
-        if(input.getHeader().getEventType().equals(ServiceEventAdapter.REGISTERED)) {
-            addService(input.getData());
-        } else if(input.getHeader().getEventType().equals(ServiceEventAdapter.UNREGISTERING)
-                || input.getHeader().getEventType().equals(ServiceEventAdapter.MODIFIED_ENDMATCH)) {
-            removeService(input.getData());
-        } else if(input.getHeader().getEventType().equals(ServiceEventAdapter.MODIFIED)) {
-            modified(input.getData());
+    public void handleEvent(RegistryEvent input) {
+        if(input == null || input.getReference() == null){
+            return;
+        }
+        int type = input.getEventType();
+        if(RegistryEvent.REGISTERED == type) {
+            addService(input.getReference());
+        } else if(RegistryEvent.UNREGISTERING == type
+                || RegistryEvent.MODIFIED_ENDMATCH == type) {
+            removeService(input.getReference());
+        } else if(RegistryEvent.MODIFIED == type) {
+            modified(input.getReference());
         }
     }
 

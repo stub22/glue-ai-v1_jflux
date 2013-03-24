@@ -6,7 +6,7 @@ package org.jflux.impl.registry;
 
 import java.util.Dictionary;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.registry.opt.Certificate;
+import org.jflux.api.registry.Certificate;
 import org.osgi.framework.ServiceRegistration;
 
 /**

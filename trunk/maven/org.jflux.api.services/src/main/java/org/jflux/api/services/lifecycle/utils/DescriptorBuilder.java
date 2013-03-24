@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import org.jflux.api.services.DependencyDescriptor;
-import org.jflux.api.services.DependencyDescriptor.DependencyType;
+import org.jflux.api.services.dep.DependencyDescriptor;
+import org.jflux.api.services.dep.DependencyDescriptor.DependencyType;
 
 /**
  * Builds a DependencyDescriptor.

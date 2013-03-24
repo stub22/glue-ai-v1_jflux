@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.registry.opt;
+package org.jflux.api.registry;
 
 /**
  * A Certificate is produced when an item is added to a Registry.
@@ -22,7 +22,7 @@ package org.jflux.api.registry.opt;
  * 
  * @author Matthew Stevenson
  */
-public interface Certificate<Ref> {
+public interface Certificate<Ref extends Reference> {
     /**
      * Gets the reference to the service the certificate is for.
      * @return the reference

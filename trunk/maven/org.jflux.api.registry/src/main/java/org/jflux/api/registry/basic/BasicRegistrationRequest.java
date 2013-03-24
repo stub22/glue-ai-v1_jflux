@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.jflux.api.registry.opt;
+package org.jflux.api.registry.basic;
 
+import org.jflux.api.registry.RegistrationRequest;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -12,11 +13,10 @@ import java.util.Set;
  * Basic implementation of RegistrationRequest
  * @author Matthew Stevenson
  */
-public class BasicRegistrationRequest<T,K,V> implements 
-        RegistrationRequest<T,K,V> {
+public class BasicRegistrationRequest<T> implements RegistrationRequest<T> {
     private String myName;
     private T myItem;
-    private Map<K,V> myProperties;
+    private Map<String,String> myProperties;
     private Set<String> myClassNames;
     
     /**
@@ -27,7 +27,7 @@ public class BasicRegistrationRequest<T,K,V> implements
      * @param classNames the service's class names
      */
     public BasicRegistrationRequest(
-            String name, T item, Map<K,V> properties, Set<String> classNames) {
+            String name, T item, Map<String,String> properties, Set<String> classNames) {
         if(item == null || classNames == null || classNames.isEmpty()) {
             throw new NullPointerException();
         }
@@ -45,7 +45,7 @@ public class BasicRegistrationRequest<T,K,V> implements
      * @param className the service's class name
      */
     public BasicRegistrationRequest(
-            String name, T item, Map<K,V> properties, String className) {
+            String name, T item, Map<String,String> properties, String className) {
         if(item == null || className == null || className.isEmpty()) {
             throw new NullPointerException();
         }
@@ -79,7 +79,7 @@ public class BasicRegistrationRequest<T,K,V> implements
      * @return the service's properties
      */
     @Override
-    public Map<K, V> getProperties() {
+    public Map<String, String> getProperties() {
         return myProperties;
     }
 

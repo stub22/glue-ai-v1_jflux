@@ -17,8 +17,8 @@ package org.jflux.api.services.lifecycle.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jflux.api.services.DependencyDescriptor;
-import org.jflux.api.services.DependencyDescriptor.DependencyType;
+import org.jflux.api.services.dep.DependencyDescriptor;
+import org.jflux.api.services.dep.DependencyDescriptor.DependencyType;
 
 /**
  * Convenience class for building a List of DependencyDescriptors.

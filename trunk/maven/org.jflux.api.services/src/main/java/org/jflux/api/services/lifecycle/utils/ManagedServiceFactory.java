@@ -16,8 +16,8 @@
 package org.jflux.api.services.lifecycle.utils;
 
 import java.util.Properties;
-import org.jflux.api.services.ManagedService;
-import org.jflux.api.services.ServiceLifecycleProvider;
+import org.jflux.api.services.dep.ManagedService;
+import org.jflux.api.services.dep.ServiceLifecycleProvider;
 
 /**
  *

@@ -13,19 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.registry.opt;
+package org.jflux.api.registry;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Describes a change to a registration.
+ * Provides details for adding an item to a Registry.
  * 
  * @author Matthew Stevenson
  */
-public interface Modification<K,V> {
+public interface RegistrationRequest<T> {
     /**
-     * Gets the properties needed to be changed.
-     * @return the properties
+     * Gets the service's name.
+     * @return the service's name
      */
-    public Map<K,V> getProperties();
+    public String getName();
+    /**
+     * Gets the service.
+     * @return the service
+     */
+    public T getItem();
+    /**
+     * Gets the service's properties
+     * @return the service's properties
+     */
+    public Map<String,String> getProperties();
+    /**
+     * Gets the class names the service will be registered under
+     * @return a set of class names
+     */
+    public Set<String> getClassNames();
 }

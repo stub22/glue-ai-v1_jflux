@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.jflux.api.core.Adapter;
-import org.jflux.api.registry.opt.Descriptor;
+import org.jflux.api.registry.Descriptor;
 import org.osgi.framework.Constants;
 
 /**
@@ -16,14 +16,14 @@ import org.osgi.framework.Constants;
  * @author Matthew Stevenson
  */
 public class DescriptorFilterAdapter implements 
-        Adapter<Descriptor<String,String>, String> {
+        Adapter<Descriptor, String> {
 
     /**
      * Creates an OSGi filter string from a descriptor's properties.
      * @param a the descriptor
      * @return an OSGi filter string
      */
-    public static String getPropertiesFilter(Descriptor<String, String> a) {
+    public static String getPropertiesFilter(Descriptor a) {
         Set<String> keys = a.getPropertyKeys();
         List<String> conditions = new ArrayList<String>(keys.size());
         for(String key : a.getPropertyKeys()){
@@ -46,7 +46,7 @@ public class DescriptorFilterAdapter implements
      * @param a the descriptor
      * @return an OSGi filter string
      */
-    public static String getFullFilter(Descriptor<String, String> a) {
+    public static String getFullFilter(Descriptor a) {
         Set<String> keys = a.getPropertyKeys();
         List<String> conditions = new ArrayList<String>(keys.size());
         for(String key : a.getPropertyKeys()){
@@ -85,7 +85,7 @@ public class DescriptorFilterAdapter implements
      * @return an OSGi filter string
      */
     @Override
-    public String adapt(Descriptor<String, String> a) {
+    public String adapt(Descriptor a) {
         return getPropertiesFilter(a);
     }
 }

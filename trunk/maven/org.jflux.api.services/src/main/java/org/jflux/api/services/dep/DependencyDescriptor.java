@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.services;
+package org.jflux.api.services.dep;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
-import org.jflux.api.registry.opt.Descriptor;
-import org.jflux.impl.services.osgi.OSGiUtils;
+import org.jflux.api.registry.Descriptor;
 
 /**
  * Describes a service dependency of a ServiceLifecycleProvider.  Used to match
@@ -28,14 +26,13 @@ import org.jflux.impl.services.osgi.OSGiUtils;
  * 
  * @author Matthew Stevenson <www.robokind.org>
  */
-public final class DependencyDescriptor implements Descriptor<String, String> {
+public final class DependencyDescriptor implements Descriptor {
     public static enum DependencyType{
         REQUIRED, OPTIONAL
     }
     
     private String myDependencyName;
     private Class myDependencyClass;
-    private String myDependencyFilter;
     private Map<String,String> myDependencyProperties;
     private DependencyType myType;
     
@@ -67,7 +64,6 @@ public final class DependencyDescriptor implements Descriptor<String, String> {
         myDependencyName = dependencyName;
         myDependencyClass = clazz;
         myDependencyProperties = props;
-        myDependencyFilter = buildFilter(props);
         myType = type;
     }
 
@@ -85,15 +81,6 @@ public final class DependencyDescriptor implements Descriptor<String, String> {
      */
     public Class getServiceClass(){
         return myDependencyClass;
-    }
-
-    /**
-     * Returns an OSGi filter string for the dependency, null if it is
-     * not set.
-     * @return OSGi filter string for the dependency, null if it is not set
-     */
-    public String getServiceFilter(){
-        return myDependencyFilter;
     }
 
     @Override
@@ -140,9 +127,6 @@ public final class DependencyDescriptor implements Descriptor<String, String> {
         if (this.myDependencyClass != other.myDependencyClass && (this.myDependencyClass == null || !this.myDependencyClass.equals(other.myDependencyClass))) {
             return false;
         }
-        if ((this.myDependencyFilter == null) ? (other.myDependencyFilter != null) : !this.myDependencyFilter.equals(other.myDependencyFilter)) {
-            return false;
-        }
         if (this.myType != other.myType) {
             return false;
         }
@@ -154,33 +138,7 @@ public final class DependencyDescriptor implements Descriptor<String, String> {
         int hash = 3;
         hash = 19 * hash + (this.myDependencyName != null ? this.myDependencyName.hashCode() : 0);
         hash = 19 * hash + (this.myDependencyClass != null ? this.myDependencyClass.hashCode() : 0);
-        hash = 19 * hash + (this.myDependencyFilter != null ? this.myDependencyFilter.hashCode() : 0);
         hash = 19 * hash + (this.myType != null ? this.myType.hashCode() : 0);
         return hash;
-    }
-    private static String buildFilter(Map<?,?> props){
-        if(props == null || props.isEmpty()){
-            return null;
-        }
-        StringBuilder filterBuilder = new StringBuilder();
-        if(props.size() > 1){
-            filterBuilder.append("(&");
-        }
-        for(Entry e : props.entrySet()){
-            String f = OSGiUtils.createFilter(
-                    e.getKey().toString(), e.getValue().toString());
-            f = f.trim();
-            if(!f.startsWith("(")){
-                filterBuilder.append("(");
-            }
-            filterBuilder.append(f);
-            if(f.charAt(f.length()-1) != ')'){
-                filterBuilder.append(")");
-            }
-        }
-        if(props.size() > 1){
-            filterBuilder.append(")");
-        }
-        return filterBuilder.toString();
     }
 }

@@ -19,21 +19,21 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map.Entry;
 import java.util.*;
+import org.jflux.api.registry.basic.BasicRegistrationRequest;
+import org.jflux.api.registry.Certificate;
+import org.jflux.api.registry.RegistrationRequest;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.registry.opt.BasicRegistrationRequest;
-import org.jflux.api.registry.opt.Certificate;
-import org.jflux.api.registry.opt.RegistrationRequest;
-import org.jflux.api.services.DependencyDescriptor;
-import org.jflux.api.services.ManagedService;
-import org.jflux.api.services.ServiceLifecycleProvider;
-import org.jflux.api.services.ServiceLifecycleProvider.Validator;
+import org.jflux.api.services.dep.DependencyDescriptor;
+import org.jflux.api.services.dep.ManagedService;
+import org.jflux.api.services.dep.ServiceLifecycleProvider;
+import org.jflux.api.services.dep.ServiceLifecycleProvider.Validator;
 import org.jflux.api.services.extras.PropertyChangeNotifier;
 import org.jflux.impl.services.osgi.OSGiUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.jflux.api.services.ServiceLifecycleProvider.PROP_DEPENDENCY_ADDED;
-import static org.jflux.api.services.ServiceLifecycleProvider.PROP_DEPENDENCY_REMOVED;
+import static org.jflux.api.services.dep.ServiceLifecycleProvider.PROP_DEPENDENCY_ADDED;
+import static org.jflux.api.services.dep.ServiceLifecycleProvider.PROP_DEPENDENCY_REMOVED;
 import static org.jflux.impl.services.osgi.lifecycle.ServiceDependenciesTracker.*;
 
 /**
@@ -271,8 +271,8 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
                 Arrays.toString(getServiceClassNames()));
 
         try {
-            RegistrationRequest<ManagedService, String, String> rr =
-                    new BasicRegistrationRequest<ManagedService, String, String>(
+            RegistrationRequest<ManagedService> rr =
+                    new BasicRegistrationRequest<ManagedService>(
                     "", this, props, classNames);
             mySelfRegistration = (Certificate)myContext.register(rr);
         } catch(Exception e) {
@@ -366,8 +366,8 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
                 new HashSet<String>(Arrays.asList(myRegistrationClassNames));        
         
         try {
-            RegistrationRequest<T, String, String> rr =
-                    new BasicRegistrationRequest<T, String, String>(
+            RegistrationRequest<T> rr =
+                    new BasicRegistrationRequest<T>(
                     "", myService, propMap, classNames);
             myServiceRegistration = (Certificate)myContext.register(rr);
         } catch(Exception e) {

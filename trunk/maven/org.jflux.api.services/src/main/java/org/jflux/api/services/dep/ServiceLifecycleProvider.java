@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.api.services;
+package org.jflux.api.services.dep;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
-import org.jflux.api.services.DependencyDescriptor.DependencyType;
+import org.jflux.api.services.dep.DependencyDescriptor.DependencyType;
 import org.jflux.api.services.extras.PropertyChangeSource;
 
 /**

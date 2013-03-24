@@ -17,13 +17,6 @@ package org.jflux.api.registry;
 
 import java.util.List;
 import org.jflux.api.core.Listener;
-import org.jflux.api.core.event.Event;
-import org.jflux.api.core.event.Header;
-import org.jflux.api.registry.opt.Certificate;
-import org.jflux.api.registry.opt.Descriptor;
-import org.jflux.api.registry.opt.Modification;
-import org.jflux.api.registry.opt.Reference;
-import org.jflux.api.registry.opt.RegistrationRequest;
 
 /**
  * Provides access to registry components based on the given context.
@@ -31,14 +24,14 @@ import org.jflux.api.registry.opt.RegistrationRequest;
  * @param <Context> Provides registry permissions
  * @author Matthew Stevenson
  */
-public interface Registry<Desc,Ref,Req,Cert,ModReq, Evt>{
+public interface Registry {
     /**
      * Returns the first reference matching the given description.  
      * Returns null if no matching reference is found.
      * @param desc
      * @return first reference matching the given description.
      */
-    public Ref findSingle(Desc desc);
+    public Reference findSingle(Descriptor desc);
     
     /**
      * Returns all references matching the given description.  
@@ -46,7 +39,7 @@ public interface Registry<Desc,Ref,Req,Cert,ModReq, Evt>{
      * @param desc
      * @return all references matching the given description.
      */
-    public List<Ref> findAll(Desc desc);
+    public List<Reference> findAll(Descriptor desc);
     
     /**
      * Returns a list of references matching the given description whose size 
@@ -56,8 +49,7 @@ public interface Registry<Desc,Ref,Req,Cert,ModReq, Evt>{
      * @param max
      * @return list of references matching the given description.
      */
-    public List<Ref> findCount( Desc desc, int max);
-    
+    public List<Reference> findCount(Descriptor desc, int max);
     
     
     /**
@@ -65,36 +57,34 @@ public interface Registry<Desc,Ref,Req,Cert,ModReq, Evt>{
      * @param clazz the item's class
      * @return Adapter for retrieving an item
      */
-    public <T> T retrieve(Class<T> clazz, Ref reference);
+    public <T> T retrieve(Class<T> clazz, Reference reference);
     /**
      * Returns an Adapter for retrieving an untyped item.
      * @return Adapter for retrieving an untyped item
      */
-    public Object retrieve(Ref reference);
+    public Object retrieve(Reference reference);
     /**
      * Returns a Listener for releasing an item which was retrieved.
      * @return Listener for releasing an item which was retrieved
      */
-    public void release(Ref reference);
-    
+    public void release(Reference reference);
     
     
     /**
      * Returns an Adapter for registering items.
      * @return Adapter for registering items
      */
-    public Cert register(Req request);
+    public Certificate register(RegistrationRequest<?> request);
     /**
      * Returns a Listener for unregistering items.
      * @return Listener for unregistering an items
      */
-    public void unregister(Cert cert);
+    public void unregister(Certificate cert);
     /**
      * Returns an Adapter for modifying a registration.
      * @return Adapter for modifying a registration
      */
-    public void modify(Cert cert, ModReq request);
-    
+    public void modify(Certificate cert, Modification request);
     
     
     /**
@@ -102,22 +92,10 @@ public interface Registry<Desc,Ref,Req,Cert,ModReq, Evt>{
      * @param desc event filter
      * @param listener the listener to be notified
      */
-    public void addListener(Desc desc, Listener<Evt> listener);
+    public void addListener(Descriptor desc, Listener<RegistryEvent> listener);
     /**
      * Removes a Listener from being notified of any events
      * @param listener the listener to be removed
      */
-    public void removeListener(Listener<Evt> listener);
-    
-    /**
-     * A basic kind of Registry
-     */
-    public static interface BasicRegistry<Time,K,V> extends Registry<
-            Descriptor<K,V>,
-            Reference<K,V>,
-            RegistrationRequest<?,K,V>,
-            Certificate<Reference<K,V>>,
-            Modification<K,V>,
-            Event<Header<? extends BasicRegistry<Time,K,V>,Time>,Reference<K,V>>> {
-    }
+    public void removeListener(Listener<RegistryEvent> listener);
 }
