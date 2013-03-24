@@ -32,15 +32,24 @@ public class BindingSpec {
     private final BindingStrategy myBindingStrategy;
     private final UpdateStrategy myUpdateStrategy;
     
-    public BindingSpec(
-            String name, DependencySpec spec, Descriptor desc, 
+    public BindingSpec(DependencySpec spec, Descriptor desc, 
             BindingStrategy bindStrat, UpdateStrategy updateStrat){
-        myName = name;
+        if(spec == null || desc == null || bindStrat == null){
+            throw new NullPointerException();
+        }
+        myName = spec.getDependencyName();
         mySpec = spec;
         myDescriptor = desc;
         myBindingStrategy = bindStrat;
-        myUpdateStrategy = updateStrat;
+        myUpdateStrategy = updateStrat == null 
+                ? mySpec.getUpdateStrategy() : updateStrat;
     }
+    
+    public BindingSpec(
+            DependencySpec spec, Descriptor desc, BindingStrategy bindStrat){
+        this(spec, desc, bindStrat, spec.getUpdateStrategy());
+    }
+    
     public String getDependencyName(){
         return myName;
     }
