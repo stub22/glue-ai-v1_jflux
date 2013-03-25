@@ -35,16 +35,16 @@ public class OSGiReference implements Reference, ServiceReference {
         myReference = ref;
     }
 
-    /**
-     * Gets the reference's name
-     * @return the reference's name
-     */
-    @Override
-    public String getName() {
-        Object nameObj = myReference.getProperty(PROP_REFERENCE_NAME);
-        return nameObj == null
-                ? "anonRef:" + this.toString() : nameObj.toString();
-    }
+//    /**
+//     * Gets the reference's name
+//     * @return the reference's name
+//     */
+//    @Override
+//    public String getName() {
+//        Object nameObj = myReference.getProperty(PROP_REFERENCE_NAME);
+//        return nameObj == null
+//                ? "anonRef:" + this.toString() : nameObj.toString();
+//    }
 
     /**
      * Gets a reference's property by name.
