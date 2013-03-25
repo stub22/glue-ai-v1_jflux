@@ -66,7 +66,8 @@ public class ReferenceTracker<T> {
     
     public void stop(){
         myRegistry.removeListener(myRegistryListener);
-        for(Reference ref : myCachedReferences){
+        Reference[] refs = myCachedReferences.toArray(new Reference[0]);
+        for(Reference ref : refs){
             removeReference(ref);
         }
         myStartFlag = false;

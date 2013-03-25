@@ -28,8 +28,20 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>org.jflux.impl.registry.osgi</artifactId>
+            <artifactId>org.jflux.api.registry</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.5</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -42,7 +54,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>org.jflux.api.services.*,org.jflux.impl.services.*</Export-Package>
+                        <Export-Package>org.jflux.api.service.*</Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
