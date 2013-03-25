@@ -80,7 +80,7 @@ public class ServiceManager<T> {
             return;
         }
         myService = myLifecycle.handleDependencyChange(
-                myService, 0, dependencyName, dependency, dependencies);
+                myService, "", dependencyName, dependency, dependencies);
     }
     
     public boolean isSatisfied(){

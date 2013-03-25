@@ -26,20 +26,7 @@ import org.jflux.api.services.extras.PropertyChangeNotifier;
  *
  * @author matt
  */
-public abstract class DependencyTracker<T> extends PropertyChangeNotifier {
-    /**
-     * Property change event name for a dependency becoming available.
-     */
-    public final static String PROP_DEPENDENCY_AVAILABLE = "dependencyAvailable";
-    /**
-     * Property change event name for a dependency changing.
-     */
-    public final static String PROP_DEPENDENCY_CHANGED = "dependencyChanged";
-    /**
-     * Property change event name for a dependency becoming unavailable.
-     */
-    public final static String PROP_DEPENDENCY_UNAVAILABLE = "dependencyUnavailable";
-    
+public abstract class DependencyTracker<T> extends PropertyChangeNotifier {    
     protected Source<Boolean> myCreatedFlag;
     protected BindingStrategy myBindingStrategy;
     protected DepRefTracker<T> myTracker;

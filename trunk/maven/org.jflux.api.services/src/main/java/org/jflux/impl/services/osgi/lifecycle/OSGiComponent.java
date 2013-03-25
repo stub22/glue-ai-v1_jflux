@@ -271,10 +271,10 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
                 Arrays.toString(getServiceClassNames()));
 
         try {
-            RegistrationRequest<ManagedService> rr =
-                    new BasicRegistrationRequest<ManagedService>(
-                    "", this, props, classNames);
-            mySelfRegistration = (Certificate)myContext.register(rr);
+//            RegistrationRequest<ManagedService> rr =
+//                    new BasicRegistrationRequest<ManagedService>(
+//                    "", this, props, classNames);
+//            mySelfRegistration = (Certificate)myContext.register(rr);
         } catch(Exception e) {
             theLogger.error(e.getMessage());
         }
@@ -366,10 +366,10 @@ public class OSGiComponent<T> extends PropertyChangeNotifier implements ManagedS
                 new HashSet<String>(Arrays.asList(myRegistrationClassNames));        
         
         try {
-            RegistrationRequest<T> rr =
-                    new BasicRegistrationRequest<T>(
-                    "", myService, propMap, classNames);
-            myServiceRegistration = (Certificate)myContext.register(rr);
+//            RegistrationRequest<T> rr =
+//                    new BasicRegistrationRequest<T>(
+//                    "", myService, propMap, classNames);
+//            myServiceRegistration = (Certificate)myContext.register(rr);
         } catch(Exception e) {
             theLogger.error(e.getMessage());
         }

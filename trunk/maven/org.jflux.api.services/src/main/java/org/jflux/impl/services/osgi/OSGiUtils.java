@@ -239,9 +239,9 @@ public class OSGiUtils {
             return null;
         }
         
-        RegistrationRequest<Object> rr =
-                    new BasicRegistrationRequest<Object>(
-                    "", service, props, cls);
+        RegistrationRequest<Object> rr = null;
+//                    new BasicRegistrationRequest<Object>(
+//                    "", service, props, cls);
         return context.register(rr);
     }
     

@@ -16,15 +16,15 @@
 package org.jflux.api.service;
 
 import java.util.Map;
-import org.jflux.api.service.binding.BindingSpec;
 
 /**
  *
  * @author matt
  */
 public interface RegistrationStrategy<T> {
-    public Map<String,String> getRegistrationProperties(T service, Map<String,BindingSpec> bindingStrat);
-    public void register(T service, Map<String,BindingSpec> bindingStrat);
-    public void updateRegistration(T service, Map<String,BindingSpec> bindingStrat);
-    public void unregister(T service);
+    public Map<String,String> getRegistrationProperties(T service);
+    public void register(T service);
+    public void updateRegistration(T service);
+    public void unregister();
+    public boolean isRegistered();
 }
