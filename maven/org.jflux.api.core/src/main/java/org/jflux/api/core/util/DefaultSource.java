@@ -33,5 +33,7 @@ public class DefaultSource<T> implements Source<T> {
         return myT;
     }
     
-    
+    public void setValue(T t){
+        myT = t;
+    }
 }
