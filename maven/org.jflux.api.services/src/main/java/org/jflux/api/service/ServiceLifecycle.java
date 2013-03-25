@@ -17,15 +17,26 @@ package org.jflux.api.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
  * @author Matthew Stevenson
  */
 public interface ServiceLifecycle<T> {
-    public final static int ADDED = 0;
-    public final static int REMOVED = 1;
-    public final static int CHANGED = 2;
+    /**
+     * Property change event name for a dependency becoming available.
+     */
+    public final static String PROP_DEPENDENCY_AVAILABLE = "dependencyAvailable";
+    /**
+     * Property change event name for a dependency changing.
+     */
+    public final static String PROP_DEPENDENCY_CHANGED = "dependencyChanged";
+    /**
+     * Property change event name for a dependency becoming unavailable.
+     */
+    public final static String PROP_DEPENDENCY_UNAVAILABLE = "dependencyUnavailable";
+    
     /**
      * Returns a list describing the service dependencies required by this 
      * lifecycle provider.
@@ -47,7 +58,7 @@ public interface ServiceLifecycle<T> {
      * @param availableDependencies
      * @return 
      */
-    public T handleDependencyChange(T service, int changeType,
+    public T handleDependencyChange(T service, String changeType,
             String dependencyName, Object dependency, 
             Map<String,Object> availableDependencies);
     /**
@@ -63,5 +74,5 @@ public interface ServiceLifecycle<T> {
      * @return names of the interfaces this service implements and makes
      * available
      */
-    public String[] getServiceClassNames();
+    public Set<String> getServiceClassNames();
 }

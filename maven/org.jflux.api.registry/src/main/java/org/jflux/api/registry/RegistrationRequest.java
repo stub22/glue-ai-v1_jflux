@@ -24,11 +24,11 @@ import java.util.Set;
  * @author Matthew Stevenson
  */
 public interface RegistrationRequest<T> {
-    /**
-     * Gets the service's name.
-     * @return the service's name
-     */
-    public String getName();
+//    /**
+//     * Gets the service's name.
+//     * @return the service's name
+//     */
+//    public String getName();
     /**
      * Gets the service.
      * @return the service

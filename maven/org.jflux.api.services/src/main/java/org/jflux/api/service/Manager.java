@@ -19,10 +19,13 @@ import org.jflux.api.service.binding.DependencyTracker;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.jflux.api.core.Source;
+import org.jflux.api.registry.Descriptor;
 import org.jflux.api.registry.Registry;
+import org.jflux.api.registry.basic.BasicDescriptor;
 import org.jflux.api.service.DependencySpec.Cardinality;
 import org.jflux.api.service.binding.BindingSpec;
 import org.jflux.api.service.binding.BindingSpec.BindingStrategy;
@@ -48,12 +51,19 @@ public class Manager<T> {
     public Manager(ServiceLifecycle<T> lifecycle, 
             Map<String,BindingSpec> bindings, 
             RegistrationStrategy<T> registration){
-        if(lifecycle == null || bindings == null || registration == null){
+        if(lifecycle == null){
             throw new NullPointerException();
         }
         myLifecycle = lifecycle;
         myBindings = bindings;
+        if(myBindings == null){
+            myBindings = new HashMap<String, BindingSpec>();
+        }
         myRegistrationStrategy = registration;
+        if(myRegistrationStrategy == null){
+            myRegistrationStrategy = new DefaultRegistrationStrategy(
+                    myLifecycle.getServiceClassNames(), null);
+        }
         myStartFlag = false;
         myListenFlag = false;
         myTrackerMap = new HashMap<BindingSpec, DependencyTracker>();
@@ -64,10 +74,28 @@ public class Manager<T> {
             }
         };
     }
+    public Manager(ServiceLifecycle<T> lifecycle, 
+            Map<String,BindingSpec> bindings, 
+            Map<String,String> registrationProperties){
+        this(lifecycle, bindings, 
+                new DefaultRegistrationStrategy<T>(
+                        lifecycle.getServiceClassNames(),
+                        registrationProperties));
+    }
     
     public synchronized void start(Registry registry){
         if(myStartFlag){
             return;
+        }
+        List<DependencySpec> deps = myLifecycle.getDependencyDescriptors();
+        for(DependencySpec s : deps){
+            if(myBindings.containsKey(s.getDependencyName())){
+                continue;
+            }
+            Descriptor desc = new BasicDescriptor(
+                    s.getDependencyName(), s.getDependencyClassName(), null);
+            BindingSpec bind = new BindingSpec(s, desc, BindingStrategy.LAZY);
+            myBindings.put(s.getDependencyName(), bind);
         }
         bindDependencies(registry);
         myStartFlag = true;
@@ -77,7 +105,8 @@ public class Manager<T> {
         if(!myStartFlag){
             return;
         }
-        myRegistrationStrategy.unregister(myService);
+        myListenFlag = false;
+        myRegistrationStrategy.unregister();
         unbindDependencies();
         myStartFlag = false;
     }
@@ -105,8 +134,6 @@ public class Manager<T> {
         if(!myStartFlag){
             return;
         }
-        myListenFlag = false;
-        myRegistrationStrategy.unregister(myService);
         myLifecycle.disposeService(myService, myCachedDependencies);
         for(Entry<BindingSpec,DependencyTracker> e : myTrackerMap.entrySet()){
             BindingSpec s = e.getKey();
@@ -127,10 +154,13 @@ public class Manager<T> {
             return;
         }
         myService = t;
-        myRegistrationStrategy.register(myService, myBindings);
+        myRegistrationStrategy.register(myService);
     }
     
-    private void updateDependency(int changeType, String dependencyName, Object dependency){
+    private void updateDependency(String changeType, String dependencyName, Object dependency){
+        if(!isSatisfied()){
+            
+        }
         BindingSpec spec = myBindings.get(dependencyName);
         switch(spec.getUpdateStrategy()){
             case STATIC : staticUpdate(); break;
@@ -145,23 +175,21 @@ public class Manager<T> {
             return;
         }
         T service = myLifecycle.createService(myCachedDependencies);
-        myRegistrationStrategy.register(service, myBindings);
-        myRegistrationStrategy.unregister(myService);
+        myRegistrationStrategy.updateRegistration(service);
         myLifecycle.disposeService(myService, dependencies);
         myService = service;
     }
     
-    private void dynamicUpdate(int changeType, String dependencyName, Object dependency){
+    private void dynamicUpdate(String changeType, String dependencyName, Object dependency){
         Map<String,Object> dependencies = myCachedDependencies;
         updateDependencyCache();
         T service = myLifecycle.handleDependencyChange(
                 myService, changeType, dependencyName, 
                 dependency, myCachedDependencies);
         if(service == myService){
-           myRegistrationStrategy.updateRegistration(myService, myBindings);
+           myRegistrationStrategy.updateRegistration(myService);
         }else{
-            myRegistrationStrategy.register(service, myBindings);
-            myRegistrationStrategy.unregister(myService);
+            myRegistrationStrategy.updateRegistration(service);
             myLifecycle.disposeService(myService, dependencies);
             myService = service;
         }
@@ -192,10 +220,12 @@ public class Manager<T> {
         return true;
     }
     
+    public boolean isAvailable(){
+        return myRegistrationStrategy.isRegistered();
+    }
+    
     class DependencyChangeListener implements PropertyChangeListener {
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
+        @Override public void propertyChange(PropertyChangeEvent evt) {
             if(!myListenFlag){
                 return;
             }
@@ -204,7 +234,7 @@ public class Manager<T> {
                 return;
             }
             String depName = (String)evt.getSource();
-            updateDependency(0, depName, evt.getNewValue());
+            updateDependency(evt.getPropertyName(), depName, evt.getNewValue());
         }
     }
 }

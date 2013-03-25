@@ -17,6 +17,15 @@ public class BasicDescriptor implements Descriptor {
     private Map<String,String> myProperties;
     private String myClassName;
     
+    public BasicDescriptor(String name, String className, Map<String,String> properties){
+        if(className == null){
+            throw new NullPointerException();
+        }
+        myName = name;
+        myClassName = className;
+        myProperties = properties;
+    }
+    
     /**
      * Gets the descriptor's name.
      * @return the descriptor's name

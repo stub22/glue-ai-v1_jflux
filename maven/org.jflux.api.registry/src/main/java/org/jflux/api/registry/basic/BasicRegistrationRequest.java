@@ -14,7 +14,7 @@ import java.util.Set;
  * @author Matthew Stevenson
  */
 public class BasicRegistrationRequest<T> implements RegistrationRequest<T> {
-    private String myName;
+//    private String myName;
     private T myItem;
     private Map<String,String> myProperties;
     private Set<String> myClassNames;
@@ -27,11 +27,12 @@ public class BasicRegistrationRequest<T> implements RegistrationRequest<T> {
      * @param classNames the service's class names
      */
     public BasicRegistrationRequest(
-            String name, T item, Map<String,String> properties, Set<String> classNames) {
+//            String name, 
+            T item, Set<String> classNames, Map<String,String> properties) {
         if(item == null || classNames == null || classNames.isEmpty()) {
             throw new NullPointerException();
         }
-        myName = name;
+//        myName = name;
         myItem = item;
         myProperties = properties;
         myClassNames = classNames;
@@ -45,25 +46,26 @@ public class BasicRegistrationRequest<T> implements RegistrationRequest<T> {
      * @param className the service's class name
      */
     public BasicRegistrationRequest(
-            String name, T item, Map<String,String> properties, String className) {
+//            String name, 
+            T item, String className, Map<String,String> properties) {
         if(item == null || className == null || className.isEmpty()) {
             throw new NullPointerException();
         }
-        myName = name;
+//        myName = name;
         myItem = item;
         myProperties = properties;
         myClassNames = new HashSet<String>();
         myClassNames.add(className);
     }
     
-    /**
-     * Gets the service's name.
-     * @return the service's name
-     */
-    @Override
-    public String getName() {
-        return myName;
-    }
+//    /**
+//     * Gets the service's name.
+//     * @return the service's name
+//     */
+//    @Override
+//    public String getName() {
+//        return myName;
+//    }
 
     /**
      * Gets the service
