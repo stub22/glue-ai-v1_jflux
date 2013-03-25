@@ -25,11 +25,6 @@ import java.util.Set;
  */
 public interface Reference {
     /**
-     * Gets the reference's name
-     * @return the reference's name
-     */
-    public String getName();
-    /**
      * Gets a property of the reference by name
      * @param key the property name
      * @return the property value

@@ -13,27 +13,29 @@ import java.util.Set;
  * @author Matthew Stevenson
  */
 public class BasicDescriptor implements Descriptor {
-    private String myName;
+//    private String myName;
     private Map<String,String> myProperties;
     private String myClassName;
     
-    public BasicDescriptor(String name, String className, Map<String,String> properties){
+    public BasicDescriptor(
+//            String name, 
+            String className, Map<String,String> properties){
         if(className == null){
             throw new NullPointerException();
         }
-        myName = name;
+//        myName = name;
         myClassName = className;
         myProperties = properties;
     }
-    
-    /**
-     * Gets the descriptor's name.
-     * @return the descriptor's name
-     */
-    @Override
-    public String getDescriptorName() {
-        return myName;
-    }
+//    
+//    /**
+//     * Gets the descriptor's name.
+//     * @return the descriptor's name
+//     */
+//    @Override
+//    public String getDescriptorName() {
+//        return myName;
+//    }
 
     /**
      * Gets a descriptor's property by name
