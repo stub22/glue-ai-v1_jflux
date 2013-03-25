@@ -36,7 +36,7 @@ import org.jflux.api.service.binding.SingleDepencyTracker;
  *
  * @author matt
  */
-public class Manager<T> {
+public class ServiceManager<T> {
     private ServiceLifecycle<T> myLifecycle;
     private Map<String,BindingSpec> myBindings;
     private Map<String,Object> myCachedDependencies;
@@ -48,7 +48,7 @@ public class Manager<T> {
     private boolean myStartFlag;
     private boolean myListenFlag;
     
-    public Manager(ServiceLifecycle<T> lifecycle, 
+    public ServiceManager(ServiceLifecycle<T> lifecycle, 
             Map<String,BindingSpec> bindings, 
             RegistrationStrategy<T> registration){
         if(lifecycle == null){
@@ -74,7 +74,7 @@ public class Manager<T> {
             }
         };
     }
-    public Manager(ServiceLifecycle<T> lifecycle, 
+    public ServiceManager(ServiceLifecycle<T> lifecycle, 
             Map<String,BindingSpec> bindings, 
             Map<String,String> registrationProperties){
         this(lifecycle, bindings, 
@@ -87,13 +87,14 @@ public class Manager<T> {
         if(myStartFlag){
             return;
         }
-        List<DependencySpec> deps = myLifecycle.getDependencyDescriptors();
+        List<DependencySpec> deps = myLifecycle.getDependencySpecs();
         for(DependencySpec s : deps){
             if(myBindings.containsKey(s.getDependencyName())){
                 continue;
             }
             Descriptor desc = new BasicDescriptor(
-                    s.getDependencyName(), s.getDependencyClassName(), null);
+//                    s.getDependencyName(), 
+                    s.getDependencyClassName(), null);
             BindingSpec bind = new BindingSpec(s, desc, BindingStrategy.LAZY);
             myBindings.put(s.getDependencyName(), bind);
         }
