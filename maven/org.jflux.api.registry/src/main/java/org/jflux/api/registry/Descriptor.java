@@ -24,11 +24,6 @@ import java.util.Set;
  */
 public interface Descriptor {
     /**
-     * Gets the descriptor's name
-     * @return the descriptor's name
-     */
-    public String getDescriptorName();
-    /**
      * Gets one of the descriptor's properties by name
      * @param key the property name
      * @return the property value
