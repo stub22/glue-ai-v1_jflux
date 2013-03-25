@@ -92,9 +92,8 @@ public class ServiceManager<T> {
             if(myBindings.containsKey(s.getDependencyName())){
                 continue;
             }
-            Descriptor desc = new BasicDescriptor(
-//                    s.getDependencyName(), 
-                    s.getDependencyClassName(), null);
+            Descriptor desc = 
+                    new BasicDescriptor(s.getDependencyClassName(), null);
             BindingSpec bind = new BindingSpec(s, desc, BindingStrategy.LAZY);
             myBindings.put(s.getDependencyName(), bind);
         }
