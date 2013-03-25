@@ -40,7 +40,7 @@ public class SingleDepencyTracker<T> extends DependencyTracker<T> {
         List<Reference> refs = myTracker.getTrackedReferences();
         boolean tracking = !refs.isEmpty();
         Reference topRef = tracking ? refs.get(refs.size()-1) : null;
-        if(topRef == ref){
+        if(topRef != null && topRef == ref){
             return;
         }
         T top = topRef != null ? myTracker.getTrackedService(topRef) : null;
@@ -58,7 +58,7 @@ public class SingleDepencyTracker<T> extends DependencyTracker<T> {
     
     @Override
     protected synchronized void lazyAdd(Reference ref){
-        if(myCreatedFlag.getValue() || myTracker.getTrackedServices().isEmpty()){
+        if(myCreatedFlag.getValue() || !myTracker.getTrackedServices().isEmpty()){
             return;
         }
         T t = myTracker.getService(ref);
