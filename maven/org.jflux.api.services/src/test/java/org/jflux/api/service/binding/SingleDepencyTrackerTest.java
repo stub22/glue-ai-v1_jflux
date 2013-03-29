@@ -66,12 +66,58 @@ public class SingleDepencyTrackerTest {
      */
     @Test
     public void testEagerAdd() {
-        System.out.println("eagerAdd");
-        Reference ref = null;
-        SingleDepencyTracker instance = null;
-        instance.eagerAdd(ref);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Registry reg = mock(Registry.class);
+        final Reference[] refs = new Reference[]{mock(Reference.class),mock(Reference.class),mock(Reference.class)};
+        final List<Reference> refList = Arrays.asList(refs);
+        final Object[] objs = new Object[]{new Object(), new Object(), new Object()};
+        when(reg.findAll(any(Descriptor.class))).thenReturn(Collections.EMPTY_LIST);
+        when(reg.retrieve(any(Reference.class))).thenAnswer(new Answer<Object>() {
+            @Override public Object answer(InvocationOnMock invocation) throws Throwable {
+                int i = refList.lastIndexOf(invocation.getArguments()[0]);
+                return i == -1 ? null : objs[i];
+            }
+        });
+        Descriptor desc = mock(Descriptor.class);
+        createdSource.setValue(false);
+        SingleDepencyTracker instance = new SingleDepencyTracker("depName", BindingStrategy.EAGER, createdSource);
+        instance.start(reg, desc);
+        assertNull(instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[0]);
+        assertEquals(objs[0], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[1]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[2]);
+        assertEquals(objs[2], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[2]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[0]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[2]);
+        assertEquals(objs[2], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[2]);
+        assertEquals(objs[2], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[0]);
+        assertEquals(objs[0], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[1]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[1]);
+        assertEquals(objs[0], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[0]);
+        assertEquals(objs[2], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[2]);
+        assertNull(instance.getTrackedDependency());
     }
 
     /**
@@ -79,25 +125,58 @@ public class SingleDepencyTrackerTest {
      */
     @Test
     public void testLazyAdd() {
-        System.out.println("lazyAdd");
-        Reference ref = null;
-        SingleDepencyTracker instance = null;
-        instance.lazyAdd(ref);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of dependencyRemoved method, of class SingleDepencyTracker.
-     */
-    @Test
-    public void testDependencyRemoved() {
-        System.out.println("dependencyRemoved");
-        Reference ref = null;
-        SingleDepencyTracker instance = null;
-        instance.dependencyRemoved(ref);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Registry reg = mock(Registry.class);
+        final Reference[] refs = new Reference[]{mock(Reference.class),mock(Reference.class),mock(Reference.class)};
+        final List<Reference> refList = Arrays.asList(refs);
+        final Object[] objs = new Object[]{new Object(), new Object(), new Object()};
+        when(reg.findAll(any(Descriptor.class))).thenReturn(Collections.EMPTY_LIST);
+        when(reg.retrieve(any(Reference.class))).thenAnswer(new Answer<Object>() {
+            @Override public Object answer(InvocationOnMock invocation) throws Throwable {
+                int i = refList.lastIndexOf(invocation.getArguments()[0]);
+                return i == -1 ? null : objs[i];
+            }
+        });
+        Descriptor desc = mock(Descriptor.class);
+        createdSource.setValue(false);
+        SingleDepencyTracker instance = new SingleDepencyTracker("depName", BindingStrategy.LAZY, createdSource);
+        instance.start(reg, desc);
+        assertNull(instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[0]);
+        assertEquals(objs[0], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[1]);
+        assertEquals(objs[0], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[2]);
+        assertEquals(objs[0], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[2]);
+        assertEquals(objs[0], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[0]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[2]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[2]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[0]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.addReference(refs[1]);
+        assertEquals(objs[1], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[1]);
+        assertEquals(objs[2], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[2]);
+        assertEquals(objs[0], instance.getTrackedDependency());
+        
+        instance.myTracker.removeReference(refs[0]);
+        assertNull(instance.getTrackedDependency());
     }
 
     /**

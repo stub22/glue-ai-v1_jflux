@@ -88,7 +88,7 @@ public class SingleDepencyTracker<T> extends DependencyTracker<T> {
             tracked = new ArrayList<Reference>(tracked);
             Collections.reverse(tracked);
         }
-        for(Reference r : myTracker.getTrackedReferences()){
+        for(Reference r : tracked){
             if(r == ref){
                 continue;
             }
@@ -97,7 +97,12 @@ public class SingleDepencyTracker<T> extends DependencyTracker<T> {
                 return t;
             }
         }
-        for(Reference r : myTracker.getAvailableReferences()){
+        tracked = myTracker.getAvailableReferences();
+        if(myBindingStrategy == BindingStrategy.EAGER){
+            tracked = new ArrayList<Reference>(tracked);
+            Collections.reverse(tracked);
+        }
+        for(Reference r : tracked){
             if(r == ref){
                 continue;
             }
