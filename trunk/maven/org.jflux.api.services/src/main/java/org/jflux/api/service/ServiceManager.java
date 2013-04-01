@@ -145,7 +145,7 @@ public class ServiceManager<T> {
     }
     
     private void tryCreate(){
-        if(!isSatisfied()){
+        if(myService != null || !isSatisfied()){
             return;
         }
         updateDependencyCache();

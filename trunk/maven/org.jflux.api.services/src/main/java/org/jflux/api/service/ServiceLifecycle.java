@@ -74,5 +74,5 @@ public interface ServiceLifecycle<T> {
      * @return names of the interfaces this service implements and makes
      * available
      */
-    public Set<String> getServiceClassNames();
+    public String[] getServiceClassNames();
 }

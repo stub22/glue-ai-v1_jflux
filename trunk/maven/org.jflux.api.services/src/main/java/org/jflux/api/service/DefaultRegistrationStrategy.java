@@ -16,7 +16,6 @@
 package org.jflux.api.service;
 
 import java.util.Map;
-import java.util.Set;
 import org.jflux.api.registry.Certificate;
 import org.jflux.api.registry.Reference;
 import org.jflux.api.registry.RegistrationRequest;
@@ -32,10 +31,10 @@ public class DefaultRegistrationStrategy<T> implements RegistrationStrategy<T> {
     private Registry myRegistry;
     private T myRegisteredService;
     private Certificate<Reference> myCertificate;
-    private Set<String> myRegistrationClassNames;
+    private String[] myRegistrationClassNames;
 
     public DefaultRegistrationStrategy(
-            Set<String> classNames, Map<String,String> registrationProperties){
+            String[] classNames, Map<String,String> registrationProperties){
         if(classNames == null){
             throw new NullPointerException();
         }
