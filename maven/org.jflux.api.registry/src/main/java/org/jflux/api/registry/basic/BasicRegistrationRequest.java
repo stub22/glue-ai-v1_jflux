@@ -5,9 +5,7 @@
 package org.jflux.api.registry.basic;
 
 import org.jflux.api.registry.RegistrationRequest;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Basic implementation of RegistrationRequest
@@ -17,7 +15,7 @@ public class BasicRegistrationRequest<T> implements RegistrationRequest<T> {
 //    private String myName;
     private T myItem;
     private Map<String,String> myProperties;
-    private Set<String> myClassNames;
+    private String[] myClassNames;
     
     /**
      * Creates a new registration request for multiple class names
@@ -28,8 +26,8 @@ public class BasicRegistrationRequest<T> implements RegistrationRequest<T> {
      */
     public BasicRegistrationRequest(
 //            String name, 
-            T item, Set<String> classNames, Map<String,String> properties) {
-        if(item == null || classNames == null || classNames.isEmpty()) {
+            T item, String[] classNames, Map<String,String> properties) {
+        if(item == null || classNames == null || classNames.length == 0) {
             throw new NullPointerException();
         }
 //        myName = name;
@@ -54,8 +52,7 @@ public class BasicRegistrationRequest<T> implements RegistrationRequest<T> {
 //        myName = name;
         myItem = item;
         myProperties = properties;
-        myClassNames = new HashSet<String>();
-        myClassNames.add(className);
+        myClassNames = new String[]{className};
     }
     
 //    /**
@@ -90,7 +87,7 @@ public class BasicRegistrationRequest<T> implements RegistrationRequest<T> {
      * @return the service's class names
      */
     @Override
-    public Set<String> getClassNames() {
+    public String[] getClassNames() {
         return myClassNames;
     }
     

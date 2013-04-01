@@ -43,5 +43,5 @@ public interface RegistrationRequest<T> {
      * Gets the class names the service will be registered under
      * @return a set of class names
      */
-    public Set<String> getClassNames();
+    public String[] getClassNames();
 }
