@@ -23,7 +23,7 @@
   
 	<groupId>org.jflux</groupId>
 	<artifactId>org.jflux.project.root</artifactId>
-	<version>0.1.4</version>
+	<version>0.1.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.artifactId} - Root pom</name>
 	<url>http://www.jflux.org</url>
@@ -41,9 +41,9 @@
 	</modules>
 	
 	<scm>
-		<connection>scm:svn:https://subversion.assembla.com/svn/jflux/tags/org.jflux.project.root-0.1.4</connection>
-		<developerConnection>scm:svn:https://subversion.assembla.com/svn/jflux/tags/org.jflux.project.root-0.1.4</developerConnection>
-		<url>https://www.assembla.com/code/jflux/subversion/nodes/tags/org.jflux.project.root-0.1.4</url>
+		<connection>scm:svn:https://subversion.assembla.com/svn/jflux/trunk/</connection>
+		<developerConnection>scm:svn:https://subversion.assembla.com/svn/jflux/trunk/</developerConnection>
+		<url>https://www.assembla.com/code/jflux/subversion/nodes/trunk/</url>
 	</scm>
     
 	<build>
