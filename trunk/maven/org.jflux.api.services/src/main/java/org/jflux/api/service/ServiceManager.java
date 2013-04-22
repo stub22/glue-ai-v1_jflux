@@ -83,11 +83,21 @@ public class ServiceManager<T> {
                         registrationProperties));
     }
     
+    /**
+     * 
+     * @param registry 
+     */
     public synchronized void start(Registry registry){
+        
+        // Do nothing if already started.
         if(myStartFlag){
             return;
         }
+        
+        
         List<DependencySpec> deps = myLifecycle.getDependencySpecs();
+        
+        // Ensures each dependency has a binding
         for(DependencySpec s : deps){
             if(myBindings.containsKey(s.getDependencyName())){
                 continue;

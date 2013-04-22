@@ -58,11 +58,13 @@ public interface Registry {
      * @return Adapter for retrieving an item
      */
     public <T> T retrieve(Class<T> clazz, Reference reference);
+    
     /**
      * Returns an Adapter for retrieving an untyped item.
      * @return Adapter for retrieving an untyped item
      */
     public Object retrieve(Reference reference);
+    
     /**
      * Returns a Listener for releasing an item which was retrieved.
      * @return Listener for releasing an item which was retrieved
@@ -75,11 +77,13 @@ public interface Registry {
      * @return Adapter for registering items
      */
     public Certificate register(RegistrationRequest<?> request);
+    
     /**
      * Returns a Listener for unregistering items.
      * @return Listener for unregistering an items
      */
     public void unregister(Certificate cert);
+    
     /**
      * Returns an Adapter for modifying a registration.
      * @return Adapter for modifying a registration
@@ -93,6 +97,7 @@ public interface Registry {
      * @param listener the listener to be notified
      */
     public void addListener(Descriptor desc, Listener<RegistryEvent> listener);
+    
     /**
      * Removes a Listener from being notified of any events
      * @param listener the listener to be removed

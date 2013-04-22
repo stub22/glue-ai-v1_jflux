@@ -16,7 +16,6 @@
 package org.jflux.api.service;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -140,7 +139,7 @@ public class ServiceManagerTest {
         fail("The test case is a prototype.");
     }
     
-    class LifecycleImpl implements ServiceLifecycle {
+    class LifecycleImpl implements ServiceLifecycle<Map> {
 
         @Override
         public List<DependencySpec> getDependencySpecs() {
@@ -155,23 +154,22 @@ public class ServiceManagerTest {
         }
 
         @Override
-        public Object createService(Map dependencyMap) {
+        public Map createService(Map dependencyMap) {
             return dependencyMap;
         }
 
         @Override
-        public Object handleDependencyChange(Object service, String changeType, String dependencyName, Object dependency, Map availableDependencies) {
+        public Map handleDependencyChange(Map service, String changeType, String dependencyName, Object dependency, Map<String,Object> availableDependencies) {
             return availableDependencies;
         }
 
         @Override
-        public void disposeService(Object service, Map availableDependencies) {
+        public void disposeService(Map service, Map availableDependencies) {
         }
 
         @Override
         public String[] getServiceClassNames() {
-            return new String[]{Object.class.getName()};
+            return new String[]{Map.class.getName()};
         }
-        
     }
 }
