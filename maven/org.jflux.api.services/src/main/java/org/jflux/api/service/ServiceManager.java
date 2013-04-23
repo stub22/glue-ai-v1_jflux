@@ -93,7 +93,9 @@ public class ServiceManager<T> {
         if(myStartFlag){
             return;
         }
-        
+        if(myRegistrationStrategy instanceof DefaultRegistrationStrategy){
+            ((DefaultRegistrationStrategy)myRegistrationStrategy).setRegistry(registry);
+        }
         
         List<DependencySpec> deps = myLifecycle.getDependencySpecs();
         

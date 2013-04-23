@@ -4,6 +4,7 @@
  */
 package org.jflux.api.registry.basic;
 
+import java.util.Collections;
 import org.jflux.api.registry.Descriptor;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +45,9 @@ public class BasicDescriptor implements Descriptor {
      */
     @Override
     public String getProperty(String key) {
+        if(myProperties == null){
+            return null;
+        }
         return myProperties.get(key);
     }
 
@@ -53,6 +57,9 @@ public class BasicDescriptor implements Descriptor {
      */
     @Override
     public Set<String> getPropertyKeys() {
+        if(myProperties == null){
+            return Collections.EMPTY_SET;
+        }
         return myProperties.keySet();
     }
 

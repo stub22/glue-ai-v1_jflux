@@ -140,14 +140,14 @@ public class OSGiReference implements Reference, ServiceReference {
         return myReference.compareTo(reference);
     }
     
-    private static Adapter<ServiceReference,OSGiReference> theReferenceApadter;
+    private static Adapter<ServiceReference,OSGiReference> theReferenceAdapter;
     public static Adapter<ServiceReference,OSGiReference> getReferenceAdapter(){
-        if(theReferenceApadter == null){
-            theReferenceApadter = new Adapter<ServiceReference,OSGiReference>() {
+        if(theReferenceAdapter == null){
+            theReferenceAdapter = new Adapter<ServiceReference,OSGiReference>() {
                 @Override public OSGiReference adapt(ServiceReference a) {
                     return a == null ? null : new OSGiReference(a);
                 }};
         }
-        return theReferenceApadter;
+        return theReferenceAdapter;
     }
 }

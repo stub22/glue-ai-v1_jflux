@@ -42,6 +42,10 @@ public class DefaultRegistrationStrategy<T> implements RegistrationStrategy<T> {
         myRegistrationProperties = registrationProperties;
     }
     
+    public void setRegistry(Registry registry){
+        myRegistry = registry;
+    }
+    
     @Override
     public Map<String, String> getRegistrationProperties(T service) {
         return myRegistrationProperties;
