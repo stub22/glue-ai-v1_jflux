@@ -113,7 +113,8 @@ public class OSGiRegistry implements Registry {
         if(!(reference instanceof OSGiReference)){
             return null;
         }
-        return myContext.getService((OSGiReference)reference);
+        ServiceReference ref = ((OSGiReference)reference).getReference();
+        return myContext.getService(ref);
     }
 
     @Override
@@ -126,8 +127,8 @@ public class OSGiRegistry implements Registry {
 
     @Override
     public OSGiCertificate register(RegistrationRequest request) {
-        String[] classNames = null;
-        Dictionary props = null;
+        String[] classNames = request.getClassNames();
+        Dictionary props = new Hashtable(request.getProperties());
         Object item = request.getItem();
         ServiceRegistration reg =  myContext.registerService(classNames, item, props);
         return reg == null ? null : new OSGiCertificate(reg);

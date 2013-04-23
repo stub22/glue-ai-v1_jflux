@@ -58,8 +58,10 @@ public class ReferenceTracker<T> {
         myRegistryListener = new RegistryListener();
         List<Reference> refs = myRegistry.findAll(desc);
         myRegistry.addListener(desc, myRegistryListener);
-        for(Reference ref : refs){
-            addReference(ref);
+        if(refs != null){
+            for(Reference ref : refs){
+                addReference(ref);
+            }
         }
         myStartFlag = true;
     }
