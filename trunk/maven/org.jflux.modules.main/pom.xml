@@ -13,6 +13,11 @@
 	<packaging>pom</packaging>
 
     <repositories>
+        <repository>
+            <id>sonatype</id>
+            <name>sonatype</name>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+        </repository>
     </repositories>
     
 	<modules>
