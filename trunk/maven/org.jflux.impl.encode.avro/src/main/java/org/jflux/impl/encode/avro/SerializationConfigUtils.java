@@ -26,18 +26,48 @@ import org.jflux.api.core.config.DefaultConfiguration;
  * @author Matthew Stevenson
  */
 public class SerializationConfigUtils {
+    /**
+     * Message class key.
+     */
     public final static String CONF_MESSAGE_CLASS = "serializationMessageClass";
+    /**
+     * Record class key.
+     */
     public final static String CONF_OUTPUT_CLASS = "serializationRecordClass";
+    /**
+     * Content type key.
+     */
     public final static String CONF_CONTENT_TYPE = "serializationContentType";
+    /**
+     * Encoder key.
+     */
     public final static String CONF_ENCODING_ADAPTER = "serializationSenderEncoderAdapter";
+    /**
+     * Decoder key.
+     */
     public final static String CONF_DECODING_ADAPTER = "serializationReceiverDecoderAdapter";
     
+    /**
+     * Schema key.
+     */
     public final static String CONF_AVRO_RECORD_SCHEMA = "avroRecordSchema";
+    /**
+     * Encoding type key.
+     */
     public final static String CONF_AVRO_ENCODING_TYPE = "avroEncodingType";
     
+    /**
+     * Binary encoding type.
+     */
     public final static int ENCODING_BINARY = 0;
+    /**
+     * JSON encoding type.
+     */
     public final static int ENCODING_JSON = 1;
     
+    /**
+     * Default encoding type (binary).
+     */
     public final static int DEF_AVRO_ENCODING_TYPE = ENCODING_BINARY;
     
     private static <Msg,Rec> DefaultConfiguration<String> buildBaseConfig(
@@ -53,6 +83,17 @@ public class SerializationConfigUtils {
         return conf;
     }
     
+    /**
+     * Creates a serialization config with user-specified parameters.
+     * @param <Msg> type of object that represents the data
+     * @param <Rec> type of data
+     * @param messageClass type of object that represents the data
+     * @param recordClass type of data
+     * @param encoder Adapter to encode object into raw data
+     * @param decoder Adapter to decode raw data into object
+     * @param contentType content type
+     * @return
+     */
     public static <Msg,Rec> Configuration<String> buildSerializationConfig(
             Class<Msg> messageClass, Class<Rec> recordClass,
             Adapter<Msg,Rec> encoder, Adapter<Rec,Msg> decoder,
@@ -61,6 +102,19 @@ public class SerializationConfigUtils {
                 messageClass, recordClass, encoder, decoder, contentType);
     }
     
+    /**
+     * Creates an Avro serialization config with user-specified parameters.
+     * @param <Msg> type of object that represents the data
+     * @param <Rec> type of data
+     * @param messageClass type of object that represents the data
+     * @param recordClass type of data
+     * @param encoder Adapter to encode object into raw data
+     * @param decoder Adapter to decode raw data into object
+     * @param contentType content type
+     * @param recordSchema the record's schema
+     * @param encoding type of encoding to use
+     * @return
+     */
     public static <Msg,Rec extends IndexedRecord> Configuration<String> 
             buildAvroSerializationConfig(
                     Class<Msg> messageClass, Class<Rec> recordClass,

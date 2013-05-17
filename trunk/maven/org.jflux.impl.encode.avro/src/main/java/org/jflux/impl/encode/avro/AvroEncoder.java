@@ -31,7 +31,9 @@ import org.jflux.api.core.Adapter;
 import org.jflux.api.encode.EncodeRequest;
 
 /**
- *
+ * Encodes record objects into Avro data
+ * @param <T> the type of record object to encode from
+ * @param <S> the type of message stream to encode to
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class AvroEncoder<T extends IndexedRecord, S extends OutputStream> 
@@ -43,10 +45,25 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
     private boolean myJsonFlag;
     private Schema mySchema;
     
+    /**
+     * Builds an encoder to convert from a SpecificRecordBase.
+     * @param <R> the type of SpecificRecordBase
+     * @param <S> the type of InputStream
+     * @param clazz the type of SpecificRecordBase
+     * @return AvroEncoder to convert from a SpecificRecordBase
+     */
     public static <R extends SpecificRecordBase, S extends OutputStream> 
             Adapter<EncodeRequest<R,S>,S> buildSpecificBinaryEncoder(Class<R> clazz){
         return new AvroEncoder<R,S>(clazz, null, false);
     }
+    /**
+     * Builds an encoder to convert according to a schema.
+     * @param <R> the type of IndexedRecord
+     * @param <S> the type of InputStream
+     * @param clazz the type of IndexedRecord
+     * @param schema the Schema to use to convert
+     * @return AvroEncoder to convert an object into raw data via schema
+     */
     public static <R extends IndexedRecord, S extends OutputStream> 
             Adapter<EncodeRequest<R,S>,S> buildBinaryEncoder(
                     Class<R> clazz, Schema schema){
@@ -54,12 +71,12 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
     }
     /**
      * Used when the Stream type needs to be specified.
-     * @param <R>
-     * @param <S>
-     * @param streamType
-     * @param clazz
-     * @param schema
-     * @return 
+     * @param <R> the type of IndexedRecord
+     * @param <S> the type of InputStream
+     * @param streamType the type of InputStream
+     * @param clazz the type of IndexedRecord 
+     * @param schema the Schema to use to convert
+     * @return AvroEncoder to convert an object into raw data via schema
      */
     public static <R extends IndexedRecord, S extends OutputStream> 
             Adapter<EncodeRequest<R,S>,S> buildBinaryEncoder(
@@ -67,12 +84,26 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
         return new AvroEncoder<R,S>(clazz, schema, false);
     }
     
+    /**
+     * Builds an AvroEncoder to convert to a JSON file
+     * @param <R> the type of IndexedRecord
+     * @param <S> the type of InputStream (JSON-based)
+     * @param clazz the type of IndexedRecord 
+     * @param schema the Schema to use to convert
+     * @return AvroEncoder to convert an object into a JSON file
+     */
     public static <R extends IndexedRecord, S extends OutputStream> 
             Adapter<EncodeRequest<R,S>,S> buildJsonEncoder(
                     Class<R> clazz, Schema schema){
         return new AvroEncoder<R,S>(clazz, schema, true);
     }
     
+    /**
+     * @return AvroEncoder to convert an object into Avro format
+     * @param clazz the type of IndexedRecord 
+     * @param schema the Schema to use to convert
+     * @param json determines whether or not to convert to JSON
+     */
     public AvroEncoder(Class<T> clazz, Schema schema, boolean json){
         if((clazz == null && schema == null) || (json && schema == null)){
             throw new NullPointerException();
@@ -87,6 +118,12 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
         mySchema = schema;
     }
     
+    /**
+     * @return AvroEncoder to convert an object into Avro format
+     * @param schema the Schema to use to convert
+     * @param specific determines whether or not we use a specific encoder
+     * @param json determines whether or not to convert to JSON
+     */
     public AvroEncoder(Schema schema, boolean specific, boolean json){
         if(schema == null){
             throw new NullPointerException();
@@ -98,6 +135,11 @@ public class AvroEncoder<T extends IndexedRecord, S extends OutputStream>
         mySchema = schema;
     }
     
+    /**
+     * Sets the type of record to convert.
+     * @param clazz the type of record
+     * @param schema the record's schema
+     */
     public void setType(Class<T> clazz, Schema schema){
         if((clazz == null && schema == null) || (myJsonFlag && schema == null)){
             myWriter = null;
