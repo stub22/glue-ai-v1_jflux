@@ -31,7 +31,9 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Decodes Avro messages into record objects.
+ * @param <S> the type of message stream to decode
+ * @param <T> the type of record to decode to
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class AvroDecoder<S extends InputStream, T extends IndexedRecord> 
@@ -43,6 +45,12 @@ public class AvroDecoder<S extends InputStream, T extends IndexedRecord>
     private boolean myJsonFlag;
     private Schema mySchema;
     
+    /**
+     * Builds a decoder to convert from a ByteArrayInputStream to a SpecificRecordBase.
+     * @param <R> the type of SpecificRecordBase
+     * @param outputClass the type of SpecificRecordBase
+     * @return AvroDecoder to convert ByteArrayInputStream data to an object
+     */
     public static <R extends SpecificRecordBase> 
             AvroDecoder<ByteArrayInputStream,R> 
             buildByteStreamDecoder(Class<R> outputClass){
@@ -50,17 +58,41 @@ public class AvroDecoder<S extends InputStream, T extends IndexedRecord>
                 outputClass, null, false);
     }
     
+    /**
+     * Builds a decoder to convert to a SpecificRecordBase
+     * @param <S> the type of InputStream
+     * @param <R> the type of SpecificRecordBase
+     * @param outputClass the type of SpecificRecordBase
+     * @return AvroDecoder to convert raw data to an object
+     */
     public static <S extends InputStream, R extends SpecificRecordBase> 
             AvroDecoder<S,R> buildSpecificBinaryDecoder(Class<R> outputClass){
         return new AvroDecoder<S,R>(outputClass, null, false);
     }
     
+    /**
+     * Builds a decoder to convert according to a Schema
+     * @param <S> the type of InputStream
+     * @param <R> the type of IndexedRecord
+     * @param outputClass the type of IndexedRecord
+     * @param schema the Schema to use to convert
+     * @return AvroDecoder to convert raw data to an object via schema
+     */
     public static <S extends InputStream, R extends IndexedRecord> 
             AvroDecoder<S,R> buildBinaryDecoder(
                     Class<R> outputClass, Schema schema){
         return new AvroDecoder<S,R>(outputClass, schema, false);
     }
     
+    /**
+     * Builds a decoder to convert from a JSON file
+     * @param <S> the type of InputStream (JSON-based)
+     * @param <R> the type of IndexedRecord
+     * @param inputClass the type of InputStream (JSON-based)
+     * @param outputClass the type of IndexedRecord
+     * @param schema the Schema to use to convert
+     * @return AvroDecoder to convert a JSON file to an object
+     */
     public static <S extends InputStream, R extends IndexedRecord> 
             AvroDecoder<S,R> buildJsonDecoder(
                     Class<S> inputClass, Class<R> outputClass, Schema schema){
