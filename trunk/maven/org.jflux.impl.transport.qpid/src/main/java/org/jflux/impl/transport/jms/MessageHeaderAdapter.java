@@ -26,6 +26,10 @@ import org.jflux.api.core.Adapter;
 public class MessageHeaderAdapter implements Adapter<BytesMessage,BytesMessage>{
     private String myContentType;
     
+    /**
+     * Adapter to format a message with proper content type and encoding.
+     * @param contentType the content type to format
+     */
     public MessageHeaderAdapter(String contentType){
         if(contentType == null){
             throw new NullPointerException();
@@ -33,10 +37,19 @@ public class MessageHeaderAdapter implements Adapter<BytesMessage,BytesMessage>{
         myContentType = contentType;
     }
     
+    /**
+     * Change the content type.
+     * @param contentType the new content type
+     */
     public synchronized void setContentType(String contentType){
         myContentType = contentType;
     }
     
+    /**
+     * Format a message.
+     * @param a the message to format
+     * @return message formatted with content type and encoding
+     */
     @Override
     public synchronized BytesMessage adapt(BytesMessage a) {
         if(!(a instanceof JMSBytesMessage)){

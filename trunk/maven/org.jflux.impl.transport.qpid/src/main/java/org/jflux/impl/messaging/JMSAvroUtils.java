@@ -42,6 +42,19 @@ import org.jflux.impl.transport.jms.MessageUnpacker;
  */
 public class JMSAvroUtils {
     
+    /**
+     * Build a chain to send events over Qpid.
+     * @param <T> the event type
+     * @param <R> the record type
+     * @param recordClass the record type
+     * @param schema the record schema
+     * @param eventAdapter the event-to-record processor
+     * @param session the Qpid session
+     * @param dest the Qpid destination
+     * @param optionalProc an optional processor
+     * @return a sender chain
+     * @throws JMSException
+     */
     public static <T, R extends IndexedRecord> 
             ConsumerChain<EncodeRequest<T,ByteArrayOutputStream>> buildEventSenderChain(
             Class<R> recordClass, Schema schema, 
@@ -54,6 +67,17 @@ public class JMSAvroUtils {
                         buildJMSSenderChain(session, dest, optionalProc));
     }
     
+    /**
+     * Build a chain to send Avro messages over Qpid.
+     * @param <R> the Avro record type
+     * @param recordClass the Avro record type
+     * @param schema the Avro record schema
+     * @param session the Qpid session
+     * @param dest the Qpid destination
+     * @param optionalProc an optional processor
+     * @return a sender chain
+     * @throws Exception
+     */
     public static <R extends IndexedRecord> 
             ConsumerChain<EncodeRequest<R,ByteArrayOutputStream>> buildJMSAvroSenderChain(
             Class<R> recordClass, Schema schema, 
@@ -67,6 +91,14 @@ public class JMSAvroUtils {
                         buildJMSSenderChain(session, dest, optionalProc));
     }
     
+    /**
+     * Build a chain to send arbitrary messages.
+     * @param session the Qpid session
+     * @param dest the Qpid destination
+     * @param optionalProc an optional processor
+     * @return a sender chain
+     * @throws JMSException
+     */
     public static ConsumerChain<ByteArrayOutputStream> buildJMSSenderChain(
             Session session, Destination dest, 
             Adapter<BytesMessage,BytesMessage> optionalProc)
@@ -80,6 +112,18 @@ public class JMSAvroUtils {
                 .getConsumerChain(new JMSMessageSender(session, dest));
     }
     
+    /**
+     * Build a chain to receive events over Qpid
+     * @param <E> the event type
+     * @param <R> the record type
+     * @param recordClass the record type
+     * @param schema the record schema
+     * @param recordAdapter the record-to-event processor
+     * @param session the Qpid session
+     * @param dest the Qpid destination
+     * @return a receiver chain
+     * @throws JMSException
+     */
     public static <E, R extends IndexedRecord> 
             ProducerChain<E> buildEventReceiverChain(
             Class<R> recordClass, Schema schema, 
@@ -92,6 +136,16 @@ public class JMSAvroUtils {
                 .getProducerChain();
     }
     
+    /**
+     * Build a chain to receive Avro messages over Qpid.
+     * @param <T> the Avro record type
+     * @param recordClass the Avro record type
+     * @param schema the Avro record schema
+     * @param session the Qpid session
+     * @param dest the Qpid destination
+     * @return a receiver chain
+     * @throws JMSException
+     */
     public static <T extends IndexedRecord> 
             ProducerChain<T> buildJMSAvroReceiverChain(
             Class<T> recordClass, Schema schema, 
@@ -103,17 +157,35 @@ public class JMSAvroUtils {
                 .getProducerChain();
     }
     
+    /**
+     * Adapter to build a byte stream request.
+     * @param <T> the class of the object to convert into a byte stream
+     * @return an encode request
+     */
     public static <T> Adapter<T, EncodeRequest<
             T,ByteArrayOutputStream>> byteStreamRequestFactory(){
         return EncodeRequest.factory(new ByteOutputStreamFactory());
     }
+    /**
+     * Adapter to build a byte stream request from a specified type.
+     * @param <T> the class of the object to convert into a byte stream
+     * @param clazz the class of the object to convert into a byte stream
+     * @return an encode request
+     */
     public static <T> Adapter<T,EncodeRequest<
             T,ByteArrayOutputStream>> byteStreamRequestFactory(Class<T> clazz){
         return EncodeRequest.factory(new ByteOutputStreamFactory());
     }
     
+    /**
+     * Class to build a byte stream.
+     */
     public static class ByteOutputStreamFactory implements 
             Source<ByteArrayOutputStream>{
+        /**
+         * Builds a byte stream.
+         * @return the byte stream
+         */
         @Override
         public ByteArrayOutputStream getValue() {
             return new ByteArrayOutputStream();

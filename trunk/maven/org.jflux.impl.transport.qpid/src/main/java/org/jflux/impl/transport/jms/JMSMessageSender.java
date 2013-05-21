@@ -34,18 +34,31 @@ public class JMSMessageSender implements Listener<BytesMessage> {
     private Destination myDestination;
     private MessageProducer myProducer;
 
+    /**
+     * Builds a JMSMessageReceiver from a session and a destination.
+     * @param session the session to connect to
+     * @param dest the destination to send on
+     */
     public JMSMessageSender(Session session, Destination dest) {
         mySession = session;
         myDestination = dest;
         start();
     }
     
+    /**
+     * Changes the session.
+     * @param session the new session to connect to
+     */
     public void setSession(Session session){
         stop();
         mySession = session;
         start();
     }
     
+    /**
+     * Changes the destination.
+     * @param dest the new destination to send on
+     */
     public void setDestination(Destination dest){
         stop();
         myDestination = dest;
@@ -79,6 +92,10 @@ public class JMSMessageSender implements Listener<BytesMessage> {
         }
     }
     
+    /**
+     * Send a message.
+     * @param event the message to send
+     */
     @Override
     public void handleEvent(BytesMessage event) {
         if(myProducer == null){

@@ -28,14 +28,27 @@ import org.jflux.api.core.Adapter;
 public class MessagePacker implements Adapter<ByteArrayOutputStream,BytesMessage> {
     private Session mySession;
     
+    /**
+     * Adapter to turn a byte stream into a proper message.
+     * @param session the session to connect to
+     */
     public MessagePacker(Session session){
         mySession = session;
     }
     
+    /**
+     * Change the session.
+     * @param session the new session to connect to
+     */
     public synchronized void setSession(Session session){
         mySession = session;
     }
     
+    /**
+     * Format the message.
+     * @param a the byte stream to format into a proper message
+     * @return the formatted message
+     */
     @Override
     public synchronized BytesMessage adapt(ByteArrayOutputStream a) {
         if(a == null || mySession == null){

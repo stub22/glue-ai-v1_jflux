@@ -27,6 +27,11 @@ import org.jflux.api.core.Adapter;
  */
 public class MessageUnpacker implements Adapter<BytesMessage,InputStream> {
 
+    /**
+     * Adapter to convert a message into a data stream.
+     * @param a the message
+     * @return a data stream of the message
+     */
     @Override
     public ByteArrayInputStream adapt(BytesMessage a) {
         try{

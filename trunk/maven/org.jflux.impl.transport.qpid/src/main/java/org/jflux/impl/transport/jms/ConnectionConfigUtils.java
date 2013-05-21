@@ -38,39 +38,121 @@ import org.jflux.api.core.config.DefaultConfiguration;
 public class ConnectionConfigUtils {
     private final static Logger theLogger = Logger.getLogger(ConnectionConfigUtils.class.getName());
     private final static String theAMQPFormatString = "amqp://%s:%s@%s/%s?brokerlist='%s'";
+    /**
+     * 
+     */
     public final static String CONF_BROKER_IP = "msgBrokerIp";
+    /**
+     * 
+     */
     public final static String CONF_BROKER_PORT = "msgBrokerPort";
+    /**
+     * 
+     */
     public final static String CONF_BROKER_USERNAME = "msgBrokerUser";
+    /**
+     * 
+     */
     public final static String CONF_BROKER_PASSWORD = "msgBrokerPassword";
+    /**
+     * 
+     */
     public final static String CONF_BROKER_CLIENT_NAME = "msgBrokerClientName";
+    /**
+     * 
+     */
     public final static String CONF_BROKER_VIRTUAL_HOST = "msgBrokerVirtualHost";
     
+    /**
+     * 
+     */
     public final static String DEF_BROKER_IP = "127.0.0.1";
+    /**
+     * 
+     */
     public final static String DEF_BROKER_PORT = "5672";
+    /**
+     * 
+     */
     public final static String DEF_BROKER_USERNAME = "admin";
+    /**
+     * 
+     */
     public final static String DEF_BROKER_PASSWORD = "admin";
+    /**
+     * 
+     */
     public final static String DEF_BROKER_CLIENT_NAME = "client1";
+    /**
+     * 
+     */
     public final static String DEF_BROKER_VIRTUAL_HOST = "test";
     
+    /**
+     * 
+     */
     public final static String CONF_DESTINATION_NAME = "msgDestinationName";
+    /**
+     * 
+     */
     public final static String CONF_DESTINATION_CREATE = "msgDestinationCreateMode";
+    /**
+     * 
+     */
     public final static String CONF_DESTINATION_NODE_TYPE = "msgDestinationNodeType";
+    /**
+     * 
+     */
     public final static String CONF_DESTINATION_NODE_OPTIONS = "msgDestinationNodeOpts";
+    /**
+     * 
+     */
     public final static String CONF_DESTINATION_OPTIONS = "msgDestinationOpts";
     
+    /**
+     * 
+     */
     public final static String CREATE_ALWAYS = "always";
+    /**
+     * 
+     */
     public final static String CREATE_NEVER = "never";
+    /**
+     * 
+     */
     public final static String CREATE_SENDER = "sender";
+    /**
+     * 
+     */
     public final static String CREATE_RECEIVER = "receiver";
     
+    /**
+     * 
+     */
     public final static String NODE_QUEUE = "queue";
+    /**
+     * 
+     */
     public final static String NODE_TOPIC = "topic";
+    /**
+     * 
+     */
     public final static String NODE_UNKNOWN = "unknown";
     
+    /**
+     * 
+     */
     public final static String DEF_DESTINATION_CREATE = CREATE_NEVER;
+    /**
+     * 
+     */
     public final static String DEF_DESTINATION_NODE_TYPE = NODE_UNKNOWN;
     
     
+    /**
+     * Build a default connection configuration.
+     * @return the connection configuration
+     */
     public static Configuration<String> buildConnectionConfig(){
         DefaultConfiguration<String> conf = new DefaultConfiguration<String>();
         
@@ -84,6 +166,11 @@ public class ConnectionConfigUtils {
         return conf;
     }
     
+    /**
+     * Build a connection configuration for a specified IP address.
+     * @param ip the IP address
+     * @return the connection configuration
+     */
     public static Configuration<String> buildConnectionConfig(String ip){
         if(ip == null){
             throw new NullPointerException();
@@ -95,6 +182,16 @@ public class ConnectionConfigUtils {
         return conf;
     }
     
+    /**
+     * Build a connection configuration with custom parameters.
+     * @param ip the IP address
+     * @param port the Qpid port
+     * @param username the Qpid username
+     * @param password the Qpid password
+     * @param clientName the client ID
+     * @param virtualHost the virtual hostname
+     * @return the connection configuration
+     */
     public static Configuration<String> buildConnectionConfig(
             String ip, String port, String username, String password, 
             String clientName, String virtualHost){
@@ -113,6 +210,11 @@ public class ConnectionConfigUtils {
         return conf;
     }
     
+    /**
+     * Build a destination configuration with an unknown type.
+     * @param name the destination name
+     * @return the destination config
+     */
     public static Configuration<String> buildDestinationConfig(String name){
         DefaultConfiguration<String> conf = new DefaultConfiguration<String>();
         
@@ -125,6 +227,12 @@ public class ConnectionConfigUtils {
         return conf;
     }
     
+    /**
+     * Build a destination configuration for a specified type.
+     * @param name the destination name
+     * @param type the destination type, NODE_TOPIC or NODE_QUEUE
+     * @return the destination config
+     */
     public static Configuration<String> buildDestinationConfig(
             String name, String type){
         Configuration<String> conf = buildDestinationConfig(name);
@@ -134,6 +242,13 @@ public class ConnectionConfigUtils {
         return conf;
     }
     
+    /**
+     * Build a destination configuration with type and auto-creation status.
+     * @param name the destination name
+     * @param type the destination type, NODE_TOPIC or NODE_QUEUE
+     * @param create whether or not to auto-create the destination
+     * @return the destination config
+     */
     public static Configuration<String> buildDestinationConfig(
             String name, String type, String create){
         Configuration<String> conf = buildDestinationConfig(name, type);
@@ -143,6 +258,15 @@ public class ConnectionConfigUtils {
         return conf;
     }
     
+    /**
+     * Build a custom destination configuration.
+     * @param name the destination name
+     * @param type the destination type, NODE_TOPIC or NODE_QUEUE
+     * @param create whether or not to auto-create the destination
+     * @param options the destination options
+     * @param nodeOptions the node options
+     * @return the destination config
+     */
     public static Configuration<String> buildDestinationConfig(
             String name, String type, String create, 
             String options, String nodeOptions){
@@ -213,8 +337,16 @@ public class ConnectionConfigUtils {
         return (opts == null || opts.isEmpty()) ? kv : opts + ", " + kv; 
     }
     
+    /**
+     * Adapter to build a connection from a configuration.
+     */
     public static class ConnectionFactory implements 
             Adapter<Configuration<String>,Connection> {
+        /**
+         * Turns a configuration into a real connection.
+         * @param a the configuration
+         * @return the connection
+         */
         @Override 
         public Connection adapt(Configuration<String> a) {
             try{
@@ -228,8 +360,16 @@ public class ConnectionConfigUtils {
         }
     }
     
+    /**
+     * Adapter to build a destination from a configuration.
+     */
     public static class DestinationFactory implements 
             Adapter<Configuration<String>,Destination> {
+        /**
+         * Turns a configuration into a real destination.
+         * @param a the configuration
+         * @return the destination
+         */
         @Override 
         public Destination adapt(Configuration<String> a) {
             try{
@@ -242,7 +382,15 @@ public class ConnectionConfigUtils {
         }
     }
     
+    /**
+     * Adapter to extract a session from a connection.
+     */
     public static class SessionFactory implements Adapter<Connection,Session> {
+        /**
+         * Extract a session from a connection.
+         * @param a the connection
+         * @return the session
+         */
         @Override 
         public Session adapt(Connection a) {
             try{
