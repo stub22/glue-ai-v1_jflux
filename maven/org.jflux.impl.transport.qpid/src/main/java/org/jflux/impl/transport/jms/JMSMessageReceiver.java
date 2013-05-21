@@ -40,6 +40,11 @@ public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
     private MessageConsumer myMessageConsumer;
     private Thread myPollingThread;
     
+    /**
+     * Builds a JMSMessageReceiver from a session and a destination.
+     * @param session the session to connect to
+     * @param dest the destination to listen on
+     */
     public JMSMessageReceiver(Session session, Destination dest){
         super(new DefaultNotifier<BytesMessage>());
         if(session == null || dest == null){
@@ -52,6 +57,7 @@ public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
     
     /**
      * Creates and starts an Polling Thread to fetch Records over JMS.
+     * @return 
      */
     @Override
     public boolean start(){
@@ -72,12 +78,20 @@ public class JMSMessageReceiver extends DefaultProducerNode<BytesMessage>{
         return true;
     }
     
+    /**
+     * Changes the destination.
+     * @param dest the new destination to listen on
+     */
     public void setDestination(Destination dest){
         closeConsumer();
         myDestination = dest;
         createConsumer();
     }
     
+    /**
+     * Changes the session.
+     * @param session the new session to connect to
+     */
     public void setSession(Session session){
         closeConsumer();
         mySession = session;
