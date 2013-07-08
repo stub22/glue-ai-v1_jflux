@@ -27,7 +27,7 @@
         <dependency>
             <artifactId>slf4j-api</artifactId>
             <groupId>org.slf4j</groupId>
-            <version>1.6.1</version>
+            <version>1.7.5</version>
         </dependency>
 		<!-- stub22 2012-09-27 : This dep should be disabled or marked scope="test" in committed library pom.xml 
 				(and published binaries) so that application can choose its own SLF4J binding.
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.6.1</version>
+            <version>1.7.5</version>
         </dependency>
 		-->
         <dependency>
