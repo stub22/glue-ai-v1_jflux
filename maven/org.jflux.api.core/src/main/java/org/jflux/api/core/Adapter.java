@@ -22,6 +22,5 @@ package org.jflux.api.core;
 public interface Adapter<A,B> {
     public B adapt(A a);
     //Breaking build to test continuois integration server
-    DELETE_ME
-            IM BROKEN NOW
+    //IM BROKEN NOW
 }
