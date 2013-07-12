@@ -23,7 +23,7 @@
 
   <!-- adding developer entry to test continuum server -->
   <developers>
-      <developer>
+<!--      <developer>
           <id>eadsjr</id>
           <name>Jason R. Eads</name>
           <email>EadsJR@hansonrobokind.com</email>
@@ -35,7 +35,7 @@
           <organization>Hanson Robokind and Intelligent Bots</organization>
           <organizationUrl>http://hansonrobokind.com/</organizationUrl>
           <timezone>5-</timezone>
-      </developer>
+      </developer>-->
   </developers>
       
 	<groupId>org.jflux</groupId>
