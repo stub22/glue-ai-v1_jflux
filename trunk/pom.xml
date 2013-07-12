@@ -20,7 +20,23 @@
     <artifactId>oss-parent</artifactId>
     <version>7</version>
   </parent>	
-  
+
+  <!-- adding developer entry to test continuum server -->
+  <developers>
+      <developer>
+          <id>eadsjr</id>
+          <name>Jason R. Eads</name>
+          <roles>
+              <role>
+                  Developer
+              </role>
+          </roles>
+          <organization>Hanson Robokind and Intelligent Bots</organization>
+          <organizationUrl>http://hansonrobokind.com/</organizationUrl>
+          <timezone>5-</timezone>
+      </developer>
+  </developers>
+      
 	<groupId>org.jflux</groupId>
 	<artifactId>org.jflux.project.root</artifactId>
 	<version>0.1.6-SNAPSHOT</version>
