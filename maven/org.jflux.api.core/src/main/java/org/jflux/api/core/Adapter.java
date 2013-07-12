@@ -20,5 +20,6 @@ package org.jflux.api.core;
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Adapter<A,B> {
-    public B adapt(A a);
+    //System broke for integration server testing
+    public B adapt(A a)//;
 }
