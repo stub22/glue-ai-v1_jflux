@@ -26,6 +26,7 @@ import org.apache.avro.generic.IndexedRecord;
 import org.apache.avro.io.DatumReader;
 import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
+import org.apache.avro.specific.SpecificData;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificRecordBase;
 import org.jflux.api.core.Adapter;
@@ -100,20 +101,43 @@ public class AvroDecoder<S extends InputStream, T extends IndexedRecord>
     }
     
     AvroDecoder(Class<T> clazz, Schema schema, boolean json){
+        this(clazz, schema, json, null);
+    }
+    
+    AvroDecoder(Class<T> clazz, Schema schema, boolean json, ClassLoader classLoader){
         if(clazz == null && schema == null){
             throw new NullPointerException();
         }else if(json && schema == null){
             throw new NullPointerException();
         }  
-        if(clazz != null 
-                && SpecificRecordBase.class.isAssignableFrom(clazz)){
-            myReader = new SpecificDatumReader<T>(clazz);
-        }else{
+        if((clazz != null && SpecificRecordBase.class.isAssignableFrom(clazz))
+                || (classLoader != null && schema != null)){
+            myReader = buildSpecificReader(clazz, schema, classLoader);
+        }
+        if(myReader == null && schema != null){
             myReader = new GenericDatumReader<T>(schema);
+        }
+        if(myReader == null){
+            throw new NullPointerException();
         }
         myDecoderFactory = DecoderFactory.get();
         myJsonFlag = json;
         mySchema = schema;
+    }
+    
+    private SpecificDatumReader<T> buildSpecificReader(
+            Class<T> clazz, Schema schema, ClassLoader classLoader){
+        if(classLoader == null){
+            classLoader = clazz.getClassLoader();
+        }
+        SpecificData data = new SpecificData(classLoader);
+        if(schema == null){
+            schema = data.getSchema(clazz);
+            if(schema == null){
+                return null;
+            }
+        }
+        return new SpecificDatumReader<T>(schema, schema, data);
     }
         
     @Override
