@@ -16,23 +16,23 @@
 package org.jflux.api.service.binding;
 
 import org.jflux.api.registry.Descriptor;
-import org.jflux.api.service.DependencySpec;
-import org.jflux.api.service.DependencySpec.UpdateStrategy;
+import org.jflux.api.service.ServiceDependency;
+import org.jflux.api.service.ServiceDependency.UpdateStrategy;
 
 /**
  *
  * @author matt
  */
-public class BindingSpec {
+public class ServiceBinding {
     public static enum BindingStrategy {EAGER, LAZY}
     
     private final String myName;
-    private final DependencySpec mySpec;
+    private final ServiceDependency mySpec;
     private final Descriptor myDescriptor;
     private final BindingStrategy myBindingStrategy;
     private final UpdateStrategy myUpdateStrategy;
     
-    public BindingSpec(DependencySpec spec, Descriptor desc, 
+    public ServiceBinding(ServiceDependency spec, Descriptor desc, 
             BindingStrategy bindStrat, UpdateStrategy updateStrat){
         if(spec == null || desc == null || bindStrat == null){
             throw new NullPointerException();
@@ -45,15 +45,15 @@ public class BindingSpec {
                 ? mySpec.getUpdateStrategy() : updateStrat;
     }
     
-    public BindingSpec(
-            DependencySpec spec, Descriptor desc, BindingStrategy bindStrat){
+    public ServiceBinding(
+            ServiceDependency spec, Descriptor desc, BindingStrategy bindStrat){
         this(spec, desc, bindStrat, spec.getUpdateStrategy());
     }
     
     public String getDependencyName(){
         return myName;
     }
-    public DependencySpec getDependencySpec(){
+    public ServiceDependency getDependencySpec(){
         return mySpec;
     }
     public Descriptor getDescriptor(){

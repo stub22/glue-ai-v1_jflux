@@ -19,7 +19,7 @@ import org.jflux.api.core.Source;
 import org.jflux.api.registry.Descriptor;
 import org.jflux.api.registry.Reference;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.service.binding.BindingSpec.BindingStrategy;
+import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import org.jflux.api.service.extras.PropertyChangeNotifier;
 
 /**

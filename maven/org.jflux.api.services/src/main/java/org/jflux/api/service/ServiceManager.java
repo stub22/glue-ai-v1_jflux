@@ -26,9 +26,9 @@ import org.jflux.api.core.Source;
 import org.jflux.api.registry.Descriptor;
 import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.basic.BasicDescriptor;
-import org.jflux.api.service.DependencySpec.Cardinality;
-import org.jflux.api.service.binding.BindingSpec;
-import org.jflux.api.service.binding.BindingSpec.BindingStrategy;
+import org.jflux.api.service.ServiceDependency.Cardinality;
+import org.jflux.api.service.binding.ServiceBinding;
+import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import org.jflux.api.service.binding.MultiDependencyTracker;
 import org.jflux.api.service.binding.SingleDepencyTracker;
 
@@ -38,10 +38,10 @@ import org.jflux.api.service.binding.SingleDepencyTracker;
  */
 public class ServiceManager<T> {
     private ServiceLifecycle<T> myLifecycle;
-    private Map<String,BindingSpec> myBindings;
+    private Map<String,ServiceBinding> myBindings;
     private Map<String,Object> myCachedDependencies;
     private T myService;
-    private Map<BindingSpec,DependencyTracker> myTrackerMap;
+    private Map<ServiceBinding,DependencyTracker> myTrackerMap;
     private RegistrationStrategy myRegistrationStrategy;
     private Source<Boolean> myServiceCreatedSource;
     private DependencyChangeListener myChangeListener;
@@ -50,7 +50,7 @@ public class ServiceManager<T> {
     private RegistrationStrategy<ServiceManager> myManagerRegistrationStrat;
     
     public ServiceManager(ServiceLifecycle<T> lifecycle, 
-            Map<String,BindingSpec> bindings, 
+            Map<String,ServiceBinding> bindings, 
             RegistrationStrategy<T> registration,
             RegistrationStrategy<ServiceManager> managerRegistrationStrat){
         if(lifecycle == null){
@@ -59,7 +59,7 @@ public class ServiceManager<T> {
         myLifecycle = lifecycle;
         myBindings = bindings;
         if(myBindings == null){
-            myBindings = new HashMap<String, BindingSpec>();
+            myBindings = new HashMap<String, ServiceBinding>();
         }
         myRegistrationStrategy = registration;
         if(myRegistrationStrategy == null){
@@ -68,7 +68,7 @@ public class ServiceManager<T> {
         }
         myStartFlag = false;
         myListenFlag = false;
-        myTrackerMap = new HashMap<BindingSpec, DependencyTracker>();
+        myTrackerMap = new HashMap<ServiceBinding, DependencyTracker>();
         myChangeListener = new DependencyChangeListener();
         myServiceCreatedSource = new Source<Boolean>() {
             @Override  public Boolean getValue() {
@@ -85,7 +85,7 @@ public class ServiceManager<T> {
         }
     }
     public ServiceManager(ServiceLifecycle<T> lifecycle, 
-            Map<String,BindingSpec> bindings, 
+            Map<String,ServiceBinding> bindings, 
             Map<String,String> registrationProperties,
             RegistrationStrategy<ServiceManager> managerRegistrationStrat){
         this(lifecycle, bindings, 
@@ -112,16 +112,16 @@ public class ServiceManager<T> {
             myManagerRegistrationStrat.register(this);
         }
         
-        List<DependencySpec> deps = myLifecycle.getDependencySpecs();
+        List<ServiceDependency> deps = myLifecycle.getDependencySpecs();
         
         // Ensures each dependency has a binding
-        for(DependencySpec s : deps){
+        for(ServiceDependency s : deps){
             if(myBindings.containsKey(s.getDependencyName())){
                 continue;
             }
             Descriptor desc = 
                     new BasicDescriptor(s.getDependencyClassName(), null);
-            BindingSpec bind = new BindingSpec(s, desc, BindingStrategy.LAZY);
+            ServiceBinding bind = new ServiceBinding(s, desc, BindingStrategy.LAZY);
             myBindings.put(s.getDependencyName(), bind);
         }
         bindDependencies(registry);
@@ -142,7 +142,7 @@ public class ServiceManager<T> {
         if(myStartFlag){
             return;
         }
-        for(BindingSpec s : myBindings.values()){
+        for(ServiceBinding s : myBindings.values()){
             String name = s.getDependencyName();
             Cardinality c = s.getDependencySpec().getCardinality();
             BindingStrategy strat = s.getBindingStrategy();
@@ -162,8 +162,8 @@ public class ServiceManager<T> {
             return;
         }
         myLifecycle.disposeService(myService, myCachedDependencies);
-        for(Entry<BindingSpec,DependencyTracker> e : myTrackerMap.entrySet()){
-            BindingSpec s = e.getKey();
+        for(Entry<ServiceBinding,DependencyTracker> e : myTrackerMap.entrySet()){
+            ServiceBinding s = e.getKey();
             DependencyTracker t = e.getValue();
             t.stop();
             t.removePropertyChangeListener(myChangeListener);
@@ -188,7 +188,7 @@ public class ServiceManager<T> {
         if(!isSatisfied()){
             
         }
-        BindingSpec spec = myBindings.get(dependencyName);
+        ServiceBinding spec = myBindings.get(dependencyName);
         switch(spec.getUpdateStrategy()){
             case STATIC : staticUpdate(); break;
             case DYNAMIC : dynamicUpdate(changeType, dependencyName, dependency); break;
@@ -236,8 +236,8 @@ public class ServiceManager<T> {
     }
     
     public boolean isSatisfied(){
-        for(Entry<BindingSpec,DependencyTracker> e : myTrackerMap.entrySet()){
-            BindingSpec spec = e.getKey();
+        for(Entry<ServiceBinding,DependencyTracker> e : myTrackerMap.entrySet()){
+            ServiceBinding spec = e.getKey();
             DependencyTracker tracker = e.getValue();
             Cardinality c = spec.getDependencySpec().getCardinality();
             if(c.isRequired() && tracker.getTrackedDependency() == null){
