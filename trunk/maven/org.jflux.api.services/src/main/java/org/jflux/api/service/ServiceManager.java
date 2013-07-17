@@ -47,10 +47,12 @@ public class ServiceManager<T> {
     private DependencyChangeListener myChangeListener;
     private boolean myStartFlag;
     private boolean myListenFlag;
+    private RegistrationStrategy<ServiceManager> myManagerRegistrationStrat;
     
     public ServiceManager(ServiceLifecycle<T> lifecycle, 
             Map<String,BindingSpec> bindings, 
-            RegistrationStrategy<T> registration){
+            RegistrationStrategy<T> registration,
+            RegistrationStrategy<ServiceManager> managerRegistrationStrat){
         if(lifecycle == null){
             throw new NullPointerException();
         }
@@ -73,14 +75,23 @@ public class ServiceManager<T> {
                 return isSatisfied() && myService != null;
             }
         };
+        if(managerRegistrationStrat != null) {
+            myManagerRegistrationStrat = managerRegistrationStrat;
+        } else {
+            String[] classNames = {ServiceManager.class.getName()};
+            myManagerRegistrationStrat =
+                    new DefaultRegistrationStrategy<ServiceManager>(
+                    classNames, null);
+        }
     }
     public ServiceManager(ServiceLifecycle<T> lifecycle, 
             Map<String,BindingSpec> bindings, 
-            Map<String,String> registrationProperties){
+            Map<String,String> registrationProperties,
+            RegistrationStrategy<ServiceManager> managerRegistrationStrat){
         this(lifecycle, bindings, 
                 new DefaultRegistrationStrategy<T>(
                         lifecycle.getServiceClassNames(),
-                        registrationProperties));
+                        registrationProperties), managerRegistrationStrat);
     }
     
     /**
@@ -95,6 +106,10 @@ public class ServiceManager<T> {
         }
         if(myRegistrationStrategy instanceof DefaultRegistrationStrategy){
             ((DefaultRegistrationStrategy)myRegistrationStrategy).setRegistry(registry);
+        }
+        
+        if(!myManagerRegistrationStrat.isRegistered()){
+            myManagerRegistrationStrat.register(this);
         }
         
         List<DependencySpec> deps = myLifecycle.getDependencySpecs();
@@ -247,6 +262,14 @@ public class ServiceManager<T> {
             }
             String depName = (String)evt.getSource();
             updateDependency(evt.getPropertyName(), depName, evt.getNewValue());
+        }
+    }
+    
+    public void dispose() {
+        stop();
+        
+        if(myManagerRegistrationStrat.isRegistered()) {
+            myManagerRegistrationStrat.unregister();
         }
     }
 }

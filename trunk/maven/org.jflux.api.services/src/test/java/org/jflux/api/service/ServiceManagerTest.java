@@ -93,7 +93,8 @@ public class ServiceManagerTest {
         bind.put(specs.get(0).getDependencyName(), bind0);
         bind.put(specs.get(1).getDependencyName(), bind1);
         bind.put(specs.get(2).getDependencyName(), bind2);
-        ServiceManager instance = new ServiceManager(lifecycle, bind, strat);
+        ServiceManager instance = new ServiceManager(
+                lifecycle, bind, strat, null);
         instance.start(registry);
         verify(strat).register(any(Map.class));
     }
