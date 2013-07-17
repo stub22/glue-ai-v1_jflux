@@ -22,7 +22,7 @@ import org.jflux.api.core.util.DefaultSource;
 import org.jflux.api.registry.Descriptor;
 import org.jflux.api.registry.Reference;
 import org.jflux.api.registry.Registry;
-import org.jflux.api.service.binding.BindingSpec.BindingStrategy;
+import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

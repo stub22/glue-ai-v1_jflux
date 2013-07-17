@@ -23,10 +23,10 @@ import org.jflux.api.registry.Descriptor;
 import org.jflux.api.registry.Reference;
 import org.jflux.api.registry.Registry;
 import org.jflux.api.registry.basic.BasicDescriptor;
-import org.jflux.api.service.DependencySpec.Cardinality;
-import org.jflux.api.service.DependencySpec.UpdateStrategy;
-import org.jflux.api.service.binding.BindingSpec;
-import org.jflux.api.service.binding.BindingSpec.BindingStrategy;
+import org.jflux.api.service.ServiceDependency.Cardinality;
+import org.jflux.api.service.ServiceDependency.UpdateStrategy;
+import org.jflux.api.service.binding.ServiceBinding;
+import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -80,16 +80,16 @@ public class ServiceManagerTest {
             }
         });
         ServiceLifecycle l = new LifecycleImpl();
-        List<DependencySpec> specs = l.getDependencySpecs();
+        List<ServiceDependency> specs = l.getDependencySpecs();
         ServiceLifecycle lifecycle = spy(l);
         RegistrationStrategy strat = mock(RegistrationStrategy.class);
-        Map<String, BindingSpec> bind = new HashMap<String, BindingSpec>();
+        Map<String, ServiceBinding> bind = new HashMap<String, ServiceBinding>();
         Descriptor desc0 = new BasicDescriptor(Object.class.getName(), null);
-        BindingSpec bind0 = new BindingSpec(specs.get(0), desc0, BindingStrategy.EAGER);
+        ServiceBinding bind0 = new ServiceBinding(specs.get(0), desc0, BindingStrategy.EAGER);
         Descriptor desc1 = new BasicDescriptor(Object.class.getName(), null);
-        BindingSpec bind1 = new BindingSpec(specs.get(1), desc1, BindingStrategy.EAGER);
+        ServiceBinding bind1 = new ServiceBinding(specs.get(1), desc1, BindingStrategy.EAGER);
         Descriptor desc2 = new BasicDescriptor(Object.class.getName(), null);
-        BindingSpec bind2 = new BindingSpec(specs.get(2), desc2, BindingStrategy.EAGER);
+        ServiceBinding bind2 = new ServiceBinding(specs.get(2), desc2, BindingStrategy.EAGER);
         bind.put(specs.get(0).getDependencyName(), bind0);
         bind.put(specs.get(1).getDependencyName(), bind1);
         bind.put(specs.get(2).getDependencyName(), bind2);
@@ -143,13 +143,13 @@ public class ServiceManagerTest {
     class LifecycleImpl implements ServiceLifecycle<Map> {
 
         @Override
-        public List<DependencySpec> getDependencySpecs() {
+        public List<ServiceDependency> getDependencySpecs() {
             return Arrays.asList(
-                    new DependencySpec("dependencyA", Object.class.getName(), 
+                    new ServiceDependency("dependencyA", Object.class.getName(), 
                             Cardinality.MANDATORY_UNARY, UpdateStrategy.DYNAMIC, null),
-                    new DependencySpec("dependencyB", Object.class.getName(), 
+                    new ServiceDependency("dependencyB", Object.class.getName(), 
                             Cardinality.MANDATORY_UNARY, UpdateStrategy.DYNAMIC, null),
-                    new DependencySpec("dependencyC", Object.class.getName(), 
+                    new ServiceDependency("dependencyC", Object.class.getName(), 
                             Cardinality.MANDATORY_UNARY, UpdateStrategy.DYNAMIC, null));
             
         }

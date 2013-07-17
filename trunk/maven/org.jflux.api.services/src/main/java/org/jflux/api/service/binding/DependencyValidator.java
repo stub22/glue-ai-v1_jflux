@@ -18,7 +18,7 @@ package org.jflux.api.service.binding;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import org.jflux.api.service.DependencySpec;
+import org.jflux.api.service.ServiceDependency;
 
 /**
  * The DependencyValidator is used validate a dependencyId and dependency against a
@@ -41,7 +41,7 @@ public class DependencyValidator {
      * false if one or more descriptors is not filled
      */
     public static boolean validateServices(
-            List<DependencySpec> descriptors, Map<String,Object> depdendencies){
+            List<ServiceDependency> descriptors, Map<String,Object> depdendencies){
         if(descriptors == null || descriptors.isEmpty()){
             return true;
         }else if(depdendencies == null || depdendencies.isEmpty()){
@@ -53,7 +53,7 @@ public class DependencyValidator {
 //            return true;
             return false;
         }
-        for(DependencySpec descriptor : descriptors){
+        for(ServiceDependency descriptor : descriptors){
             if(!checkDescriptor(descriptor, depdendencies)){
                 return false;
             }
@@ -73,7 +73,7 @@ public class DependencyValidator {
      * @return true is a map entry matches the descriptor, false otherwise
      */
     private static boolean checkDescriptor(
-            DependencySpec descriptor, 
+            ServiceDependency descriptor, 
             Map<String,Object> dependencies){
         String id = descriptor.getDependencyName();
         Object req = dependencies.get(id);
@@ -95,13 +95,13 @@ public class DependencyValidator {
      * @return true if a matching descriptor is found
      */
     public static boolean validateService(
-            List<DependencySpec> descriptors,
+            List<ServiceDependency> descriptors,
             String dependencyId, Object dependency){
         if(dependencyId == null || dependency == null){
             theLogger.warning("Found null argument.  Returning false.");
             return false;
         }
-        for(DependencySpec descriptor : descriptors){
+        for(ServiceDependency descriptor : descriptors){
             if(dependencyId.equals(descriptor.getDependencyName()) 
                     && checkClass(descriptor.getDependencyClassName(), dependency)){
                 return true;
@@ -135,12 +135,12 @@ public class DependencyValidator {
      * dependency id
      */
     public static boolean validateServiceId(
-            List<DependencySpec> descriptors, String dependencyId){
+            List<ServiceDependency> descriptors, String dependencyId){
         if(dependencyId == null){
             theLogger.warning("Found null dependencyId.  Returning false.");
             return false;
         }
-        for(DependencySpec descriptor : descriptors){
+        for(ServiceDependency descriptor : descriptors){
             String id = descriptor.getDependencyName();
             if(dependencyId.equals(id)){
                 return true;

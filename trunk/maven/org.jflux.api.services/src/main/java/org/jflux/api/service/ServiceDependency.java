@@ -21,7 +21,7 @@ import java.util.Map;
  *
  * @author matt
  */
-public class DependencySpec {    
+public class ServiceDependency {    
     private final String myDependencyName;
     private final String myDependencyClassName;
     private final Cardinality myCardinality;
@@ -34,7 +34,7 @@ public class DependencySpec {
      * @param className Class name of the dependency
      * @param props Properties of the dependency
      */
-    public DependencySpec(String dependencyName, String className, 
+    public ServiceDependency(String dependencyName, String className, 
             Cardinality cardinality, UpdateStrategy updateStrategy, 
             Map<String,String> props){
         if(dependencyName == null || className == null 

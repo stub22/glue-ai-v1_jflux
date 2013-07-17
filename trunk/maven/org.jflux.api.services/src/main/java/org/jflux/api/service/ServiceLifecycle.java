@@ -43,7 +43,7 @@ public interface ServiceLifecycle<T> {
      * @return list describing the service dependencies required by this 
      * lifecycle provider
      */
-    public List<DependencySpec> getDependencySpecs();
+    public List<ServiceDependency> getDependencySpecs();
     /**
      * 
      * @param dependencyMap

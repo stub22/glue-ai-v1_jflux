@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import org.jflux.api.core.Source;
 import org.jflux.api.registry.Reference;
-import org.jflux.api.service.binding.BindingSpec.BindingStrategy;
+import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import static org.jflux.api.service.ServiceLifecycle.*;
 
 /**
