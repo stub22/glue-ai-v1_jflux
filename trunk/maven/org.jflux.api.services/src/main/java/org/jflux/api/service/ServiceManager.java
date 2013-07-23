@@ -18,6 +18,7 @@ package org.jflux.api.service;
 import org.jflux.api.service.binding.DependencyTracker;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,13 +37,13 @@ import org.jflux.api.service.binding.SingleDepencyTracker;
  *
  * @author matt
  */
-public class ServiceManager<T> {
+public class ServiceManager<T> implements Manager {
     private ServiceLifecycle<T> myLifecycle;
     private Map<String,ServiceBinding> myBindings;
     private Map<String,Object> myCachedDependencies;
     private T myService;
     private Map<ServiceBinding,DependencyTracker> myTrackerMap;
-    private RegistrationStrategy myRegistrationStrategy;
+    private RegistrationStrategy myServiceRegistrationStrategy;
     private Source<Boolean> myServiceCreatedSource;
     private DependencyChangeListener myChangeListener;
     private boolean myStartFlag;
@@ -61,9 +62,9 @@ public class ServiceManager<T> {
         if(myBindings == null){
             myBindings = new HashMap<String, ServiceBinding>();
         }
-        myRegistrationStrategy = registration;
-        if(myRegistrationStrategy == null){
-            myRegistrationStrategy = new DefaultRegistrationStrategy(
+        myServiceRegistrationStrategy = registration;
+        if(myServiceRegistrationStrategy == null){
+            myServiceRegistrationStrategy = new DefaultRegistrationStrategy(
                     myLifecycle.getServiceClassNames(), null);
         }
         myStartFlag = false;
@@ -104,8 +105,8 @@ public class ServiceManager<T> {
         if(myStartFlag){
             return;
         }
-        if(myRegistrationStrategy instanceof DefaultRegistrationStrategy){
-            ((DefaultRegistrationStrategy)myRegistrationStrategy).setRegistry(registry);
+        if(myServiceRegistrationStrategy instanceof DefaultRegistrationStrategy){
+            ((DefaultRegistrationStrategy)myServiceRegistrationStrategy).setRegistry(registry);
         }
         
         if(!myManagerRegistrationStrat.isRegistered()){
@@ -133,7 +134,7 @@ public class ServiceManager<T> {
             return;
         }
         myListenFlag = false;
-        myRegistrationStrategy.unregister();
+        myServiceRegistrationStrategy.unregister();
         unbindDependencies();
         myStartFlag = false;
     }
@@ -181,7 +182,7 @@ public class ServiceManager<T> {
             return;
         }
         myService = t;
-        myRegistrationStrategy.register(myService);
+        myServiceRegistrationStrategy.register(myService);
     }
     
     private void updateDependency(String changeType, String dependencyName, Object dependency){
@@ -202,7 +203,7 @@ public class ServiceManager<T> {
             return;
         }
         T service = myLifecycle.createService(myCachedDependencies);
-        myRegistrationStrategy.updateRegistration(service);
+        myServiceRegistrationStrategy.updateRegistration(service);
         myLifecycle.disposeService(myService, dependencies);
         myService = service;
     }
@@ -214,9 +215,9 @@ public class ServiceManager<T> {
                 myService, changeType, dependencyName, 
                 dependency, myCachedDependencies);
         if(service == myService){
-           myRegistrationStrategy.updateRegistration(myService);
+           myServiceRegistrationStrategy.updateRegistration(myService);
         }else{
-            myRegistrationStrategy.updateRegistration(service);
+            myServiceRegistrationStrategy.updateRegistration(service);
             myLifecycle.disposeService(myService, dependencies);
             myService = service;
         }
@@ -248,7 +249,7 @@ public class ServiceManager<T> {
     }
     
     public boolean isAvailable(){
-        return myRegistrationStrategy.isRegistered();
+        return myServiceRegistrationStrategy.isRegistered();
     }
     
     class DependencyChangeListener implements PropertyChangeListener {
@@ -271,5 +272,17 @@ public class ServiceManager<T> {
         if(myManagerRegistrationStrat.isRegistered()) {
             myManagerRegistrationStrat.unregister();
         }
+    }
+    
+    public Map<ServiceBinding,DependencyTracker> getDependencies(){
+        return myTrackerMap;
+    }
+    
+    public RegistrationStrategy<T> getRegistrationStrategy(){
+        return myServiceRegistrationStrategy;
+    }
+    
+    public ServiceLifecycle<T> getLifecycle(){
+        return myLifecycle;
     }
 }
