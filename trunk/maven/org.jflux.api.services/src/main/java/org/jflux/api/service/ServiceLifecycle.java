@@ -17,7 +17,6 @@ package org.jflux.api.service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -74,5 +73,8 @@ public interface ServiceLifecycle<T> {
      * @return names of the interfaces this service implements and makes
      * available
      */
-    public String[] getServiceClassNames();
+    //TODO: Move or copy this in RegistrationStrategy.  RegistrationStrategy should decide what classes it is available as.
+    //This is already part of DefaultRegistrationStrategy, and probably should be promoted to RegistrationStrategy.
+    //Is there a reason the Lifecycle needs to declare the class names at runtime?  Any purpose it serves could be better handled as external bookkeeping.
+    @Deprecated public String[] getServiceClassNames();
 }
