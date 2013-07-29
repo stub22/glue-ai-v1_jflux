@@ -128,7 +128,10 @@ public class OSGiRegistry implements Registry {
     @Override
     public OSGiCertificate register(RegistrationRequest request) {
         String[] classNames = request.getClassNames();
-        Dictionary props = new Hashtable(request.getProperties());
+        Dictionary props = null;
+        if(request.getProperties() != null){
+            props = new Hashtable(request.getProperties());
+        }
         Object item = request.getItem();
         ServiceRegistration reg =  myContext.registerService(classNames, item, props);
         return reg == null ? null : new OSGiCertificate(reg);
@@ -147,8 +150,10 @@ public class OSGiRegistry implements Registry {
         if(!(cert instanceof OSGiCertificate)){
             return;
         }
-        Dictionary<String,String> props = 
-                new Hashtable<String, String>(request.getProperties());
+        Dictionary props = null;
+        if(request.getProperties() != null){
+            props = new Hashtable<String,String>(request.getProperties());
+        }
         ((OSGiCertificate)cert).setProperties(props);
     }
 

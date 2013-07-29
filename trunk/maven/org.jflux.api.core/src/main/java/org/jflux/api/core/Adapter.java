@@ -21,7 +21,4 @@ package org.jflux.api.core;
  */
 public interface Adapter<A,B> {
     public B adapt(A a);
-    
-    // Breaking build for continuum testing
-    //DELETE_ME
 }
