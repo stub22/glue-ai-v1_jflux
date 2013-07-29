@@ -108,6 +108,9 @@ public class ServiceManager<T> implements Manager {
         if(myServiceRegistrationStrategy instanceof DefaultRegistrationStrategy){
             ((DefaultRegistrationStrategy)myServiceRegistrationStrategy).setRegistry(registry);
         }
+        if(myManagerRegistrationStrat instanceof DefaultRegistrationStrategy){
+            ((DefaultRegistrationStrategy)myManagerRegistrationStrat).setRegistry(registry);
+        }
         
         if(!myManagerRegistrationStrat.isRegistered()){
             myManagerRegistrationStrat.register(this);
