@@ -112,14 +112,7 @@ public class ServiceManager<T> implements Manager {
             ((DefaultRegistrationStrategy)myManagerRegistrationStrat).setRegistry(registry);
         }
         
-        bindDependencies(registry);
-        
-        if(!myManagerRegistrationStrat.isRegistered()){
-            myManagerRegistrationStrat.register(this);
-        }
-        
         List<ServiceDependency> deps = myLifecycle.getDependencySpecs();
-        
         // Ensures each dependency has a binding
         for(ServiceDependency s : deps){
             if(myBindings.containsKey(s.getDependencyName())){
@@ -129,6 +122,11 @@ public class ServiceManager<T> implements Manager {
                     new BasicDescriptor(s.getDependencyClassName(), null);
             ServiceBinding bind = new ServiceBinding(s, desc, BindingStrategy.LAZY);
             myBindings.put(s.getDependencyName(), bind);
+        }
+        bindDependencies(registry);
+        
+        if(!myManagerRegistrationStrat.isRegistered()){
+            myManagerRegistrationStrat.register(this);
         }
         myStartFlag = true;
     }
