@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+  <classpathentry exported="true" kind="src" path="src/main/java" including="**/*.java"/>
+  <classpathentry exported="true" kind="src" path="src/main/resources" excluding="**/*.java"/>
+  <classpathentry kind="output" path="target/eclipse-classes"/>
+  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+  <classpathentry exported="true" kind="src" path="/org.jflux.api.core"/>
+  <classpathentry exported="true" kind="src" path="/org.jflux.api.data"/>
+<classpathentry exported="true" kind="src" path="/org.storychat.bundle.osgi"/></classpath>
