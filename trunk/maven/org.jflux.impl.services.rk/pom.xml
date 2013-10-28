@@ -2,16 +2,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.jflux</groupId>
+    <parent>
+		<groupId>org.jflux</groupId>
+		<artifactId>org.jflux.modules.main</artifactId>
+		<version>0.1.7-SNAPSHOT</version>
+		<relativePath>../org.jflux.modules.main/pom.xml</relativePath>
+	</parent>
+    
     <artifactId>org.jflux.impl.services.rk</artifactId>
-    <version>0.1.7-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
-    <name>org.jflux.impl.services.rk OSGi Bundle</name>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <name>${project.artifactId} OSGi Bundle</name>
 
     <dependencies>
         <dependency>
