@@ -16,6 +16,7 @@
 package org.jflux.impl.services.rk.lifecycle.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import org.jflux.impl.services.rk.lifecycle.ManagedService;
@@ -83,5 +84,9 @@ public class ManagedServiceGroup {
             service.unregister();
         }
         myStartFlag = false;
+    }
+    
+    public List<ManagedService> getServices() {
+        return Collections.unmodifiableList(myServices);
     }
 }
