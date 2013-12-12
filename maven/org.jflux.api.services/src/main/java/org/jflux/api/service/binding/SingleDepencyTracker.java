@@ -29,85 +29,96 @@ import static org.jflux.api.service.ServiceLifecycle.*;
  */
 public class SingleDepencyTracker<T> extends DependencyTracker<T> {
 
+    private final Object trackerLock;
+
     public SingleDepencyTracker(
-            String dependencyName, BindingStrategy binding, 
-            Source<Boolean> serviceCreated){
+            String dependencyName, BindingStrategy binding,
+            Source<Boolean> serviceCreated, Object lock) {
+
         super(dependencyName, binding, serviceCreated);
+        trackerLock = lock;
     }
-    
+
     @Override
-    protected synchronized void eagerAdd(Reference ref){
-        List<Reference> refs = myTracker.getTrackedReferences();
-        boolean tracking = !refs.isEmpty();
-        Reference topRef = tracking ? refs.get(refs.size()-1) : null;
-        if(topRef != null && topRef == ref){
-            return;
+    protected void eagerAdd(Reference ref) {
+        synchronized (trackerLock) {
+            List<Reference> refs = myTracker.getTrackedReferences();
+            boolean tracking = !refs.isEmpty();
+            Reference topRef = tracking ? refs.get(refs.size() - 1) : null;
+            if (topRef != null && topRef == ref) {
+                return;
+            }
+            T top = topRef != null ? myTracker.getTrackedService(topRef) : null;
+            T t = myTracker.getService(ref);
+            if (t == null) {
+                return;
+            }
+            if (top == null) {
+                firePropertyChange(PROP_DEPENDENCY_AVAILABLE, null, t);
+            } else {
+                firePropertyChange(PROP_DEPENDENCY_CHANGED, top, t);
+                myTracker.releaseReference(topRef);
+            }
         }
-        T top = topRef != null ? myTracker.getTrackedService(topRef) : null;
-        T t = myTracker.getService(ref);
-        if(t == null){
-            return;
-        }
-        if(top == null){
+    }
+
+    @Override
+    protected void lazyAdd(Reference ref) {
+        synchronized(trackerLock)
+        {
+            if (myCreatedFlag.getValue() || !myTracker.getTrackedServices().isEmpty()) {
+                return;
+            }
+            T t = myTracker.getService(ref);
+            if (t == null) {
+                return;
+            }
             firePropertyChange(PROP_DEPENDENCY_AVAILABLE, null, t);
-        }else{
-            firePropertyChange(PROP_DEPENDENCY_CHANGED, top, t);
-            myTracker.releaseReference(topRef);
         }
     }
-    
+
     @Override
-    protected synchronized void lazyAdd(Reference ref){
-        if(myCreatedFlag.getValue() || !myTracker.getTrackedServices().isEmpty()){
-            return;
-        }
-        T t = myTracker.getService(ref);
-        if(t == null){
-            return;   
-        }
-        firePropertyChange(PROP_DEPENDENCY_AVAILABLE, null, t);
-    }
-    
-    @Override
-    protected synchronized void dependencyRemoved(Reference ref){
-        T service = myTracker.getTrackedService(ref);
-        if(service == null){
-            return;
-        }
-        T newService = getReplacement(ref);
-        if(newService == null){
-            firePropertyChange(PROP_DEPENDENCY_UNAVAILABLE, service, null);
-        }else{
-            firePropertyChange(PROP_DEPENDENCY_CHANGED, service, newService);
+    protected void dependencyRemoved(Reference ref) {
+        synchronized (trackerLock) {
+            T service = myTracker.getTrackedService(ref);
+            if (service == null) {
+                return;
+            }
+            T newService = getReplacement(ref);
+            if (newService == null) {
+                firePropertyChange(PROP_DEPENDENCY_UNAVAILABLE, service, null);
+            } else {
+                firePropertyChange(PROP_DEPENDENCY_CHANGED, service, newService);
+            }
         }
     }
-    
-    private T getReplacement(Reference ref){
+
+    private T getReplacement(Reference ref) {
         List<Reference> tracked = myTracker.getTrackedReferences();
-        if(myBindingStrategy == BindingStrategy.EAGER){
+        if (myBindingStrategy == BindingStrategy.EAGER) {
             tracked = new ArrayList<Reference>(tracked);
             Collections.reverse(tracked);
         }
-        for(Reference r : tracked){
-            if(r == ref){
+        for (Reference r : tracked) {
+            if (r == ref) {
                 continue;
             }
             T t = myTracker.getTrackedService(ref);
-            if(t != null){
+            if (t != null) {
                 return t;
             }
         }
         tracked = myTracker.getAvailableReferences();
-        if(myBindingStrategy == BindingStrategy.EAGER){
+        if (myBindingStrategy == BindingStrategy.EAGER) {
             tracked = new ArrayList<Reference>(tracked);
             Collections.reverse(tracked);
         }
-        for(Reference r : tracked){
-            if(r == ref){
+        for (Reference r : tracked) {
+            if (r == ref) {
                 continue;
             }
             T t = myTracker.getService(r);
-            if(t != null){
+            if (t != null) {
                 return t;
             }
         }
@@ -115,21 +126,21 @@ public class SingleDepencyTracker<T> extends DependencyTracker<T> {
     }
 
     @Override
-    public synchronized Object getTrackedDependency() {
+    public Object getTrackedDependency() {
         return getReference(myTracker.getTrackedReferences());
     }
-    
+
     private T getReference(List<Reference> refs) {
-        if(refs.isEmpty()){
+        if (refs.isEmpty()) {
             return null;
         }
-        if(myBindingStrategy == BindingStrategy.EAGER){
+        if (myBindingStrategy == BindingStrategy.EAGER) {
             refs = new ArrayList<Reference>(refs);
             Collections.reverse(refs);
         }
-        for(Reference r : refs){
+        for (Reference r : refs) {
             T t = myTracker.getService(r);
-            if(t != null){
+            if (t != null) {
                 return t;
             }
         }
