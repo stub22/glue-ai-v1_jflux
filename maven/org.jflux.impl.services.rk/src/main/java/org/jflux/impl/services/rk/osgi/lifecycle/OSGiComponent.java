@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  * 2012-09-28 - Stu replaced JDK logging (in this class only) with SLF4J logging.
 import java.util.logging.Level;
 import java.util.logging.Logger;
-*/ 
+*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,16 +45,16 @@ import static org.jflux.impl.services.rk.osgi.lifecycle.ServiceDependenciesTrack
 import org.jflux.impl.services.rk.property.PropertyChangeNotifier;
 
 /**
- * An OSGi Service managed with a ServiceLifecycleProvider.  
- * Creates a ServiceDependenciesTracker to drive the service lifecycle from the 
- * OSGi Service Registry.  The the service lifecycle changes, the OSGiComponent 
+ * An OSGi Service managed with a ServiceLifecycleProvider.
+ * Creates a ServiceDependenciesTracker to drive the service lifecycle from the
+ * OSGi Service Registry.  The the service lifecycle changes, the OSGiComponent
  * registers/unregisters the managed service in the OSGi ServiceRegistry.
  * An OSGiComponent Registers itself to the OSGi ServiceRegistry when started.
- * 
+ *
  * @param <T> type of the service to be launched
  * @author Matthew Stevenson <www.robokind.org>
  */
-public class OSGiComponent<T> extends 
+public class OSGiComponent<T> extends
         PropertyChangeNotifier implements ManagedService<T>{
     private final static Logger theLogger = LoggerFactory.getLogger(OSGiComponent.class);
     private BundleContext myContext;
@@ -70,7 +70,7 @@ public class OSGiComponent<T> extends
     private boolean myInitializedFlag;
     private boolean myRegistrationEnabledFlag;
     private boolean mySelfRegistrationEnabledFlag;
-    
+
     private static ThreadPoolExecutor theExecutor;
     private static int theCurrentThreadId = 0;
     private static synchronized ThreadPoolExecutor getExecutor(){
@@ -87,18 +87,18 @@ public class OSGiComponent<T> extends
         }
         return theExecutor;
     }
-    
+
     private static void spawnThread(Runnable runnable){
         ThreadPoolExecutor exec = getExecutor();
         exec.execute(runnable);
     }
-    
+
     /**
      * Creates a new OSGiComponent from the given lifecycle provider.
      * @param context BundleContext for accessing the OSGi Service Registry
-     * @param lifecycle lifecycle provider for the managed service 
+     * @param lifecycle lifecycle provider for the managed service
      */
-    public OSGiComponent(BundleContext context, 
+    public OSGiComponent(BundleContext context,
             ServiceLifecycleProvider<T> lifecycle){
         this(context, lifecycle, null, null, true);
     }
@@ -107,57 +107,60 @@ public class OSGiComponent<T> extends
      * Uses the given registration properties when registering the managed
      * service to the OSGi Service Registry.
      * @param context BundleContext for accessing the OSGi Service Registry
-     * @param lifecycle lifecycle provider for the managed service 
-     * @param registrationProps optional properties to be used when registering 
+     * @param lifecycle lifecycle provider for the managed service
+     * @param registrationProps optional properties to be used when registering
      * the managed service to the OSGi Service Registry.  These are combined
      * with any properties from the ServiceLifecycleProvider
      */
-    public OSGiComponent(BundleContext context, 
-            ServiceLifecycleProvider<T> lifecycle, 
+    public OSGiComponent(BundleContext context,
+            ServiceLifecycleProvider<T> lifecycle,
             Properties registrationProps){
         this(context, lifecycle, registrationProps, null, true);
     }
     /**
      * Creates a new OSGiComponent from the given lifecycle provider.
-     * Uses the given registration class name and properties when registering 
+     * Uses the given registration class name and properties when registering
      * the managed service to the OSGi Service Registry.
      * @param context BundleContext for accessing the OSGi Service Registry
-     * @param lifecycle lifecycle provider for the managed service 
-     * @param registrationProps optional properties to be used when registering 
+     * @param lifecycle lifecycle provider for the managed service
+     * @param registrationProps optional properties to be used when registering
      * the managed service to the OSGi Service Registry.  These are combined
      * with any properties from the ServiceLifecycleProvider
      * @param selfRegister determines if this OSGiComponent should register
      * itself when started, by default this is true
      */
-    public OSGiComponent(BundleContext context, 
-            ServiceLifecycleProvider<T> lifecycle, 
+    public OSGiComponent(BundleContext context,
+            ServiceLifecycleProvider<T> lifecycle,
             Properties registrationProps, boolean selfRegister){
         this(context, lifecycle, registrationProps, null, selfRegister);
     }
     /**
      * Creates a new OSGiComponent from the given lifecycle provider.
-     * Uses the given registration class name and properties when registering 
+     * Uses the given registration class name and properties when registering
      * the managed service to the OSGi Service Registry.
      * @param context BundleContext for accessing the OSGi Service Registry
-     * @param lifecycle lifecycle provider for the managed service 
-     * @param registrationProps optional properties to be used when registering 
+     * @param lifecycle lifecycle provider for the managed service
+     * @param registrationProps optional properties to be used when registering
      * the managed service to the OSGi Service Registry.  These are combined
      * with any properties from the ServiceLifecycleProvider
      * @param registrationClassNames class names to be used when registering the
      * managed service to the OSGi Service Registry.  By default, this value is
      * taken from the ServiceLifecycleProvider's getServiceClass().
      */
-    public OSGiComponent(BundleContext context, 
-            ServiceLifecycleProvider<T> lifecycle, 
-            Properties registrationProps, 
+    public OSGiComponent(BundleContext context,
+            ServiceLifecycleProvider<T> lifecycle,
+            Properties registrationProps,
             Properties uniqueProps,
             boolean selfRegister){
-        if(context == null || lifecycle == null){
-            throw new NullPointerException();
+        if(context == null){
+            throw new NullPointerException("context");
+        }
+        if(lifecycle == null){
+            throw new NullPointerException("lifecycle");
         }
         myContext = context;
         myLifecycleProvider = lifecycle;
-        List<DependencyDescriptor> descriptors = 
+        List<DependencyDescriptor> descriptors =
                 myLifecycleProvider.getDependencyDescriptors();
         myRegistrationClassNames = myLifecycleProvider.getServiceClassNames();
         myRegistrationProperties = registrationProps;
@@ -171,8 +174,8 @@ public class OSGiComponent<T> extends
         myDependenciesTracker = new ServiceDependenciesTracker(myContext);
         for(DependencyDescriptor dd : descriptors){
             myDependenciesTracker.addDependencyDescription(
-                    dd.getServiceClass(), 
-                    dd.getDependencyName(), 
+                    dd.getServiceClass(),
+                    dd.getDependencyName(),
                     dd.getServiceFilter(),
                     dd.getDependencyType());
         }
@@ -182,7 +185,7 @@ public class OSGiComponent<T> extends
     /**
      * Starts the OSGiComponent.  Begins tracker dependencies and
      * notifies the lifecycle provider of dependency changes.
-     * 
+     *
      * The OSGiComponent, by default, adds itself to the OSGi Service Registry.
      * This can be disabled by calling setSelfRegistrationEnabled(false).
      * The OSGiComponent can be unregistered by calling unregisterSelf(), and
@@ -202,7 +205,7 @@ public class OSGiComponent<T> extends
                 __start();
             }});
     }
-    
+
     public void __start(){
         if(myDependenciesTracker == null){
             handleAllDependencies(Collections.EMPTY_MAP);
@@ -211,7 +214,7 @@ public class OSGiComponent<T> extends
         if(!myDependenciesTracker.isRunning()){
             myDependenciesTracker.start();
         }
-        
+
     }
     /**
      * Stops tracking dependency changes.  Does not modify the existing service
@@ -237,7 +240,7 @@ public class OSGiComponent<T> extends
             myLifecycleListener = null;
         }
     }
-    
+
     @Override
     public void dispose(){
         getLogger().info("Disposing of OSGi Component with class {}", this.getClass());
@@ -272,7 +275,7 @@ public class OSGiComponent<T> extends
         mySelfRegistrationEnabledFlag = enabled;
         if(mySelfRegistrationEnabledFlag && mySelfRegistration == null){
             registerSelf();
-        }else if(!mySelfRegistrationEnabledFlag && 
+        }else if(!mySelfRegistrationEnabledFlag &&
                 myServiceRegistration != null){
             unregisterSelf();
         }
@@ -306,23 +309,23 @@ public class OSGiComponent<T> extends
         mySelfRegistration.unregister();
         mySelfRegistration = null;
     }
-    
+
     @Override
     public void setRegistrationEnabled(boolean enabled){
         myRegistrationEnabledFlag = enabled;
-        if(myRegistrationEnabledFlag && myService != null && 
+        if(myRegistrationEnabledFlag && myService != null &&
                 myServiceRegistration == null){
             register();
         }else if(!myRegistrationEnabledFlag && myServiceRegistration != null){
             unregister();
         }
     }
-    
+
     @Override
     public boolean getRegistrationEnabled(){
         return myRegistrationEnabledFlag;
     }
-    
+
     @Override
     public void unregister(){
         spawnThread(new Runnable() {
@@ -330,7 +333,7 @@ public class OSGiComponent<T> extends
                 __unregister();
         }});
     }
-    
+
     public void __unregister(){
         if(myServiceRegistration != null){
             try{
@@ -353,7 +356,7 @@ public class OSGiComponent<T> extends
             getLogger().warn("Runtime exception in event handling for unregistration of svc {} ", myService, ex);
         }
     }
-    
+
     @Override
     public void register(){
 //            spawnThread(3, new Runnable() {
@@ -361,9 +364,9 @@ public class OSGiComponent<T> extends
                     __register();
 //                }});
     }
-    
+
     public void __register(){
-        if(myService == null || 
+        if(myService == null ||
                 myServiceRegistration != null || !myRegistrationEnabledFlag){
             return;
         }
@@ -373,14 +376,14 @@ public class OSGiComponent<T> extends
                     + "One or more unique property is in use.");
             return;
         }
-        
+
         Dictionary<String, Object> propTable = new Hashtable<String, Object>();
         if(props != null){
             for(Object prop: props.keySet()) {
                 propTable.put(prop.toString(), props.get(prop));
             }
         }
-        
+
         ServiceRegistration reg = myContext.registerService(
                 myRegistrationClassNames, myService, propTable);
         myServiceRegistration = reg;
@@ -394,7 +397,7 @@ public class OSGiComponent<T> extends
                     "Runtime exception in event handling for registration of svc {}" + myService, ex);
         }
     }
-    
+
     private boolean uniquePropertiesAvailable(){
         if(myUniqueProperties == null){
             return true;
@@ -411,10 +414,10 @@ public class OSGiComponent<T> extends
         }
         return true;
     }
-    
+
     private void handleAllDependencies(Map<String,Object> requiredServices){
         if(!ServiceLifecycleProvider.Validator.validateServices(
-                myLifecycleProvider.getDependencyDescriptors(), 
+                myLifecycleProvider.getDependencyDescriptors(),
                 requiredServices)){
             throw new IllegalArgumentException(
                     "Invalid dependency set for service.");
@@ -425,14 +428,14 @@ public class OSGiComponent<T> extends
             getLogger().warn("The lifecycle failed to create a service.");
         }else{
             getLogger().info(
-                    "Service created of type(s): {}", 
+                    "Service created of type(s): {}",
                     Arrays.toString(
                             myLifecycleProvider.getServiceClassNames()));
             register();
         }
         myLifecycleListener.flush();
     }
-    
+
     private void handleChanged(String id, Object newDependency){
         if(id == null){
             throw new NullPointerException();
@@ -440,19 +443,19 @@ public class OSGiComponent<T> extends
             throw new IllegalArgumentException("Invalid id or dependency.  "
                     + "id: " + id + ", dependency: " + newDependency);
         }
-        myLifecycleProvider.dependencyChanged(id, newDependency, 
+        myLifecycleProvider.dependencyChanged(id, newDependency,
                 myDependenciesTracker.getAvailableDependencies());
         checkForModification();
         myLifecycleListener.flush();
     }
-    
+
     private boolean validate(String id, Object req){
-        List<DependencyDescriptor> reqs = 
+        List<DependencyDescriptor> reqs =
                 myLifecycleProvider.getDependencyDescriptors();
         return (req == null && Validator.validateServiceId(reqs, id)) ||
                 Validator.validateService(reqs, id, req);
     }
-    
+
     private void checkForModification(){
         T service = myLifecycleProvider.getService();
         if(myService == null && service == null){
@@ -550,7 +553,7 @@ public class OSGiComponent<T> extends
         }
         return map.size();
     }
-    
+
     class DependencyStatusListener implements PropertyChangeListener{
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
@@ -568,7 +571,7 @@ public class OSGiComponent<T> extends
                 dependencyChange(evt);
             }
         }
-        
+
         private void dependencyChange(PropertyChangeEvent evt){
             String id = evt.getOldValue().toString();
             if(myInitializedFlag){
@@ -577,7 +580,7 @@ public class OSGiComponent<T> extends
             }
             firePropertyChange(PROP_DEPENDENCY_CHANGED, null, id);
         }
-        
+
         private void handleAllAvailable(PropertyChangeEvent evt){
             if(myInitializedFlag){
                 return;
@@ -607,20 +610,20 @@ public class OSGiComponent<T> extends
 	}
     /**
      * Listens for dependency descriptors being added or removed from the
-     * lifecycle.  
-     * Additions are queued until the lifecycle is finished updating, 
+     * lifecycle.
+     * Additions are queued until the lifecycle is finished updating,
      * otherwise the lifecycle could be called before the update is complete.
      * Removal happens immediately and the lifecycle is not notified.
      * Descriptors may be removed from the queue.
      */
     class LifecycleDependencyListener implements PropertyChangeListener{
-        private Queue<DependencyDescriptor> myAddQueue 
+        private Queue<DependencyDescriptor> myAddQueue
                 = new LinkedList<DependencyDescriptor>();
-        
+
         public LifecycleDependencyListener(){
             myAddQueue = new LinkedList<DependencyDescriptor>();
         }
-        
+
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if(evt == null){
@@ -640,7 +643,7 @@ public class OSGiComponent<T> extends
         }
         /**
          * Checks if the dependency name is in use
-         * @param desc 
+         * @param desc
          */
         private synchronized void addDesc(DependencyDescriptor desc){
             for(DependencyDescriptor d : myAddQueue){
@@ -652,7 +655,7 @@ public class OSGiComponent<T> extends
         }
         /**
          * If not found in the tracker, attempts to remove from queue
-         * @param name 
+         * @param name
          */
         private synchronized void remove(String name){
             if(myDependenciesTracker.removeDependencyTracker(name)){
@@ -670,7 +673,7 @@ public class OSGiComponent<T> extends
             }
         }
         /**
-         * Adds queued descriptors to the tracker, and removes them from the 
+         * Adds queued descriptors to the tracker, and removes them from the
          * queue.
          */
         private synchronized void flush(){
@@ -681,6 +684,6 @@ public class OSGiComponent<T> extends
                 }
             }
         }
-        
+
     }
 }
