@@ -41,6 +41,7 @@ import org.mockito.stubbing.Answer;
  */
 public class SingleDepencyTrackerTest {
     private DefaultSource<Boolean> createdSource = new DefaultSource<Boolean>(false);
+    private Object trackLock=new Object();
     
     public SingleDepencyTrackerTest() {
     }
@@ -79,7 +80,7 @@ public class SingleDepencyTrackerTest {
         });
         Descriptor desc = mock(Descriptor.class);
         createdSource.setValue(false);
-        SingleDepencyTracker instance = new SingleDepencyTracker("depName", BindingStrategy.EAGER, createdSource);
+        SingleDepencyTracker instance = new SingleDepencyTracker("depName", BindingStrategy.EAGER, createdSource, trackLock);
         instance.start(reg, desc);
         assertNull(instance.getTrackedDependency());
         
@@ -138,7 +139,7 @@ public class SingleDepencyTrackerTest {
         });
         Descriptor desc = mock(Descriptor.class);
         createdSource.setValue(false);
-        SingleDepencyTracker instance = new SingleDepencyTracker("depName", BindingStrategy.LAZY, createdSource);
+        SingleDepencyTracker instance = new SingleDepencyTracker("depName", BindingStrategy.LAZY, createdSource, trackLock);
         instance.start(reg, desc);
         assertNull(instance.getTrackedDependency());
         
@@ -196,7 +197,7 @@ public class SingleDepencyTrackerTest {
             }
         });
         Descriptor desc = mock(Descriptor.class);
-        SingleDepencyTracker instance = new SingleDepencyTracker("dependencyName", BindingStrategy.EAGER, createdSource);
+        SingleDepencyTracker instance = new SingleDepencyTracker("dependencyName", BindingStrategy.EAGER, createdSource,trackLock);
         instance.start(reg, desc);
         assertNull(instance.getTrackedDependency());
         
@@ -231,7 +232,7 @@ public class SingleDepencyTrackerTest {
             }
         });
         Descriptor desc = mock(Descriptor.class);
-        SingleDepencyTracker instance = new SingleDepencyTracker("dependencyName", BindingStrategy.LAZY, createdSource);
+        SingleDepencyTracker instance = new SingleDepencyTracker("dependencyName", BindingStrategy.LAZY, createdSource, trackLock);
         instance.start(reg, desc);
         assertNull(instance.getTrackedDependency());
         

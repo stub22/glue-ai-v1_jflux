@@ -49,11 +49,13 @@ public class ServiceManager<T> implements Manager {
     private boolean myStartFlag;
     private boolean myListenFlag;
     private RegistrationStrategy<ServiceManager> myManagerRegistrationStrat;
+    private Object trackerLock;
     
     public ServiceManager(ServiceLifecycle<T> lifecycle, 
             Map<String,ServiceBinding> bindings, 
             RegistrationStrategy<T> registration,
             RegistrationStrategy<ServiceManager> managerRegistrationStrat){
+        trackerLock=new Object();
         if(lifecycle == null){
             throw new NullPointerException();
         }
@@ -151,7 +153,7 @@ public class ServiceManager<T> implements Manager {
             BindingStrategy strat = s.getBindingStrategy();
             DependencyTracker t = c.isMultiple()
                     ? new MultiDependencyTracker(name, strat, myServiceCreatedSource)
-                    : new SingleDepencyTracker(name, strat, myServiceCreatedSource);
+                    : new SingleDepencyTracker(name, strat, myServiceCreatedSource, trackerLock);
             t.addPropertyChangeListener(myChangeListener);
             myTrackerMap.put(s, t);
             t.start(registry, s.getDescriptor());
