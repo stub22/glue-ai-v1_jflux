@@ -172,8 +172,8 @@ public class ServiceManager<T> implements Manager {
             DependencyTracker t = e.getValue();
             t.stop();
             t.removePropertyChangeListener(myChangeListener);
-            myTrackerMap.remove(s);
         }
+        myTrackerMap.clear();
     }
     
     private void tryCreate(){
