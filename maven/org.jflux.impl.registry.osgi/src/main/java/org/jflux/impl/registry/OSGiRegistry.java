@@ -122,7 +122,7 @@ public class OSGiRegistry implements Registry {
         if(!(reference instanceof OSGiReference)){
             return;
         }
-        myContext.ungetService((OSGiReference)reference);
+        myContext.ungetService(((OSGiReference)reference).getReference());
     }
 
     @Override
