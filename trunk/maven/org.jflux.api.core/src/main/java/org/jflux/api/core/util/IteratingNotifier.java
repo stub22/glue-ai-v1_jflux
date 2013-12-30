@@ -19,16 +19,11 @@ import org.jflux.api.core.Listener;
 
 /**
  *
- * @param <T> 
  * @author Matthew Stevenson
  */
 public class IteratingNotifier<T> extends 
         DefaultNotifier<T> implements Listener<Iterable<T>>{
 
-    /**
-     *
-     * @param event
-     */
     @Override
     public void handleEvent(Iterable<T> event) {
         for(T t : event){
@@ -36,17 +31,9 @@ public class IteratingNotifier<T> extends
         }
     }
     
-    /**
-     *
-     * @param <T>
-     */
     public static class IteratingArrayNotifier<T> extends 
             DefaultNotifier<T> implements Listener<T[]>{
 
-        /**
-         *
-         * @param event
-         */
         @Override
         public void handleEvent(T[] event) {
             for(T t : event){

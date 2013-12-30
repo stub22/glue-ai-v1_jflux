@@ -28,7 +28,6 @@ import org.jflux.api.core.util.DefaultSource;
 
 /**
  *
- * @param <K> 
  * @author Matthew Stevenson
  */
 public class ReadOnlyConfig<K> extends AbstractConfiguration<K> {
@@ -69,12 +68,6 @@ public class ReadOnlyConfig<K> extends AbstractConfiguration<K> {
         return null;
     }
 
-    /**
-     *
-     * @param <T>
-     * @param key
-     * @return
-     */
     @Override
     protected final <T> ConfigProperty<T> getConfigProperty(K key) {
         return myProperties.get(key);
@@ -85,19 +78,10 @@ public class ReadOnlyConfig<K> extends AbstractConfiguration<K> {
         return myProperties.keySet();
     }
     
-    /**
-     *
-     * @param <V>
-     */
     public final static class ReadOnlyProperty<V> implements ConfigProperty<V>{
         private final Class<V> myValueClass;
         private final Source<V> mySource;
 
-        /**
-         *
-         * @param valueClass
-         * @param value
-         */
         public ReadOnlyProperty(Class<V> valueClass, V value) {
             if(valueClass == null){
                 throw new NullPointerException();
@@ -106,10 +90,6 @@ public class ReadOnlyConfig<K> extends AbstractConfiguration<K> {
             mySource = new DefaultSource<V>(value);
         }
 
-        /**
-         *
-         * @param prop
-         */
         public ReadOnlyProperty(ConfigProperty<V> prop){
             this(prop.getPropertyClass(), 
                     prop.getSource() == null 

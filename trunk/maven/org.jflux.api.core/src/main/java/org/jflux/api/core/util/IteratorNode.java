@@ -25,7 +25,6 @@ import org.jflux.api.core.playable.ConditionalNotifier;
 
 /**
  *
- * @param <T> 
  * @author Matthew Stevenson
  */
 public class IteratorNode<T> extends 
@@ -33,44 +32,25 @@ public class IteratorNode<T> extends
     private Listener<List<T>> myListener;
     private Notifier<T> myNotifier;
     
-    /**
-     *
-     */
     public IteratorNode(){
         IteratingNotifier<T> in = new IteratingNotifier<T>();
         myListener = new ConditionalListener<List<T>>(this, in);
         myNotifier = new ConditionalNotifier<T>(this, in);
     }    
     
-    /**
-     *
-     * @return
-     */
     @Override
     public Listener<List<T>> getListener() {
         return myListener;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Notifier<T> getNotifier() {
         return myNotifier;
     }
     
-    /**
-     *
-     * @param <T>
-     */
     public static class IteratingNotifier<T> extends 
             DefaultNotifier<T> implements Listener<List<T>>{
 
-        /**
-         *
-         * @param event
-         */
         @Override
         public void handleEvent(List<T> event) {
             for(T t : event){

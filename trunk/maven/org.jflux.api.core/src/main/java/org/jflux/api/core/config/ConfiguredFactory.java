@@ -20,10 +20,6 @@ import org.jflux.api.core.Source;
 
 /**
  *
- * @param <T> 
- * @param <K> 
- * @param <V> 
- * @param <C> 
  * @author Matthew Stevenson
  */
 public interface ConfiguredFactory<

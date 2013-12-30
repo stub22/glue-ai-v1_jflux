@@ -21,26 +21,12 @@ import org.jflux.api.core.chain.AdapterChain.AdapterChainBuilder;
 
 /**
  *
- * @param <A> 
- * @param <B> 
  * @author Matthew Stevenson
  */
 public class SourceChain<A,B> implements Source<B> {
-    /**
-     *
-     */
     protected Source<A> myInnerSource;
-    /**
-     *
-     */
     protected Adapter<A,B> myAdapter;
         
-    /**
-     *
-     * @param <T>
-     * @param source
-     * @param adapter
-     */
     public <T> SourceChain(Source<? extends T> source, Adapter<T,B> adapter) {
         if(source == null || adapter == null){
             throw new NullPointerException();
@@ -55,77 +41,38 @@ public class SourceChain<A,B> implements Source<B> {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public B getValue() {
         A a = myInnerSource.getValue();
         return myAdapter.adapt(a);
     }
     
-    /**
-     *
-     * @param <T>
-     * @param source
-     * @return
-     */
     public static <T> SourceChainBuilder<T,T> builder(Source<T> source){
         return new SourceChainBuilder<T,T>().setSource(source);
     }
 
-    /**
-     *
-     * @param <T>
-     * @return
-     */
     public static <T> SourceChainBuilder<T,T> builder(){
         return new SourceChainBuilder<T,T>();
     }
     
-    /**
-     *
-     * @param <X>
-     * @param <Y>
-     */
     public static class SourceChainBuilder<X,Y> {
         private Source<X> mySource;
         private AdapterChainBuilder<X,Y> myAdapters;
         
-        /**
-         *
-         */
         public SourceChainBuilder(){
             myAdapters = new AdapterChainBuilder<X, Y>();
         }
         
-        /**
-         *
-         * @param source
-         * @return
-         */
         public SourceChainBuilder<X,Y> setSource(Source<X> source){
             mySource = source;
             return this;
         }
 
-        /**
-         *
-         * @param <T>
-         * @param adapter
-         * @return
-         */
         public <T> SourceChainBuilder<X,T> attach(Adapter<Y,T> adapter){
             myAdapters.attach(adapter);
             return (SourceChainBuilder<X,T>)this;
         }
 
-        /**
-         *
-         * @param <T>
-         * @return
-         */
         public <T> SourceChain<T,Y> done(){
             return new SourceChain<T,Y>(mySource, myAdapters.done());
         }

@@ -27,8 +27,6 @@ import org.jflux.api.core.Notifier;
 
 /**
  *
- * @param <P> 
- * @param <C> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class NodeChain<P,C> extends PlayableGroup implements Node{
@@ -121,34 +119,18 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         }
     }
     
-    /**
-     *
-     * @return
-     */
     protected ProducerNode<P> getProducer(){
         return myProducer;
     }
     
-    /**
-     *
-     * @return
-     */
     protected List<ProcessorNode<?,?>> getProcessorChain(){
         return myProcessors;
     }
     
-    /**
-     *
-     * @return
-     */
     protected ConsumerNode<C> getConsumer(){
         return myConsumer;
     }
     
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean start(){
         if(!myWiredFlag){
@@ -156,10 +138,6 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         }
        return super.start();
     }
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean stop(){
         if(myWiredFlag){
@@ -168,9 +146,6 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
        return super.stop();
     }
     
-    /**
-     *
-     */
     protected void wire(){
         if(myWiredFlag){
             return;
@@ -201,9 +176,6 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
     }
     
     
-    /**
-     *
-     */
     protected void unwire(){
         if(!myWiredFlag){
             return;
@@ -267,10 +239,6 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         n.removeListener(consumer.getListener());
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     protected Iterable<Playable> getPlayables() {
         return myPlayables;

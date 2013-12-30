@@ -21,17 +21,12 @@ import org.jflux.api.core.Listener;
 
 /**
  *
- * @param <In> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class DefaultConsumerNode<In> extends 
         BasicPlayable implements ConsumerNode<In> {
     private Listener<In> myListener;
 
-    /**
-     *
-     * @param proc
-     */
     public DefaultConsumerNode(Listener<In> proc){
         if(proc == null){
             throw new NullPointerException();
@@ -39,10 +34,6 @@ public class DefaultConsumerNode<In> extends
         myListener = new ConditionalListener<In>(this, proc);
     }
     
-    /**
-     *
-     * @return
-     */
     @Override
     public Listener<In> getListener() {
         return myListener;

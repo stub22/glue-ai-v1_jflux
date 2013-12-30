@@ -20,17 +20,12 @@ import org.jflux.api.core.Listener;
 
 /**
  *
- * @param <T> 
  * @author Matthew Stevenson
  */
 
 
 public class EmptyListener<T> implements Listener<T>{
 
-    /**
-     *
-     * @param input
-     */
     @Override
     public void handleEvent(T input) {}
     

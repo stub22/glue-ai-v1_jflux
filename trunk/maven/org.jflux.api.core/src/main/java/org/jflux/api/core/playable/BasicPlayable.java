@@ -22,66 +22,39 @@ package org.jflux.api.core.playable;
 public class BasicPlayable implements Playable{
     private PlayState myPlayState;
     
-    /**
-     *
-     */
     public BasicPlayable(){
         myPlayState = PlayState.INITIALIZING;
     }
     
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean start() {
         myPlayState = PlayState.RUNNING;
         return true;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean pause() {
         myPlayState = PlayState.PAUSED;
         return true;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean resume() {
         myPlayState = PlayState.RUNNING;
         return true;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean stop() {
         myPlayState = PlayState.ABORTED;
         return true;
     }
     
-    /**
-     *
-     * @return
-     */
     protected boolean complete() {
         myPlayState = PlayState.COMPLETED;
         return true;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public PlayState getPlayState() {
         return myPlayState;

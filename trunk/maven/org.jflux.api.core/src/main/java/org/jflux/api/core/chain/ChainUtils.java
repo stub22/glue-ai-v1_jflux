@@ -27,43 +27,21 @@ import org.jflux.api.core.Notifier;
  * @author Matthew Stevenson
  */
 public class ChainUtils {
-    /**
-     *
-     * @param l
-     * @return
-     */
     public static ChainComponents explode(Listener l){
         return new ChainComponents(l);
     }
-    /**
-     *
-     * @param n
-     * @return
-     */
     public static ChainComponents explode(Notifier n){
         return new ChainComponents(n);
     }
-    /**
-     *
-     * @param a
-     * @return
-     */
     public static ChainComponents explode(Adapter a){
         return new ChainComponents(a);
     }
     
-    /**
-     *
-     */
     public static class ChainComponents {
         private Listener myListener;
         private Notifier myNotifier;
         private List<Adapter> myAdapters;
         
-        /**
-         *
-         * @param l
-         */
         public ChainComponents(Listener l){
             if(l == null){
                 myAdapters = Collections.EMPTY_LIST;
@@ -76,10 +54,6 @@ public class ChainUtils {
             }
         }
         
-        /**
-         *
-         * @param n
-         */
         public ChainComponents(Notifier n){
             if(n == null){
                 myAdapters = Collections.EMPTY_LIST;
@@ -92,10 +66,6 @@ public class ChainUtils {
             }
         }
         
-        /**
-         *
-         * @param a
-         */
         public ChainComponents(Adapter a){
             if(a == null){
                 myAdapters = Collections.EMPTY_LIST;
@@ -115,43 +85,22 @@ public class ChainUtils {
             }
         }
         
-        /**
-         *
-         * @return
-         */
         public Listener getListener(){
             return myListener;
         }
         
-        /**
-         *
-         * @return
-         */
         public Notifier getNotifier(){
             return myNotifier;
         }
         
-        /**
-         *
-         * @return
-         */
         public List<Adapter> getAdapterList(){
             return myAdapters;
         }
         
-        /**
-         *
-         * @param index
-         * @return
-         */
         public Adapter getAdapter(int index){
             return myAdapters.get(index);
         }
         
-        /**
-         *
-         * @return
-         */
         public int getAdapterCount(){
             return myAdapters.size();
         }

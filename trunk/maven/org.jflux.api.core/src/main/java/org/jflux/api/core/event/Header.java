@@ -20,57 +20,24 @@ import org.jflux.api.core.Adapter;
 
 /**
  *
- * @param <SourceRef> 
- * @param <Time> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Header<SourceRef, Time> {
-    /**
-     *
-     * @return
-     */
     public SourceRef getSourceReference();
-    /**
-     *
-     * @return
-     */
     public Time getTimestamp();
-    /**
-     *
-     * @return
-     */
     public String getEventType();
-    /**
-     *
-     * @return
-     */
     public Map<String,String> getHeaderProperties();
     
-    /**
-     *
-     */
     public static class HeaderTypeAdapter implements Adapter<Header,String> {
-        /**
-         *
-         * @param a
-         * @return
-         */
         @Override 
         public String adapt(Header a) {
             return a == null ? null : a.getEventType();
         }
     }
     
-    /**
-     *
-     */
     public static class HeaderPropertyAdapter implements 
             Adapter<Header,String> {
         private String myPropertyKey;
-        /**
-         *
-         * @param propertyKey
-         */
         public HeaderPropertyAdapter(String propertyKey){
             if(propertyKey == null){
                 throw new NullPointerException();
@@ -78,11 +45,6 @@ public interface Header<SourceRef, Time> {
             myPropertyKey = propertyKey;
         }
         
-        /**
-         *
-         * @param a
-         * @return
-         */
         @Override 
         public String adapt(Header a) {
             if(a == null || a.getHeaderProperties() == null){
