@@ -20,19 +20,9 @@ import org.jflux.api.core.Notifier;
 
 /**
  *
- * @param <In> 
- * @param <Out> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface ProcessorNode<In, Out> extends Node {
-    /**
-     *
-     * @return
-     */
     public Listener<In> getListener();
-    /**
-     *
-     * @return
-     */
     public Notifier<Out> getNotifier();
 }

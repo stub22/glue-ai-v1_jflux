@@ -19,51 +19,21 @@ import org.jflux.api.core.Adapter;
 
 /**
  *
- * @param <H> 
- * @param <D> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Event<H, D> {
-    /**
-     *
-     * @return
-     */
     public H getHeader();
     
-    /**
-     *
-     * @return
-     */
     public D getData();
     
-    /**
-     *
-     * @param <H>
-     * @param <D>
-     */
     public static class EventHeaderAdapter<H,D> implements Adapter<Event<H,D>,H> {
-        /**
-         *
-         * @param a
-         * @return
-         */
         @Override
         public H adapt(Event<H, D> a) {
             return a.getHeader();
         }
     }
     
-    /**
-     *
-     * @param <H>
-     * @param <D>
-     */
     public static class EventDataAdapter<H,D> implements Adapter<Event<H,D>,D> {
-        /**
-         *
-         * @param a
-         * @return
-         */
         @Override
         public D adapt(Event<H, D> a) {
             return a.getData();

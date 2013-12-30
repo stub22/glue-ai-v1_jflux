@@ -21,62 +21,27 @@ import org.jflux.api.core.Adapter;
 
 /**
  *
- * @param <K> 
- * @param <E> 
  * @author Matthew Stevenson
  */
 public interface ConfigValidator<K, E> extends 
         Adapter<Configuration<K>,List<E>> {
     
-    /**
-     *
-     * @param a
-     * @return
-     */
     @Override
     public List<E> adapt(Configuration<K> a);
     
-    /**
-     *
-     * @param <K>
-     * @param <E>
-     */
     public abstract class AbstractConfigValidator<K,E> implements 
             ConfigValidator<K, E> {
-        /**
-         *
-         * @return
-         */
         public abstract Set<K> getValidKeySet();
         
         
         //protected abstract <V> Adapter<V,List<E>> getFieldValidator(  
                 //does not compile in JDK >= 1.6.25
-        /**
-         *
-         * @param key
-         * @param config
-         * @return
-         */
         protected abstract Adapter getFieldValidator(
                 K key, Configuration<K> config);
 
-        /**
-         *
-         * @param <V>
-         * @param clazz
-         * @param key
-         * @param config
-         * @return
-         */
         protected abstract <V> Adapter<V,List<E>> getFieldValidator(
                 Class<V> clazz, K key, Configuration<K> config);
 
-        /**
-         *
-         * @param a
-         * @return
-         */
         @Override
         public List<E> adapt(Configuration<K> a) {
             List<E> allErrors = null;

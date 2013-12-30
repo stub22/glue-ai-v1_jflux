@@ -22,26 +22,15 @@ import java.util.List;
 
 /**
  *
- * @param <E> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class DefaultNotifier<E> implements Notifier<E> {
-    /**
-     *
-     */
     protected List<Listener<E>> myListeners;
     
-    /**
-     *
-     */
     public DefaultNotifier(){
         myListeners = new ArrayList<Listener<E>>();
     }
     
-    /**
-     *
-     * @param e
-     */
     @Override
     public void notifyListeners(E e){
         for(Listener<E> l : myListeners){
@@ -49,10 +38,6 @@ public class DefaultNotifier<E> implements Notifier<E> {
         }
     }
     
-    /**
-     *
-     * @param listener
-     */
     @Override
     public void addListener(Listener<E> listener) {
         if(listener == null){
@@ -63,10 +48,6 @@ public class DefaultNotifier<E> implements Notifier<E> {
         }
     }
 
-    /**
-     *
-     * @param listener
-     */
     @Override
     public void removeListener(Listener<E> listener) {
         if(listener == null){

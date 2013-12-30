@@ -25,7 +25,6 @@ import org.jflux.api.core.config.SimpleValidator.PropertyError;
 
 /**
  *
- * @param <K> 
  * @author Matthew Stevenson
  */
 public class SimpleValidator<K> extends 
@@ -35,21 +34,11 @@ public class SimpleValidator<K> extends
 
     
     
-    /**
-     *
-     * @return
-     */
     @Override
     public Set<K> getValidKeySet() {
         return myPropertyValidators.keySet();
     }
 
-    /**
-     *
-     * @param key
-     * @param config
-     * @return
-     */
     @Override
     //protected <V> Adapter<V, List<PropertyError<K, ?>>> getFieldValidator(
     protected Adapter<?, List<PropertyError<K, ?>>> getFieldValidator(
@@ -57,35 +46,17 @@ public class SimpleValidator<K> extends
         return (Adapter)myPropertyValidators.get(key);
     }
 
-    /**
-     *
-     * @param <V>
-     * @param clazz
-     * @param key
-     * @param config
-     * @return
-     */
     @Override
     protected <V> Adapter<V, List<PropertyError<K, ?>>> getFieldValidator(
             Class<V> clazz, K key, Configuration<K> config) {
         return (Adapter)myPropertyValidators.get(key);
     }    
     
-    /**
-     *
-     * @param <K>
-     * @param <V>
-     */
     public static class EnumeratedPropertyValidator<K,V> implements 
             Adapter<V,List<PropertyError<K,V>>> {
         private K myKey;
         private Set<V> myValidProperties;
         
-        /**
-         *
-         * @param propKey
-         * @param validSet
-         */
         public EnumeratedPropertyValidator(K propKey, Set<V> validSet){
             if(propKey == null || validSet == null){
                 throw new NullPointerException();
@@ -96,11 +67,6 @@ public class SimpleValidator<K> extends
             myValidProperties = validSet;
         }
         
-        /**
-         *
-         * @param a
-         * @return
-         */
         @Override
         public List<PropertyError<K,V>> adapt(V a) {
             return myValidProperties.contains(a) ? null : 
@@ -109,48 +75,25 @@ public class SimpleValidator<K> extends
         }
     }
     
-    /**
-     *
-     * @param <K>
-     * @param <V>
-     */
     public static class PropertyError<K,V> {
         private K myKey;
         private V myValue;
         private String myErrorMessage;
 
-        /**
-         *
-         * @param key
-         * @param value
-         * @param errorMessage
-         */
         public PropertyError(K key, V value, String errorMessage) {
             myKey = key;
             myValue = value;
             myErrorMessage = errorMessage;
         }
 
-        /**
-         *
-         * @return
-         */
         public K getKey() {
             return myKey;
         }
 
-        /**
-         *
-         * @return
-         */
         public V getValue() {
             return myValue;
         }
 
-        /**
-         *
-         * @return
-         */
         public String getErrorMessage() {
             return myErrorMessage;
         }

@@ -21,68 +21,21 @@ package org.jflux.api.core.playable;
  */
 public interface Playable {
     
-    /**
-     *
-     */
     public static enum PlayState{
-        /**
-         *
-         */
         UNAVAILABLE,
-        /**
-         *
-         */
         INITIALIZING,
-        /**
-         *
-         */
         PENDING,
-        /**
-         *
-         */
         RUNNING,
-        /**
-         *
-         */
         PAUSED,
-        /**
-         *
-         */
         COMPLETED,
-        /**
-         *
-         */
         ABORTED,
-        /**
-         *
-         */
         ERROR
     }
     
-    /**
-     *
-     * @return
-     */
     public boolean start();
-    /**
-     *
-     * @return
-     */
     public boolean pause();
-    /**
-     *
-     * @return
-     */
     public boolean resume();
-    /**
-     *
-     * @return
-     */
     public boolean stop();
     
-    /**
-     *
-     * @return
-     */
     public PlayState getPlayState();
 }

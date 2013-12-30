@@ -17,52 +17,26 @@ package org.jflux.api.core.event;
 
 /**
  *
- * @param <T> 
  * @author Matthew Stevenson
  */
 public interface ValueChange<T> {    
-    /**
-     *
-     * @return
-     */
     public T getOldValue();
-    /**
-     *
-     * @return
-     */
     public T getNewValue();
     
-    /**
-     *
-     * @param <T>
-     */
     public static class DefaultValueChange<T> implements ValueChange<T> {
         private T myOldVal;
         private T myNewVal;
         
-        /**
-         *
-         * @param oldVal
-         * @param newVal
-         */
         public DefaultValueChange(T oldVal, T newVal){
             myOldVal = oldVal;
             myNewVal = newVal;
         }
 
-        /**
-         *
-         * @return
-         */
         @Override
         public T getOldValue() {
             return myOldVal;
         }
 
-        /**
-         *
-         * @return
-         */
         @Override
         public T getNewValue() {
             return myNewVal;

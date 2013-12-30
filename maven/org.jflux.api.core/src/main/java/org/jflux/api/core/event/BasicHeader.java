@@ -21,35 +21,14 @@ import org.jflux.api.core.Source;
 
 /**
  *
- * @param <SourceRef> 
- * @param <Time> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
-    /**
-     *
-     */
     protected SourceRef mySourceRef;
-    /**
-     *
-     */
     protected Time myTimestamp;
-    /**
-     *
-     */
     protected String myEventType;
-    /**
-     *
-     */
     protected Map<String,String> myProperties;
     
-    /**
-     *
-     * @param sourceRef
-     * @param timestamp
-     * @param eventType
-     * @param props
-     */
     public BasicHeader(SourceRef sourceRef, Time timestamp, 
             String eventType, Map<String,String> props){
         mySourceRef = sourceRef;
@@ -58,48 +37,26 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         myProperties = props;
     }
     
-    /**
-     *
-     * @return
-     */
     @Override
     public SourceRef getSourceReference(){
         return mySourceRef;
     }
     
-    /**
-     *
-     * @return
-     */
     @Override
     public Time getTimestamp(){
         return myTimestamp;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public String getEventType() {
         return myEventType;
     }
     
-    /**
-     *
-     * @return
-     */
     @Override
     public Map<String,String> getHeaderProperties(){
         return myProperties;
     }
     
-    /**
-     *
-     * @param <Data>
-     * @param <SourceRef>
-     * @param <Time>
-     */
     public static class HeaderFactory<Data,SourceRef,Time> implements 
             Adapter<Data,Header<SourceRef,Time>> {
         private Adapter<Data,SourceRef> mySourceRefAdapter;
@@ -107,13 +64,6 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         private Adapter<Data,String> myEventTypeAdapter;
         private Adapter<Data,Map<String,String>> myPropertiesAdapter;
         
-        /**
-         *
-         * @param sourceRefAdapter
-         * @param timestampSource
-         * @param eventTypeAdapter
-         * @param propsAdapter
-         */
         public HeaderFactory(
                 Adapter<Data,SourceRef> sourceRefAdapter, 
                 Source<Time> timestampSource, 
@@ -129,11 +79,6 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
             myPropertiesAdapter = propsAdapter;
         }
 
-        /**
-         *
-         * @param a
-         * @return
-         */
         @Override
         public Header<SourceRef, Time> adapt(Data a) {
             SourceRef ref = mySourceRefAdapter.adapt(a);
@@ -144,11 +89,6 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         }
     }
     
-    /**
-     *
-     * @param <SourceRef>
-     * @param <Time>
-     */
     public static class HeaderSource<SourceRef,Time> implements 
             Source<Header<SourceRef,Time>> {
         private SourceRef mySourceRef;
@@ -156,13 +96,6 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
         private String myEventType;
         private Map<String,String> myProperties;
         
-        /**
-         *
-         * @param sourceRef
-         * @param timestampSource
-         * @param eventType
-         * @param props
-         */
         public HeaderSource(
                 SourceRef sourceRef, Source<Time> timestampSource, 
                 String eventType, Map<String,String> props){
@@ -174,10 +107,6 @@ public class BasicHeader<SourceRef, Time> implements Header<SourceRef, Time> {
             myProperties = props;
         }
         
-        /**
-         *
-         * @return
-         */
         @Override
         public Header<SourceRef, Time> getValue() {
             return new BasicHeader<SourceRef, Time>(
