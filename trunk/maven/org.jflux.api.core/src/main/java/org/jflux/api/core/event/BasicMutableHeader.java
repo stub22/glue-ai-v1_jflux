@@ -20,6 +20,8 @@ import org.jflux.api.core.Source;
 
 /**
  *
+ * @param <SourceRef> 
+ * @param <Time> 
  * @author Matthew Stevenson
  */
 
@@ -27,30 +29,58 @@ import org.jflux.api.core.Source;
 public class BasicMutableHeader<SourceRef,Time> extends 
         BasicHeader<SourceRef, Time> implements MutableHeader<SourceRef, Time> {
 
+    /**
+     *
+     * @param sourceRef
+     * @param timestamp
+     * @param eventType
+     * @param props
+     */
     public BasicMutableHeader(SourceRef sourceRef, Time timestamp, 
             String eventType, Map<String,String> props){
         super(sourceRef, timestamp, eventType, props);
     }
+    /**
+     *
+     * @param sourceRef
+     */
     @Override
     public void setSourceReference(SourceRef sourceRef) {
         mySourceRef = sourceRef;
     }
 
+    /**
+     *
+     * @param timestamp
+     */
     @Override
     public void setTimestamp(Time timestamp) {
         myTimestamp = timestamp;
     }
 
+    /**
+     *
+     * @param eventType
+     */
     @Override
     public void setEventType(String eventType) {
         myEventType = eventType;
     }
 
+    /**
+     *
+     * @param headerProperties
+     */
     @Override
     public void setHeaderProperties(Map<String, String> headerProperties) {
         myProperties = headerProperties;
     }
     
+    /**
+     *
+     * @param <SourceRef>
+     * @param <Time>
+     */
     public static class MutableHeaderSource<SourceRef,Time> implements 
             Source<MutableHeader<SourceRef,Time>> {
         private SourceRef mySourceRef;
@@ -58,6 +88,13 @@ public class BasicMutableHeader<SourceRef,Time> extends
         private String myEventType;
         private Map<String,String> myProperties;
         
+        /**
+         *
+         * @param sourceRef
+         * @param timestampSource
+         * @param eventType
+         * @param props
+         */
         public MutableHeaderSource(
                 SourceRef sourceRef, Source<Time> timestampSource, 
                 String eventType, Map<String,String> props){
@@ -70,6 +107,10 @@ public class BasicMutableHeader<SourceRef,Time> extends
             myProperties = props;
         }
         
+        /**
+         *
+         * @return
+         */
         @Override
         public MutableHeader<SourceRef, Time> getValue() {
             return new BasicMutableHeader<SourceRef, Time>(

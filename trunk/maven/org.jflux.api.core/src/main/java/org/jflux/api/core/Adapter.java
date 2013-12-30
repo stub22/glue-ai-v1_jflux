@@ -16,9 +16,17 @@
 package org.jflux.api.core;
 
 /**
- *
+ * An interface for taking one object and returning another.
+ * Objects do not have to be of the same type.
+ * @param <A> Input type
+ * @param <B> Output type
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Adapter<A,B> {
+    /**
+     * Take one object and return another.
+     * @param a input object
+     * @return output object
+     */
     public B adapt(A a);
 }

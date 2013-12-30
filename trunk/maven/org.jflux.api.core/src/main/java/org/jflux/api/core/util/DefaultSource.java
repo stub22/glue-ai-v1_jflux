@@ -19,20 +19,33 @@ import org.jflux.api.core.Source;
 
 /**
  *
+ * @param <T> 
  * @author Matthew Stevenson
  */
 public class DefaultSource<T> implements Source<T> {
     private T myT;
 
+    /**
+     *
+     * @param t
+     */
     public DefaultSource(T t){
         myT = t;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public T getValue() {
         return myT;
     }
     
+    /**
+     *
+     * @param t
+     */
     public void setValue(T t){
         myT = t;
     }

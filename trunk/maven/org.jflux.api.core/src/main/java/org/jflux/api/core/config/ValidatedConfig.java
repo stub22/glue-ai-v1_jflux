@@ -20,6 +20,8 @@ import org.jflux.api.core.Adapter;
 
 /**
  *
+ * @param <K> 
+ * @param <C> 
  * @author Matthew Stevenson
  */
 public class ValidatedConfig<K,C extends ConfigValidator> extends 
@@ -35,15 +37,29 @@ public class ValidatedConfig<K,C extends ConfigValidator> extends
         myValidator = validator;
     }
     
+    /**
+     *
+     * @return
+     */
     public C getValidator(){
         return myValidator;
     }
     
+    /**
+     *
+     * @param <K>
+     * @param <E>
+     * @param <C>
+     */
     public final static class Validator<K,E,C extends ConfigValidator<K,E>> implements
             Adapter<Configuration<K>,ValidatedConfig<K,C>> {
         private C myValidator;
         private List<E> myErrors;
         
+        /**
+         *
+         * @param configValidator
+         */
         public Validator(C configValidator){
             if(configValidator == null){
                 throw new NullPointerException();
@@ -51,6 +67,11 @@ public class ValidatedConfig<K,C extends ConfigValidator> extends
             myValidator = configValidator;
         }
         
+        /**
+         *
+         * @param a
+         * @return
+         */
         @Override
         public ValidatedConfig<K,C> adapt(Configuration<K> a) {
             List<E> errors = myValidator.adapt(a);
@@ -61,6 +82,10 @@ public class ValidatedConfig<K,C extends ConfigValidator> extends
             return new ValidatedConfig<K,C>(a, myValidator);
         }
         
+        /**
+         *
+         * @return
+         */
         public List<E> getErrors(){
             return myErrors;
         }

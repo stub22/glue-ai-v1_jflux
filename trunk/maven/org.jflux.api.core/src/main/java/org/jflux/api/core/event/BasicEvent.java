@@ -21,30 +21,54 @@ import org.jflux.api.core.util.SourceAdapter;
 
 /**
  *
+ * @param <H> 
+ * @param <D> 
  * @author Matthew Stevenson
  */
 public class BasicEvent<H,D> implements Event<H,D> {
     private H myHeader;
     private D myData;
     
+    /**
+     *
+     * @param header
+     * @param data
+     */
     public BasicEvent(H header, D data){
         myHeader = header;
         myData = data;
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public H getHeader() {
         return myHeader;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public D getData() {
         return myData;
     }
     
+    /**
+     *
+     * @param <H>
+     * @param <D>
+     */
     public static class BasicEventFactory<H,D> implements Adapter<D,Event<H,D>> {
         private Adapter<D,H> myHeaderFactory;
         
+        /**
+         *
+         * @param headerFactory
+         */
         public BasicEventFactory(Adapter<D,H> headerFactory){
             if(headerFactory == null){
                 throw new NullPointerException();
@@ -52,14 +76,26 @@ public class BasicEvent<H,D> implements Event<H,D> {
             myHeaderFactory = headerFactory;
         }
         
+        /**
+         *
+         * @param headerSource
+         */
         public BasicEventFactory(Source<H> headerSource){
             this(new SourceAdapter<D, H>(headerSource));
         }
         
+        /**
+         *
+         * @param headerFeactory
+         */
         public void setHeaderFactory(Adapter<D,H> headerFeactory){
             myHeaderFactory = headerFeactory;
         }
         
+        /**
+         *
+         * @param headerSource
+         */
         public void setHeaderSource(Source<H> headerSource){
             if(headerSource == null){
                 myHeaderFactory = null;
@@ -68,6 +104,11 @@ public class BasicEvent<H,D> implements Event<H,D> {
             }
         }
         
+        /**
+         *
+         * @param a
+         * @return
+         */
         @Override
         public Event<H, D> adapt(D a) {
             if(myHeaderFactory == null){

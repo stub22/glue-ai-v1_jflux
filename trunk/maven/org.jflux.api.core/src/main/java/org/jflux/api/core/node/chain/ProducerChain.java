@@ -22,15 +22,26 @@ import org.jflux.api.core.Notifier;
 
 /**
  *
+ * @param <T> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class ProducerChain<T> extends NodeChain implements ProducerNode<T> {
     
+    /**
+     *
+     * @param <P>
+     * @param producer
+     * @param chain
+     */
     public <P> ProducerChain(
             ProducerNode<P> producer, List<ProcessorNode<?,?>> chain){
         super(producer, chain);
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public Notifier<T> getNotifier() {
         List<ProcessorNode> nodes = getProcessorChain();
@@ -42,11 +53,19 @@ public class ProducerChain<T> extends NodeChain implements ProducerNode<T> {
         return null;
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public ProducerNode getProducer(){
         return super.getProducer();
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public List<ProcessorNode> getProcessorChain(){
         return super.getProcessorChain();

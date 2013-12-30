@@ -19,16 +19,36 @@ import org.jflux.api.core.Adapter;
 
 /**
  *
+ * @param <I> 
+ * @param <V> 
  * @author Matthew Stevenson
  */
 public interface IndexedValue<I,V> {
+    /**
+     *
+     * @return
+     */
     public I getIndex();
+    /**
+     *
+     * @return
+     */
     public V getValue();
     
+    /**
+     *
+     * @param <I>
+     * @param <V>
+     */
     public static class BasicIndexedValue<I,V> implements IndexedValue<I, V> {
         private I myIndex;
         private V myValue;
         
+        /**
+         *
+         * @param index
+         * @param value
+         */
         public BasicIndexedValue(I index, V value){
             if(index == null){
                 throw new NullPointerException();
@@ -37,11 +57,19 @@ public interface IndexedValue<I,V> {
             myValue = value;
         }
         
+        /**
+         *
+         * @return
+         */
         @Override
         public I getIndex() {
             return myIndex;
         }
 
+        /**
+         *
+         * @return
+         */
         @Override
         public V getValue() {
             return myValue;
@@ -49,14 +77,32 @@ public interface IndexedValue<I,V> {
         
     }
     
+    /**
+     *
+     * @param <I>
+     */
     public static class IndexAdapter<I> implements Adapter<IndexedValue<I,?>,I>{
+        /**
+         *
+         * @param a
+         * @return
+         */
         @Override
         public I adapt(IndexedValue<I, ?> a) {
             return a.getIndex();
         }
     }
     
+    /**
+     *
+     * @param <V>
+     */
     public static class ValueAdapter<V> implements Adapter<IndexedValue<?,V>,V>{
+        /**
+         *
+         * @param a
+         * @return
+         */
         @Override
         public V adapt(IndexedValue<?, V> a) {
             return a.getValue();

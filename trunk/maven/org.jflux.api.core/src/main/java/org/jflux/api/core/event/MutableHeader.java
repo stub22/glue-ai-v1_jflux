@@ -21,12 +21,30 @@ import org.jflux.api.core.Source;
 
 /**
  *
+ * @param <S> 
+ * @param <T> 
  * @author Matthew Stevenson
  */
 public interface MutableHeader<S, T> extends Header<S, T> {
+    /**
+     *
+     * @param sourceRef
+     */
     public void setSourceReference(S sourceRef);
+    /**
+     *
+     * @param timestamp
+     */
     public void setTimestamp(T timestamp);
+    /**
+     *
+     * @param eventType
+     */
     public void setEventType(String eventType);
+    /**
+     *
+     * @param headerProperties
+     */
     public void setHeaderProperties(Map<String,String> headerProperties);
     
     /**
@@ -54,6 +72,11 @@ public interface MutableHeader<S, T> extends Header<S, T> {
             myHeaderFactory = headerFactory;
         }
         
+        /**
+         *
+         * @param a
+         * @return
+         */
         @Override
         public H adapt(Header<S, T> a) {
             if(myOutputClass != null && 

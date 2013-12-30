@@ -19,8 +19,13 @@ import org.jflux.api.core.Listener;
 
 /**
  *
+ * @param <E> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface ConsumerNode<E> extends Node{
+    /**
+     *
+     * @return
+     */
     public Listener<E> getListener();
 }

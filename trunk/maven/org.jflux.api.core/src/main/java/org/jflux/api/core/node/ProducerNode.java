@@ -19,8 +19,13 @@ import org.jflux.api.core.Notifier;
 
 /**
  *
+ * @param <E> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface ProducerNode<E> extends Node{
+    /**
+     *
+     * @return
+     */
     public Notifier<E> getNotifier();
 }

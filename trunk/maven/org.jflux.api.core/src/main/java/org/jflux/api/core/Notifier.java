@@ -16,12 +16,25 @@
 package org.jflux.api.core;
 
 /**
- *
+ * An interface for managing and coördinating a group of Listeners
+ * @param <E> listener input type
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Notifier<E> {
+    /**
+     * Add a listener to the managed group.
+     * @param listener
+     */
     public void addListener(Listener<E> listener);
+    /**
+     * Remove a listener from the managed group.
+     * @param listener
+     */
     public void removeListener(Listener<E> listener);
     
+    /**
+     * Sends an object as input to all listeners in the group.
+     * @param e input object
+     */
     public void notifyListeners(E e);
 }

@@ -22,6 +22,7 @@ import org.jflux.api.core.Adapter;
 
 /**
  *
+ * @param <T> 
  * @author Matthew Stevenson
  */
 
@@ -29,10 +30,17 @@ import org.jflux.api.core.Adapter;
 public class ListAdapter<T> implements Adapter<T, List<T>> {
     private int myCapacity;
     
+    /**
+     *
+     */
     public ListAdapter(){
         myCapacity = 10; //ArrayList default capacity
     }
     
+    /**
+     *
+     * @param capacity
+     */
     public ListAdapter(int capacity){
         if(capacity < 1){
             throw new IllegalArgumentException("Capacity must be greater than zero.");
@@ -40,6 +48,11 @@ public class ListAdapter<T> implements Adapter<T, List<T>> {
         myCapacity = capacity;
     }
     
+    /**
+     *
+     * @param a
+     * @return
+     */
     @Override
     public List<T> adapt(T a) {
         List<T> l = new ArrayList<T>(myCapacity);

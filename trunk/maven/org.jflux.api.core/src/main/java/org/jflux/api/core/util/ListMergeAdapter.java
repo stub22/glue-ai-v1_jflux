@@ -21,9 +21,15 @@ import org.jflux.api.core.Adapter;
 
 /**
  *
+ * @param <T> 
  * @author Matthew Stevenson
  */
 public class ListMergeAdapter<T> implements Adapter<List<List<T>>,List<T>> {
+    /**
+     *
+     * @param a
+     * @return
+     */
     @Override
     public List<T> adapt(List<List<T>> a) {
         int n = 0;
