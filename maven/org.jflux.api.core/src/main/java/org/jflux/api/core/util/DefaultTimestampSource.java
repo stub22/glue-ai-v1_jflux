@@ -22,6 +22,10 @@ import org.jflux.api.core.Source;
  * @author Matthew Stevenson
  */
 public class DefaultTimestampSource implements Source<Long> {
+    /**
+     *
+     * @return
+     */
     @Override
     public Long getValue() {
         return System.currentTimeMillis();

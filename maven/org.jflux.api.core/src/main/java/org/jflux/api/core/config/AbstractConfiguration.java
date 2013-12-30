@@ -22,10 +22,17 @@ import org.jflux.api.core.event.ValueChange;
 
 /**
  *
+ * @param <K> 
  * @author Matthew Stevenson
  */
 public abstract class AbstractConfiguration<K> implements Configuration<K> {
 
+    /**
+     *
+     * @param <T>
+     * @param key
+     * @return
+     */
     protected abstract <T> ConfigProperty<T> getConfigProperty(K key);
 
     @Override
@@ -38,6 +45,13 @@ public abstract class AbstractConfiguration<K> implements Configuration<K> {
         return getConfigProperty(clazz, key) != null;
     }
     
+    /**
+     *
+     * @param <T>
+     * @param propertyClass
+     * @param key
+     * @return
+     */
     protected <T> ConfigProperty<T> getConfigProperty(Class<T> propertyClass, K key){
         if(propertyClass == null || key == null){
             throw new NullPointerException();

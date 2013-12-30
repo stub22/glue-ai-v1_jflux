@@ -16,8 +16,14 @@
 package org.jflux.api.core;
 
 /**
+ * An interface for receiving input.
+ * @param <T> Input type
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Listener<T> {
+    /**
+     * Receive input.
+     * @param input input object
+     */
     public void handleEvent(T input);
 }

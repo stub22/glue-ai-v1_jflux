@@ -18,7 +18,7 @@ package org.jflux.api.service;
 import org.jflux.api.service.binding.DependencyTracker;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -279,7 +279,7 @@ public class ServiceManager<T> implements Manager {
     }
     
     public Map<ServiceBinding,DependencyTracker> getDependencies(){
-        return myTrackerMap;
+        return Collections.unmodifiableMap(myTrackerMap);
     }
     
     public RegistrationStrategy<T> getRegistrationStrategy(){

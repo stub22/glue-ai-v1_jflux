@@ -24,6 +24,7 @@ import org.jflux.api.core.util.DefaultNotifier;
 
 /**
  *
+ * @param <V> 
  * @author Matthew Stevenson
  */
 public class DefaultConfigProperty<V> implements ConfigProperty<V> {
@@ -33,6 +34,11 @@ public class DefaultConfigProperty<V> implements ConfigProperty<V> {
     private Notifier<ValueChange<V>> myNotifier;
     private Class<V> myValueClass;
 
+    /**
+     *
+     * @param valueClass
+     * @param value
+     */
     public DefaultConfigProperty(Class<V> valueClass, V value) {
         myValue = value;
         myValueClass = valueClass;

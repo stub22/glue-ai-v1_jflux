@@ -22,6 +22,8 @@ import org.jflux.api.core.Notifier;
 
 /**
  *
+ * @param <In> 
+ * @param <Out> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class ProcessorChain<In,Out> extends 
@@ -40,16 +42,28 @@ public class ProcessorChain<In,Out> extends
         myNodes = nodes;
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public Listener<In> getListener() {
         return myHeadNode.getListener();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Notifier<Out> getNotifier() {
         return myTailNode.getNotifier();
     }
     
+    /**
+     *
+     * @return
+     */
     public List<ProcessorNode> getProcessorNodes(){
         return myNodes;
     }

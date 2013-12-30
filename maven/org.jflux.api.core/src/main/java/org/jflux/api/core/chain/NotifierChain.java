@@ -23,12 +23,26 @@ import org.jflux.api.core.util.DefaultNotifier;
 
 /**
  *
+ * @param <A> 
+ * @param <B> 
  * @author Matthew Stevenson
  */
 public class NotifierChain<A,B> extends DefaultNotifier<B> {
+    /**
+     *
+     */
     protected Notifier<A> myInnerNotifier;
+    /**
+     *
+     */
     protected ListenerChain<A,B> myListenerChain;
         
+    /**
+     *
+     * @param <C>
+     * @param inputNotifier
+     * @param adapter
+     */
     public <C> NotifierChain(Notifier<C> inputNotifier, Adapter<C,B> adapter) {
         if(inputNotifier == null || adapter == null){
             throw new NullPointerException();
@@ -48,10 +62,18 @@ public class NotifierChain<A,B> extends DefaultNotifier<B> {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public Notifier<A> getInnerNotifier(){
         return myInnerNotifier;
     }
     
+    /**
+     *
+     * @return
+     */
     public Adapter<A,B> getInnerAdapter(){
         return myListenerChain.getInnerAdapter();
     }
@@ -63,32 +85,67 @@ public class NotifierChain<A,B> extends DefaultNotifier<B> {
         }
     }
 
+    /**
+     *
+     * @param <T>
+     * @param notifier
+     * @return
+     */
     public static <T> NotifierChainBuilder<T,T> builder(Notifier<T> notifier){
         return new NotifierChainBuilder<T,T>().setNotifier(notifier);
     }
 
+    /**
+     *
+     * @param <T>
+     * @return
+     */
     public static <T> NotifierChainBuilder<T,T> builder(){
         return new NotifierChainBuilder<T,T>();
     }
     
+    /**
+     *
+     * @param <X>
+     * @param <Y>
+     */
     public static class NotifierChainBuilder<X,Y> {
         private Notifier<X> myNotifier;
         private AdapterChainBuilder<X,Y> myAdapters;
         
+        /**
+         *
+         */
         public NotifierChainBuilder(){
             myAdapters = new AdapterChainBuilder<X, Y>();
         }
         
+        /**
+         *
+         * @param notifier
+         * @return
+         */
         public NotifierChainBuilder<X,Y> setNotifier(Notifier<X> notifier){
             myNotifier = notifier;
             return this;
         }
 
+        /**
+         *
+         * @param <T>
+         * @param adapter
+         * @return
+         */
         public <T> NotifierChainBuilder<X,T> attach(Adapter<Y,T> adapter){
             myAdapters.attach(adapter);
             return (NotifierChainBuilder<X,T>)this;
         }
 
+        /**
+         *
+         * @param <T>
+         * @return
+         */
         public <T> NotifierChain<T,Y> done(){
             return new NotifierChain<T,Y>(myNotifier, myAdapters.done());
         }

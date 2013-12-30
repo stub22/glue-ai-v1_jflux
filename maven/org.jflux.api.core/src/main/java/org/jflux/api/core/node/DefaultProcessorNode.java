@@ -25,6 +25,8 @@ import org.jflux.api.core.Notifier;
 
 /**
  *
+ * @param <In> 
+ * @param <Out> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class DefaultProcessorNode<In, Out> extends 
@@ -33,6 +35,10 @@ public class DefaultProcessorNode<In, Out> extends
     private Listener<In> myInputListener;
     private Notifier<Out> myOutputNotifier;
 
+    /**
+     *
+     * @param proc
+     */
     public DefaultProcessorNode(Adapter<In,Out> proc){
         if(proc == null){
             throw new NullPointerException();
@@ -44,11 +50,19 @@ public class DefaultProcessorNode<In, Out> extends
         myProcessor = proc;
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public Listener<In> getListener() {
         return myInputListener;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Notifier<Out> getNotifier() {
         return myOutputNotifier;

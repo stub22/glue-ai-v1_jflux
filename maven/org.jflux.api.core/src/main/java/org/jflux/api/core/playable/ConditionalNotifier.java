@@ -22,6 +22,7 @@ import org.jflux.api.core.Notifier;
 
 /**
  *
+ * @param <E> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class ConditionalNotifier<E> implements Notifier<E> {
@@ -29,6 +30,11 @@ public class ConditionalNotifier<E> implements Notifier<E> {
     private Playable myPlayable;
     private Notifier<E> myNotifier;
     
+    /**
+     *
+     * @param p
+     * @param n
+     */
     public ConditionalNotifier(Playable p, Notifier<E> n){
         if(p == null || n == null){
             throw new NullPointerException();
@@ -37,6 +43,10 @@ public class ConditionalNotifier<E> implements Notifier<E> {
         myNotifier = n;
     }
 
+    /**
+     *
+     * @param e
+     */
     @Override
     public void notifyListeners(E e) {
         if(myPlayable.getPlayState() == Playable.PlayState.RUNNING){
@@ -49,11 +59,19 @@ public class ConditionalNotifier<E> implements Notifier<E> {
         }
     }
 
+    /**
+     *
+     * @param listener
+     */
     @Override
     public void addListener(Listener<E> listener) {
         myNotifier.addListener(listener);
     }
 
+    /**
+     *
+     * @param listener
+     */
     @Override
     public void removeListener(Listener<E> listener) {
         myNotifier.removeListener(listener);

@@ -20,11 +20,17 @@ import org.jflux.api.core.Source;
 
 /**
  *
+ * @param <A> 
+ * @param <B> 
  * @author Matthew Stevenson
  */
 public class SourceAdapter<A, B> implements Adapter<A, B> {
     private Source<B> mySource;
 
+    /**
+     *
+     * @param source
+     */
     public SourceAdapter(Source<B> source){
         if(source == null){
             throw new NullPointerException();
@@ -32,6 +38,11 @@ public class SourceAdapter<A, B> implements Adapter<A, B> {
         mySource = source;
     }
     
+    /**
+     *
+     * @param a
+     * @return
+     */
     @Override
     public B adapt(A a) {
         return mySource.getValue();

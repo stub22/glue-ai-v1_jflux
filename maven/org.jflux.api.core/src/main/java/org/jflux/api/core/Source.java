@@ -16,9 +16,14 @@
 package org.jflux.api.core;
 
 /**
- *
+ * An interface for providing output.
+ * @param <E> output type
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Source<E> {
+    /**
+     * Provides output.
+     * @return output object
+     */
     public E getValue();
 }

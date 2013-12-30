@@ -21,6 +21,7 @@ import org.jflux.api.core.Listener;
 
 /**
  *
+ * @param <E> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class ConditionalListener<E> implements Listener<E> {
@@ -28,6 +29,11 @@ public class ConditionalListener<E> implements Listener<E> {
     private Playable myPlayable;
     private Listener<E> myListener;
     
+    /**
+     *
+     * @param p
+     * @param l
+     */
     public ConditionalListener(Playable p, Listener<E> l){
         if(p == null || l == null){
             throw new NullPointerException();
@@ -36,6 +42,10 @@ public class ConditionalListener<E> implements Listener<E> {
         myListener = l;
     }
 
+    /**
+     *
+     * @param event
+     */
     @Override
     public void handleEvent(E event) {
         if(myPlayable.getPlayState() == Playable.PlayState.RUNNING){

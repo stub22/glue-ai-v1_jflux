@@ -32,7 +32,10 @@
 		<module>../org.jflux.impl.transport.qpid</module>
 		<module>../org.jflux.impl.registry.osgi</module>
         <module>../org.jflux.api.services</module>
+        <module>../org.jflux.api.messaging.rk</module>
+        <module>../org.jflux.impl.messaging.rk</module>
         <module>../org.jflux.impl.services.rk</module>
+        <module>../org.jflux.swing.messaging</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>

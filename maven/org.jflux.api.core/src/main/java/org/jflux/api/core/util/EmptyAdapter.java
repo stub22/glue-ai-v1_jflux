@@ -19,17 +19,34 @@ import org.jflux.api.core.Adapter;
 
 /**
  *
+ * @param <B> 
+ * @param <A> 
  * @author Matthew Stevenson
  */
 public class EmptyAdapter<B, A extends B> implements Adapter<A, B> {
 
+    /**
+     *
+     * @param a
+     * @return
+     */
     @Override
     public B adapt(A a) {
         return a;
     }
     
+    /**
+     *
+     * @param <A>
+     * @param <B>
+     */
     public static class UnsafeCastingAdapter<A, B> implements Adapter<A, B> {
 
+        /**
+         *
+         * @param a
+         * @return
+         */
         @Override
         public B adapt(A a) {
             return (B)a;

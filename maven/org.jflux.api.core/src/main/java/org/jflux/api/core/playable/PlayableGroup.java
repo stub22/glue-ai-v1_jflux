@@ -22,17 +22,33 @@ package org.jflux.api.core.playable;
 public abstract class PlayableGroup implements Playable{
     private PlayState myPlayState;
     
+    /**
+     *
+     * @return
+     */
     protected abstract Iterable<Playable> getPlayables();
 
+    /**
+     *
+     * @return
+     */
     @Override
     public PlayState getPlayState() {
         return myPlayState;
     }
     
+    /**
+     *
+     * @param state
+     */
     protected void setPlayState(PlayState state){
         myPlayState = state;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean start() {
         boolean ret = true;
@@ -44,6 +60,10 @@ public abstract class PlayableGroup implements Playable{
         return setState(ret, PlayState.RUNNING);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean pause() {
         boolean ret = true;
@@ -55,6 +75,10 @@ public abstract class PlayableGroup implements Playable{
         return setState(ret, PlayState.PAUSED);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean resume() {
         boolean ret = true;
@@ -66,6 +90,10 @@ public abstract class PlayableGroup implements Playable{
         return setState(ret, PlayState.RUNNING);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean stop() {
         boolean ret = true;

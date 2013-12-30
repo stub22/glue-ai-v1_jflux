@@ -22,15 +22,26 @@ import org.jflux.api.core.Listener;
 
 /**
  *
+ * @param <T> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class ConsumerChain<T> extends NodeChain implements ConsumerNode<T> {
     
+    /**
+     *
+     * @param <P>
+     * @param chain
+     * @param consumer
+     */
     public <P> ConsumerChain(
             List<ProcessorNode<?,?>> chain, ConsumerNode<P> consumer){
         super(chain, consumer);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Listener<T> getListener() {
         List<ProcessorNode> nodes = getProcessorChain();
@@ -42,11 +53,19 @@ public class ConsumerChain<T> extends NodeChain implements ConsumerNode<T> {
         return null;
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public ConsumerNode getConsumer(){
         return super.getConsumer();
     }
     
+    /**
+     *
+     * @return
+     */
     @Override
     public List<ProcessorNode> getProcessorChain(){
         return super.getProcessorChain();

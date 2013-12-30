@@ -21,15 +21,24 @@ import java.util.Map;
 
 /**
  *
+ * @param <K> 
+ * @param <V> 
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class MapAdapter<K,V> implements Adapter<K,V>{
     private Map<K,V> myMap;
     
+    /**
+     *
+     */
     public MapAdapter(){
         myMap = new HashMap<K, V>();
     }
     
+    /**
+     *
+     * @param map
+     */
     public MapAdapter(Map<K,V> map){
         if(map == null){
             throw new NullPointerException();
@@ -37,19 +46,39 @@ public class MapAdapter<K,V> implements Adapter<K,V>{
         myMap = map;
     }
     
+    /**
+     *
+     * @param a
+     * @return
+     */
     @Override
     public V adapt(K a) {
         return myMap.get(a);
     }
     
+    /**
+     *
+     * @return
+     */
     public Map<K,V> getMap(){
         return myMap;
     }
     
+    /**
+     *
+     * @param <K>
+     * @param <V>
+     * @param <T>
+     */
     public static class MapValueAdapter<K,V,T> implements Adapter<Map<K,V>,T> {
         private K myKey;
         private Adapter<V,T> myAdapter;
         
+        /**
+         *
+         * @param key
+         * @param adapter
+         */
         public MapValueAdapter(K key, Adapter<V,T> adapter){
             if(key == null || adapter == null){
                 throw new NullPointerException();
@@ -58,6 +87,11 @@ public class MapAdapter<K,V> implements Adapter<K,V>{
             myAdapter = adapter;
         }
         
+        /**
+         *
+         * @param a
+         * @return
+         */
         @Override
         public T adapt(Map<K, V> a) {
             if(a == null){

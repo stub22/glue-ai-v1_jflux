@@ -23,10 +23,15 @@ import org.jflux.api.core.util.DefaultNotifier;
 
 /**
  *
+ * @param <T> 
  * @author Matthew Stevenson
  */
 public interface PlayableNotifier<T> extends Notifier<T>, Playable{
         
+    /**
+     *
+     * @param <T>
+     */
     public static class DefaultPlayableNotifier<T> extends
             BasicPlayable implements PlayableNotifier<T> {
         private final static Logger theLogger = 
@@ -34,6 +39,10 @@ public interface PlayableNotifier<T> extends Notifier<T>, Playable{
         
         private Notifier<T> myNotifier;
         
+        /**
+         *
+         * @param notifier
+         */
         public DefaultPlayableNotifier(Notifier<T> notifier){
             if(notifier == null){
                 throw new NullPointerException();
@@ -41,24 +50,43 @@ public interface PlayableNotifier<T> extends Notifier<T>, Playable{
             myNotifier = notifier;
         }
         
+        /**
+         *
+         */
         public DefaultPlayableNotifier(){
             myNotifier = new DefaultNotifier<T>();
         }
         
+        /**
+         *
+         * @return
+         */
         public Notifier<T> getNotifier(){
             return myNotifier;
         }
         
+        /**
+         *
+         * @param listener
+         */
         @Override
         public void addListener(Listener<T> listener) {
             myNotifier.addListener(listener);
         }
 
+        /**
+         *
+         * @param listener
+         */
         @Override
         public void removeListener(Listener<T> listener) {
             myNotifier.removeListener(listener);
         }
 
+        /**
+         *
+         * @param e
+         */
         @Override
         public void notifyListeners(T e) {
             if(getPlayState() == Playable.PlayState.RUNNING){

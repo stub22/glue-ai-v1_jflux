@@ -45,6 +45,7 @@ public interface Configuration<K> {
     /**
      * Returns true if the Configuration contains a property for the given key 
      * and class.  The property value may still be null.
+     * @param clazz 
      * @param key property key
      * @return true if the Configuration contains a property for the given key 
      * and class
@@ -56,6 +57,7 @@ public interface Configuration<K> {
      * A null return value can mean either the key is not present or the value 
      * of the property is null.  Use getPropertySource(key).getValue() to 
      * distinguish.
+     * @param <T> 
      * @param key property key
      * @return untyped property value, returns null if the property is not 
      * available
@@ -75,6 +77,7 @@ public interface Configuration<K> {
     
     /**
      * Returns an untyped Source for retrieving a property value.
+     * @param <T> 
      * @param key property key
      * @return untyped Source for retrieving a property value, returns null if 
      * the property is not available
@@ -92,6 +95,7 @@ public interface Configuration<K> {
     
     /**
      * Returns a Notifier to notify listeners of changes to the property.
+     * @param <T> 
      * @param key property key
      * @return Notifier to notify listeners of changes to the property, returns 
      * null if the property is not available
@@ -110,6 +114,7 @@ public interface Configuration<K> {
     
     /**
      * Returns a Listener which sets the property value.
+     * @param <T> 
      * @param key property key
      * @return Listener which sets the property value, returns null if the
      * property is not available
@@ -127,6 +132,7 @@ public interface Configuration<K> {
     
     /**
      * Returns the class of the property.
+     * @param <T> 
      * @param key property key
      * @return class of the property, returns null if the property is not 
      * available
