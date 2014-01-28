@@ -1,4 +1,4 @@
-/*
+        /*
  * Copyright 2012 Hanson Robokind LLC.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -86,23 +86,6 @@ public class RKManagedGroupConfigUtils {
     public static <T> Configuration<String> makeSelfBuildingLifecycle(
             ServiceLifecycleProvider<T> lifecycle){
         return SelfBuildingConfig.buildEmptySelfBuildingConfig(lifecycle);
-    }
-    
-    public static <T> Configuration<String> makeSimpleSelfBuildingLifecycle(
-            String[] classNames, T service, 
-            String idKey, String idStr, Properties props) {
-        if(props == null){
-            props = new Properties();
-        }
-        props.put(idKey, idStr);
-        return SelfBuildingConfig.buildEmptySelfBuildingConfig(
-                new SimpleLifecycle<T>(service, classNames, props));
-    }
-    
-    public static <T> Configuration<String> makeSimpleSelfBuildingLifecycle(
-            String[] classNames, T service, Properties props) {
-        return SelfBuildingConfig.buildEmptySelfBuildingConfig(
-                new SimpleLifecycle<T>(service, classNames, props));
     }
     
     public static ManagedServiceGroup buildGroup(
