@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.impl.messaging.services;
+package org.jflux.impl.messaging.rk.services;
 
 import org.jflux.api.common.rk.utils.TimeUtils;
 import org.jflux.api.messaging.rk.services.ServiceCommand;
