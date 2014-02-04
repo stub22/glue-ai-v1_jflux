@@ -23,7 +23,7 @@ import org.jflux.impl.messaging.rk.JMSAvroServiceFacade;
 import org.jflux.impl.messaging.rk.ServiceCommandRecord;
 import org.jflux.impl.messaging.rk.ServiceErrorRecord;
 import org.jflux.impl.messaging.rk.config.RKMessagingConfigUtils;
-import org.jflux.impl.messaging.services.PortableServiceCommand;
+import org.jflux.impl.messaging.rk.services.PortableServiceCommand;
 import org.jflux.impl.services.rk.lifecycle.utils.SimpleLifecycle;
 import org.jflux.impl.services.rk.osgi.lifecycle.OSGiComponent;
 import org.jflux.impl.services.rk.osgi.lifecycle.OSGiComponentFactory;
