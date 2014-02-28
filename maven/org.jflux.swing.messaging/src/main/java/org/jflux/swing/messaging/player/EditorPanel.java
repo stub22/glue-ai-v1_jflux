@@ -166,6 +166,8 @@ public class EditorPanel extends javax.swing.JPanel {
             return Double.parseDouble(val);
         } else if(String.class.isAssignableFrom(cls)) {
             return val;
+        } else if(Boolean.class.isAssignableFrom(cls)) {
+            return Boolean.parseBoolean(val);
         } else {
             throw new IllegalArgumentException(val);
         }
