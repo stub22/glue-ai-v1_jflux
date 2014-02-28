@@ -33,6 +33,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.IndexedRecord;
 import org.jflux.api.core.Listener;
@@ -253,7 +254,13 @@ public class AvroTablePanel extends javax.swing.JPanel implements Listener<Index
     @Override
     public void handleEvent(IndexedRecord t) {
         myRecords.add(t);
-        filterCache();
+        filterCache();SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                jScrollPane1.getVerticalScrollBar().setValue(
+                        jScrollPane1.getVerticalScrollBar().getMaximum());
+            }
+        });
     }
     
     public List<IndexedRecord> getFilteredRecords() {

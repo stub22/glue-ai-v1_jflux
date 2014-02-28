@@ -99,6 +99,7 @@ public class PlayerPanel extends javax.swing.JPanel {
     }
     
     private void loadMessages() {
+        lblStatus.setText("");
         JFileChooser fc = new JFileChooser();
         int retVal = fc.showOpenDialog(this);
         List<IndexedRecord> records = new ArrayList<IndexedRecord>();
@@ -131,14 +132,13 @@ public class PlayerPanel extends javax.swing.JPanel {
                 myEditorList.addRecord(record);
             }
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Records loaded.",
-                    "Success", JOptionPane.INFORMATION_MESSAGE);
+            
+            lblStatus.setText("Records Loaded.");
         }
     }
     
     private void playMessages() {
+        lblStatus.setText("");
         List<IndexedRecord> records = myEditorList.getRecords();
         
         JMSBytesMessageSender msgSender = new JMSBytesMessageSender();
@@ -202,9 +202,7 @@ public class PlayerPanel extends javax.swing.JPanel {
             
             msgSender.closeProducer();
             
-            JOptionPane.showMessageDialog(
-                    this, "Playback complete.", "Success",
-                    JOptionPane.INFORMATION_MESSAGE);
+            lblStatus.setText("Playback complete.");
 
             return;
         }
@@ -232,9 +230,7 @@ public class PlayerPanel extends javax.swing.JPanel {
 
         msgSender.closeProducer();
 
-        JOptionPane.showMessageDialog(
-                this, "Playback complete.", "Success",
-                JOptionPane.INFORMATION_MESSAGE);
+        lblStatus.setText("Playback complete.");
     }
 
     /**
@@ -249,6 +245,7 @@ public class PlayerPanel extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        lblStatus = new javax.swing.JLabel();
 
         jButton1.setText("Load");
         jButton1.setEnabled(false);
@@ -284,16 +281,20 @@ public class PlayerPanel extends javax.swing.JPanel {
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
                 .addComponent(jButton2))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(lblStatus)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblStatus))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -320,5 +321,6 @@ public class PlayerPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JLabel lblStatus;
     // End of variables declaration//GEN-END:variables
 }
