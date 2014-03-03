@@ -254,7 +254,8 @@ public class AvroTablePanel extends javax.swing.JPanel implements Listener<Index
     @Override
     public void handleEvent(IndexedRecord t) {
         myRecords.add(t);
-        filterCache();SwingUtilities.invokeLater(new Runnable() {
+        filterCache();
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 jScrollPane1.getVerticalScrollBar().setValue(

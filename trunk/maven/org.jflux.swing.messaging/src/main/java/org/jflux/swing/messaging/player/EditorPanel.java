@@ -15,12 +15,15 @@
  */
 package org.jflux.swing.messaging.player;
 
+import java.util.Arrays;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -107,7 +110,7 @@ public class EditorPanel extends javax.swing.JPanel {
     }
     
     private void addEditor(final Field field, final int i) {
-        final JTextField editor = new JTextField(myRecord.get(i).toString());
+        final JTextField editor = new JTextField(getStringVal(i));
         
         editor.setDropTarget(null);
         
@@ -136,6 +139,20 @@ public class EditorPanel extends javax.swing.JPanel {
         add(editor, myConstraints);
     }
     
+    private String getStringVal(int i){
+        Object obj = myRecord.get(i);
+        if(ByteBuffer.class.isAssignableFrom(obj.getClass())){
+            return buildBytesString((ByteBuffer)obj);
+        }else{
+            return obj.toString();
+        }
+    }
+    
+    private String buildBytesString(ByteBuffer buf){
+            String s = Arrays.toString(buf.array());
+            return s.substring(1, s.length()-1);
+    }
+    
     private void pushValue(String val, Field field, int i) {
         Class cls = myRecord.get(i).getClass();
         
@@ -160,6 +177,8 @@ public class EditorPanel extends javax.swing.JPanel {
             return Short.parseShort(val);
         } else if(Byte.class.isAssignableFrom(cls)) {
             return Byte.parseByte(val);
+        } else if(ByteBuffer.class.isAssignableFrom(cls)) {
+            return parseBytes(val);
         } else if(Float.class.isAssignableFrom(cls)) {
             return Float.parseFloat(val);
         } else if(Double.class.isAssignableFrom(cls)) {
@@ -171,6 +190,26 @@ public class EditorPanel extends javax.swing.JPanel {
         } else {
             throw new IllegalArgumentException(val);
         }
+    }
+    
+    
+    private ByteBuffer parseBytes(String str){
+        String[] strParts = str.split(",");
+        List<Byte> bytes = new ArrayList<Byte>(strParts.length);
+        for(String s : strParts){
+            String byteVal = s.trim();
+            if(byteVal.isEmpty()){
+                continue;
+            }
+            Byte b = Byte.parseByte(byteVal);
+            bytes.add(b);
+        }
+        ByteBuffer buf = ByteBuffer.allocate(bytes.size());
+        for(Byte b : bytes){
+            buf.put(b);
+        }
+        buf.rewind();
+        return buf;
     }
     
     public IndexedRecord getRecord() {
