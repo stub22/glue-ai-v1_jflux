@@ -1,5 +1,6 @@
 package org.jflux.swing.messaging.player;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.avro.Schema;
@@ -29,6 +30,8 @@ public class RecordUtils {
             return new Integer(0);
         } else if(type == Type.LONG) {
             return new Long(0);
+        } else if(type == Type.BYTES) {
+            return ByteBuffer.allocate(0);
         } else if(type == Type.RECORD) {
             IndexedRecord record = new GenericData.Record(schema);
             

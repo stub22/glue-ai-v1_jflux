@@ -15,8 +15,10 @@
  */
 package org.jflux.swing.messaging.monitor;
 
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.apache.avro.Schema;
@@ -108,7 +110,13 @@ public class AvroTableModel extends AbstractTableModel {
             return sdf.format(myRecords.get(rowIndex).get(columnIndex));
         }
         
-        return myRecords.get(rowIndex).get(columnIndex);
+        Object obj = myRecords.get(rowIndex).get(columnIndex);
+        if(ByteBuffer.class.isAssignableFrom(obj.getClass())){
+            return "Bytes: " + Arrays.toString(((ByteBuffer)obj).array());
+        }else{
+            return obj;
+        }
+        
     }
 
     @Override
