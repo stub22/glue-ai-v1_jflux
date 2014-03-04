@@ -23,6 +23,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.IndexedRecord;
+import org.jflux.api.common.rk.utils.Utils;
 
 /**
  *
@@ -112,11 +113,19 @@ public class AvroTableModel extends AbstractTableModel {
         
         Object obj = myRecords.get(rowIndex).get(columnIndex);
         if(ByteBuffer.class.isAssignableFrom(obj.getClass())){
-            return "Bytes: " + Arrays.toString(((ByteBuffer)obj).array());
+            return "Bytes: " + buildBytesString((ByteBuffer)obj);
         }else{
             return obj;
         }
         
+    }
+    
+    private String buildBytesString(ByteBuffer buf){
+        StringBuilder sb = new StringBuilder();
+        for(Byte b : buf.array()){
+            sb.append(Utils.unsign(b)).append(", ");
+        }
+        return sb.toString();
     }
 
     @Override
