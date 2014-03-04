@@ -86,7 +86,7 @@ public class PlayerPanel extends javax.swing.JPanel {
     public void activate() {
         jButton1.setEnabled(true);
         jButton3.setEnabled(true);
-        
+        myEditorList.clear();
         if(myEditorList.getRecords().size() > 0) {
             jButton2.setEnabled(true);
         }

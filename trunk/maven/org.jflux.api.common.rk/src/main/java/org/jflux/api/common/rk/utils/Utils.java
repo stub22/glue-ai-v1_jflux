@@ -69,6 +69,13 @@ public class Utils {
         }
         return b;
     }
+    
+    public static byte sign(int b){
+        if(b >= 128){
+            return (byte)(b - 256);
+        }
+        return (byte)b;
+    }
 
     /**
      * Calculates a checksum from the data and extra bytes

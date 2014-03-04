@@ -31,6 +31,8 @@ import javax.swing.JTextField;
 import org.apache.avro.Schema;
 import org.apache.avro.Schema.Field;
 import org.apache.avro.generic.IndexedRecord;
+import org.jflux.api.common.rk.utils.Utils;
+import org.jflux.api.encode.BytesUtils;
 
 /**
  *
@@ -149,8 +151,11 @@ public class EditorPanel extends javax.swing.JPanel {
     }
     
     private String buildBytesString(ByteBuffer buf){
-            String s = Arrays.toString(buf.array());
-            return s.substring(1, s.length()-1);
+        StringBuilder sb = new StringBuilder();
+        for(Byte b : buf.array()){
+            sb.append(Utils.unsign(b)).append(", ");
+        }
+        return sb.toString();
     }
     
     private void pushValue(String val, Field field, int i) {
@@ -201,7 +206,8 @@ public class EditorPanel extends javax.swing.JPanel {
             if(byteVal.isEmpty()){
                 continue;
             }
-            Byte b = Byte.parseByte(byteVal);
+            Integer i = Integer.parseInt(byteVal);
+            Byte b = Utils.sign(i);
             bytes.add(b);
         }
         ByteBuffer buf = ByteBuffer.allocate(bytes.size());
