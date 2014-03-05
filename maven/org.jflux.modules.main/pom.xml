@@ -24,13 +24,13 @@
 		<module>../org.jflux.impl.transport.qpid</module>
 		<module>../org.jflux.impl.registry.osgi</module>
         <module>../org.jflux.api.services</module>
-        <module>../org.jflux.api.common.rk</module>
-        <module>../org.jflux.extern.utils.apache_commons_configuration.rk</module>
-        <module>../org.jflux.extern.utils.xpp3.rk</module>
-        <module>../org.jflux.api.messaging.rk</module>
-        <module>../org.jflux.impl.messaging.rk</module>
-        <module>../org.jflux.impl.services.rk</module>
+        <module>../org.jflux.modules.rk</module>
         <module>../org.jflux.swing.messaging</module>
+        <module>../org.jflux.spec.messaging</module>
+        <module>../org.jflux.swing.services</module>
+        <module>../org.jflux.spec.services</module>
+        <module>../org.jflux.demo.services</module>
+        
 	</modules>
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
@@ -38,6 +38,8 @@
 		<encoding>UTF-8</encoding>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<netbeans.hint.license>jflux-apache20</netbeans.hint.license>
+        
+        <appdapter.version>1.1.5-SNAPSHOT</appdapter.version>
 	</properties>	
 	<build>
 		<pluginManagement>
