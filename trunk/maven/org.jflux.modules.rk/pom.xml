@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+    <parent>
+		<groupId>org.jflux</groupId>
+		<artifactId>org.jflux.modules.main</artifactId>
+		<version>0.1.9-SNAPSHOT</version>
+		<relativePath>../org.jflux.modules.main/pom.xml</relativePath>
+	</parent>
+    
+    <artifactId>org.jflux.modules.rk</artifactId>
+    <packaging>pom</packaging>
+
+    <name>${project.artifactId} - RK projects</name>
+    
+    
+	<modules>
+        <module>../org.jflux.api.common.rk</module>
+        <module>../org.jflux.extern.utils.apache_commons_configuration.rk</module>
+        <module>../org.jflux.extern.utils.xpp3.rk</module>
+        <module>../org.jflux.api.messaging.rk</module>
+        <module>../org.jflux.impl.messaging.rk</module>
+        <module>../org.jflux.impl.services.rk</module>
+    </modules>
+</project>
