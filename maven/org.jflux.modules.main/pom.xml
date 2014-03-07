@@ -39,7 +39,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<netbeans.hint.license>jflux-apache20</netbeans.hint.license>
         
-        <appdapter.version>1.1.5-SNAPSHOT</appdapter.version>
+        <appdapter.version>1.1.5</appdapter.version>
 	</properties>	
 	<build>
 		<pluginManagement>
