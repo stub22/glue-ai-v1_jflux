@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jflux</groupId>
+		<artifactId>org.jflux.project.root</artifactId>
+		<version>0.1.9</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>	
+	
+	<artifactId>org.jflux.modules.main</artifactId>
+	<name>${project.artifactId} - Main Module</name>
+	<packaging>pom</packaging>
+    
+	<modules>
+        <!--JFlux Dependency Free APIs -->
+		<module>../org.jflux.api.core</module>
+		<module>../org.jflux.api.data</module>
+		<module>../org.jflux.api.registry</module>
+        <!--JFlux Non-Java Resources -->
+		<module>../org.jflux.resource.avrogen.templates</module>
+        <!--JFlux Implementations with dependencies from Maven Central-->
+		<module>../org.jflux.impl.encode.avro</module>
+		<module>../org.jflux.impl.transport.qpid</module>
+		<module>../org.jflux.impl.registry.osgi</module>
+        <module>../org.jflux.api.services</module>
+        <module>../org.jflux.modules.rk</module>
+        <module>../org.jflux.swing.messaging</module>
+        <module>../org.jflux.spec.messaging</module>
+        <module>../org.jflux.swing.services</module>
+        <module>../org.jflux.spec.services</module>
+        <module>../org.jflux.demo.services</module>
+        
+	</modules>
+	<properties>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
+		<encoding>UTF-8</encoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<netbeans.hint.license>jflux-apache20</netbeans.hint.license>
+        
+        <appdapter.version>1.1.5</appdapter.version>
+	</properties>	
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.3.2</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.4.3</version>
+					<configuration>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.9</version>
+					<configuration>
+						<skipTests>true</skipTests>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+    <profiles>
+        <profile>
+            <id>test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.9</version>
+                        <configuration>
+                            <skipTests>false</skipTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
