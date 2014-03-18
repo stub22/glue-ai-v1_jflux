@@ -90,6 +90,7 @@ public class ServicesFrame extends javax.swing.JFrame {
         servicesPanel1 = new org.jflux.swing.services.ServicesPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Service Manager");
         getContentPane().add(servicesPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
