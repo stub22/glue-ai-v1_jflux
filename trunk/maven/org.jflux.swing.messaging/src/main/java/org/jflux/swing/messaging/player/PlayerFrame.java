@@ -62,6 +62,7 @@ public class PlayerFrame extends javax.swing.JFrame {
         editorListPanel1 = new org.jflux.swing.messaging.player.EditorListPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Message Player");
 
         editorListPanel1.setLayout(new javax.swing.BoxLayout(editorListPanel1, javax.swing.BoxLayout.LINE_AXIS));
         jScrollPane1.setViewportView(editorListPanel1);

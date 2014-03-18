@@ -64,6 +64,7 @@ public class AvroTableDemoFrame extends javax.swing.JFrame {
         savePanel1 = new org.jflux.swing.messaging.monitor.SavePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Message Monitor");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
