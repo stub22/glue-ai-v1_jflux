@@ -267,6 +267,8 @@ public class SingleServiceListener<T>
         }
         try{
             myContext.ungetService(myReference);
+        }catch(IllegalStateException ex){
+            theLogger.fine("Cannot unget service.  Bundle already uninstalled, no need to unget.");
         }catch(Exception ex){
             theLogger.log(Level.WARNING, "Error ungetting service", ex);
         }
@@ -282,6 +284,8 @@ public class SingleServiceListener<T>
         }
         try{
             myContext.ungetService(myReference);
+        }catch(IllegalStateException ex){
+            theLogger.fine("Cannot unget service.  Bundle already uninstalled, no need to unget.");
         }catch(Exception ex){
             theLogger.log(Level.WARNING, "Error ungetting service", ex);
         }
