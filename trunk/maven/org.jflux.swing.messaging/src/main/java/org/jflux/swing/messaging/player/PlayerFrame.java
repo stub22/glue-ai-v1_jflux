@@ -21,7 +21,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 public class PlayerFrame extends javax.swing.JFrame {
     private AvroQpidConnector myConnector;

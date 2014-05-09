@@ -21,7 +21,7 @@ import org.jflux.api.service.Manager;
 
 /**
  * Abstraction of a managed services panel.
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 public abstract class AbstractServicePanel<T extends Manager> extends JPanel {
     public abstract void setService(T service);

@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 public class CircularBufferTest {
     

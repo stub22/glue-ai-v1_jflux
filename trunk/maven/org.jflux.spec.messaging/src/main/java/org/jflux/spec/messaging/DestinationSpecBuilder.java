@@ -10,7 +10,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  * @author Jason R. Eads <jeads362@gmail.com>
  */
 

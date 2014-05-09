@@ -5,7 +5,7 @@ import org.appdapter.bind.rdf.jena.assembly.KnownComponentImpl;
 /**
  * The data object for a property.
  * @author Jason Randolph Eads <eadsjr@hansonrobokind.com>
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 
 public class PropertySpec extends KnownComponentImpl {

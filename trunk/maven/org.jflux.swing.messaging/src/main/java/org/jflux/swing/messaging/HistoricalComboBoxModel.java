@@ -24,7 +24,7 @@ import javax.swing.DefaultComboBoxModel;
 
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 
 

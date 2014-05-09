@@ -26,7 +26,7 @@ import org.apache.avro.generic.IndexedRecord;
 
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 public class EditorListPanel extends javax.swing.JPanel {
     private List<EditorPanel> editors;

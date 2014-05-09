@@ -23,7 +23,7 @@ import org.jflux.api.core.Listener;
 
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 public class AvroComboBoxModel extends DefaultComboBoxModel implements Listener {
     private List<Schema> mySchemas;

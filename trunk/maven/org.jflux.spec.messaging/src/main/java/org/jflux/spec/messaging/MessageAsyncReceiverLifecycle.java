@@ -19,7 +19,7 @@ import static org.jflux.impl.encode.avro.SerializationConfigUtils.*;
 
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 public class MessageAsyncReceiverLifecycle
         implements ServiceLifecycle<JMSAvroMessageAsyncReceiver> {
