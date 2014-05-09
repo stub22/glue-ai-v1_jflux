@@ -5,7 +5,7 @@ import org.jflux.impl.messaging.rk.utils.ConnectionUtils;
 
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 
 public class DestinationSpec extends KnownComponentImpl {

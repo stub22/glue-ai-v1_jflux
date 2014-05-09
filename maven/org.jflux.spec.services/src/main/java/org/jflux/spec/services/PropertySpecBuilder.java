@@ -12,7 +12,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
  * The builder that is called to make a Spec object from the raw RDF data
  * representing a ServiceBinding.
  * @author Jason Randolph Eads <eadsjr@hansonrobokind.com>
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 
 public class PropertySpecBuilder extends CachingComponentAssembler<PropertySpec> {

@@ -18,7 +18,7 @@ import org.appdapter.core.item.ItemFuncs;
  * representing a ServiceBinding.
  * 
  * @author Jason R. Eads <jeads362@gmail.com>
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  */
 
 public class ServiceBindingSpecBuilder

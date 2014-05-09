@@ -13,7 +13,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import java.util.List;
 /**
  *
- * @author Jason G. Pallack <jgpallack@gmail.com>
+ * @author Amy Jessica Book <jgpallack@gmail.com>
  * @author Jason Randolph Eads <eadsjr@hansonrobokind.com>
  */
 
