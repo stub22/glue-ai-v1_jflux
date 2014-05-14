@@ -342,15 +342,15 @@ public class OSGiComponent<T> extends
                 }else{
                     getLogger().warn("Component for null service unregistered.");
                 }
-            }catch(IllegalStateException ex){
-                getLogger().warn("Caught illegalStateException during service unregistration for {}", myService);
+            }catch(Exception ex){
+                getLogger().info("Caught Exception during service unregistration for {}", myService);
             }
         }
         Object changeKey = new Object();
         try{
             firePropertyChange(PROP_SERVICE_CHANGED, changeKey, this);
         }catch(RuntimeException ex){
-            getLogger().warn("Runtime exception in event handling for unregistration of svc {} ", myService, ex);
+            getLogger().info("Runtime exception in event handling for unregistration of svc {} ", myService, ex);
         }
     }
     
@@ -398,7 +398,7 @@ public class OSGiComponent<T> extends
         try{
             firePropertyChange(PROP_SERVICE_CHANGED, changeKey, this);
         }catch(RuntimeException ex){
-            getLogger().warn(
+            getLogger().info(
                     "Runtime exception in event handling for registration of svc {}" + myService, ex);
         }
     }

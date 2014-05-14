@@ -141,8 +141,10 @@ public class JMSBytesRecordAsyncReceiver implements RecordAsyncReceiver<BytesMes
                     }
                     myRecordHandler.handleRecord(bytesMsg);
                 }
+            }catch(IllegalStateException ex){
+                theLogger.debug("Unable to fetch record.", ex);
             }catch(Throwable t){
-                theLogger.warn("Error in Message fetch loop.", t);
+                theLogger.info("Error in Message fetch loop.", t);
                 sleep(5);
             }
         }
@@ -164,7 +166,7 @@ public class JMSBytesRecordAsyncReceiver implements RecordAsyncReceiver<BytesMes
             }
             return (BytesMessage)msg;
         }catch(JMSException ex){
-            theLogger.error("Error fetching Message.", ex);
+            theLogger.info("Error fetching Message.", ex);
             return null;
         }
     }
