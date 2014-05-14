@@ -214,9 +214,14 @@ public class OSGiUtils {
                     + "BundleContext or ServiceReference");
             return null;
         }
-        Object obj = context.getService(ref);
+        Object obj = null;
+        try{
+            obj = context.getService(ref);
+        }catch(Exception ex){
+            theLogger.log(Level.FINEST, "Unable to get service.", ex);
+        }
         if(obj == null){
-            theLogger.log(Level.WARNING, 
+            theLogger.log(Level.FINEST, 
                     "Service for reference ({0}) has a null Service.", 
                     getInformationString(ref));
             context.ungetService(ref);
@@ -256,10 +261,12 @@ public class OSGiUtils {
     
     public static String formatUsingBundlesString(ServiceReference ref){
         String bundles = "";
-        for(Bundle b : ref.getUsingBundles()){
-            String name = b.getSymbolicName();
-            bundles = bundles.isEmpty() ? name : (bundles + ", " + name);
-        }
+        try{
+            for(Bundle b : ref.getUsingBundles()){
+                String name = b.getSymbolicName();
+                bundles = bundles.isEmpty() ? name : (bundles + ", " + name);
+            }
+        }catch(Exception ex){}
         return "{bundles: [" + bundles + "]}";
     }
     
