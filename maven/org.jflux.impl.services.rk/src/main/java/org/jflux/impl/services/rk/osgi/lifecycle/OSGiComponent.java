@@ -381,8 +381,16 @@ public class OSGiComponent<T> extends
             }
         }
         
-        ServiceRegistration reg = myContext.registerService(
-                myRegistrationClassNames, myService, propTable);
+        ServiceRegistration reg = null;
+        try{
+            reg = myContext.registerService(
+                    myRegistrationClassNames, myService, propTable);
+        }catch(Exception ex){
+            theLogger.debug("Unable to register service", ex);
+            try{
+                stopLifecycle();
+            }catch(Exception ex2){}
+        }
         myServiceRegistration = reg;
 		getLogger().info("Service successfully registered,  class={}", myService.getClass());
         getLogger().debug("Service details: {}",   myService);
