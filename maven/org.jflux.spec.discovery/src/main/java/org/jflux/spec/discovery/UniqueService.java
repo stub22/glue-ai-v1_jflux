@@ -45,6 +45,23 @@ public class UniqueService {
     public Map<String, String> getProperties() {
         return myProperties;
     }
+
+    @Override
+    public String toString() {
+        return format(this);
+    }
+    
+    
+    private static String format(UniqueService service) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(service.getProperties().get("robotId"));
+        sb.append(" @ ");
+        sb.append(service.getIPAddress());
+        sb.append(" / ");
+        sb.append(service.getSerial());
+        
+        return sb.toString();
+    }
     
     @Override
     public boolean equals(Object other) {
