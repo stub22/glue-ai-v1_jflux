@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jflux.impl.transport.jms;
+package org.jflux.impl.messaging.rk.config;
 
 import java.net.URISyntaxException;
 import java.util.logging.Level;

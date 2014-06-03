@@ -20,7 +20,6 @@ import org.apache.avro.Schema;
 import org.apache.avro.generic.IndexedRecord;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.config.Configuration;
-import org.jflux.impl.transport.jms.ConnectionConfigUtils;
 import org.jflux.impl.encode.avro.SerializationConfigUtils;
 import org.jflux.impl.services.rk.lifecycle.ManagedService;
 import org.jflux.impl.services.rk.lifecycle.ServiceLifecycleProvider;

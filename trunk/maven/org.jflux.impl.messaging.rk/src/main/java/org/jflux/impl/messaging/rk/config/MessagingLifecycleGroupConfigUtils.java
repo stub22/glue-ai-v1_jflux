@@ -30,9 +30,9 @@ import org.jflux.api.core.util.MapAdapter.MapValueAdapter;
 import org.jflux.impl.services.rk.lifecycle.ServiceLifecycleProvider;
 import org.jflux.impl.services.rk.lifecycle.config.GenericLifecycle.DependencyChange;
 import org.jflux.impl.services.rk.lifecycle.config.RKManagedGroupConfigUtils;
-import org.jflux.impl.transport.jms.ConnectionConfigUtils.ConnectionFactory;
-import org.jflux.impl.transport.jms.ConnectionConfigUtils.DestinationFactory;
-import org.jflux.impl.transport.jms.ConnectionConfigUtils.SessionFactory;
+import org.jflux.impl.messaging.rk.config.ConnectionConfigUtils.ConnectionFactory;
+import org.jflux.impl.messaging.rk.config.ConnectionConfigUtils.DestinationFactory;
+import org.jflux.impl.messaging.rk.config.ConnectionConfigUtils.SessionFactory;
 import org.jflux.impl.messaging.rk.utils.ConnectionManager;
 
 import static org.jflux.impl.services.rk.lifecycle.config.RKDependencyConfigUtils.*;
