@@ -18,10 +18,10 @@ package org.jflux.spec.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.appdapter.core.repo.BoundModelProvider;
-import org.appdapter.core.repo.EnhancedRepoClient;
-import org.appdapter.core.repo.ModelProviderFactory;
-import org.appdapter.core.repo.PipelineQuerySpec;
+import org.appdapter.fancy.gpointer.PointerToTypedGraph;
+import org.appdapter.fancy.gpointer.TypedGraphPointerFactory;
+import org.appdapter.fancy.gpointer.PipelineQuerySpec;
+import org.appdapter.fancy.rclient.EnhancedRepoClient;
 import org.appdapter.core.name.Ident;
 import org.jflux.api.registry.Registry;
 import org.jflux.impl.registry.OSGiRegistry;
@@ -42,10 +42,10 @@ public class RegisterWiring {
             PIPE_QUERY_QN, PIPE_SOURCE_QUERY_QN, PIPELINE_GRAPH_QN);
 
     public static List<ManagedService> loadAndRegisterSpec(BundleContext context, EnhancedRepoClient defaultDemoRepoClient, String mergedSheetQN) {
-        Ident derivedBehavGraphID = defaultDemoRepoClient.makeIdentForQName(mergedSheetQN);
+        Ident derivedBehavGraphID = defaultDemoRepoClient.getDefaultRdfNodeTranslator().makeIdentForQName(mergedSheetQN);
         List<ManagedService> managedServices = new ArrayList();
-        BoundModelProvider derivedBMP =
-                ModelProviderFactory.makeOneDerivedModelProvider(
+        PointerToTypedGraph derivedBMP =
+                TypedGraphPointerFactory.makeOneDerivedModelPointer(
                 defaultDemoRepoClient, myDefaultPipelineQuerySpec, derivedBehavGraphID);
 
         Set<Object> allSpecs = derivedBMP.assembleModelRoots();
