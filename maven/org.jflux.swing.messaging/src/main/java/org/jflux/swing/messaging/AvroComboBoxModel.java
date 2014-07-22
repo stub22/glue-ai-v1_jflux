@@ -16,6 +16,8 @@
 package org.jflux.swing.messaging;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import org.apache.avro.Schema;
@@ -31,20 +33,10 @@ public class AvroComboBoxModel extends DefaultComboBoxModel implements Listener 
     private OSGiSchemaSelector mySelector;
     
     public AvroComboBoxModel(OSGiSchemaSelector selector) {
-        mySchemas = selector.getSchemas();
-        
-        if(mySchemas == null) {
-            mySchemas = new ArrayList<Schema>();
-        }
-        
-        if(mySchemas.isEmpty()) {
-            selected = null;
-        } else {
-            selected = mySchemas.get(0).getName();
-        }
-        
         mySelector = selector;
-        selector.getChangeNotifier().addListener(this);
+        mySchemas = new ArrayList<Schema>();
+        setSortedSchemas();
+        mySelector.getChangeNotifier().addListener(this);
     }
 
     @Override
@@ -80,29 +72,40 @@ public class AvroComboBoxModel extends DefaultComboBoxModel implements Listener 
         updateSchemaList();
     }
     
-    private synchronized void updateSchemaList(){
+    private void setSortedSchemas(){
         List<Schema> newList = mySelector.getSchemas();
-        
-        for(Schema schema: newList) {
-            if(!mySchemas.contains(schema)) {
-                mySchemas.add(schema);
+        Collections.sort(newList, new Comparator<Schema>() {
+            @Override
+            public int compare(Schema t, Schema t1) {
+                return t.getName().compareTo(t1.getName());
             }
-        }
-        
-        for(Schema schema: mySchemas) {
-            if(!newList.contains(schema)) {
-                mySchemas.remove(schema);
-                
-                if(selected.equals(schema.getName())) {
-                    if(mySchemas.isEmpty()) {
-                        selected = null;
-                    } else {
-                        selected = mySchemas.get(0).getName();
-                    }
+        });
+        mySchemas.clear();
+        mySchemas.addAll(newList);
+        if(selected == null){
+            if(!mySchemas.isEmpty()){
+                selected = mySchemas.get(0).getName();
+            }
+        }else{
+            boolean selFound = false;
+            for(Schema s : mySchemas){
+                if(selected.equals(s.getName())){
+                    selFound = true;
+                    break;
+                }
+            }
+            if(!selFound){
+                if(!mySchemas.isEmpty()){
+                    selected = mySchemas.get(0).getName();
+                }else{
+                    selected = null;
                 }
             }
         }
-        
+    }
+    
+    private synchronized void updateSchemaList(){
+        setSortedSchemas();
         fireContentsChanged(this, 0, mySchemas.size() - 1);
     }
 }
