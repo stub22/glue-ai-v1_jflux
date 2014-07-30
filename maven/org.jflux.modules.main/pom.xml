@@ -30,7 +30,17 @@
 			<url>https://oss.sonatype.org/content/groups/public/</url>
 		</repository>		
 	</repositories>
-   
+   	<pluginRepositories>
+		<pluginRepository>
+			<id>maven-central</id>
+			<url>http://repo.maven.apache.org/maven2/</url>
+		</pluginRepository>	
+		<pluginRepository>
+			<id>sonatype-public</id>
+			<name>sonatype public</name>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+		</pluginRepository>		
+	</pluginRepositories>  
     
     <modules>
         <!--JFlux Dependency Free APIs -->
