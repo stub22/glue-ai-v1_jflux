@@ -45,6 +45,35 @@
 		<developerConnection>scm:svn:https://subversion.assembla.com/svn/jflux/trunk/</developerConnection>
 		<url>https://www.assembla.com/code/jflux/subversion/nodes/trunk/</url>
 	</scm>
+    <repositories>
+		<!-- 	Explicit reference to Maven central ... ensures it is always checked first (we think),
+				which prevents downloads of broken files from sonatype-public, in particular: 
+				scala-library-2.10.2.jar.
+		-->
+		<repository>
+			<id>maven-central</id>
+			<url>http://repo.maven.apache.org/maven2/</url>
+		</repository>
+		
+		<!-- This declaration allows us to find recent binary releases and snapshosts of Appdapter.
+		-->
+		<repository>
+			<id>sonatype-public</id>
+			<name>sonatype public</name>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+		</repository>		
+	</repositories>
+   	<pluginRepositories>
+		<pluginRepository>
+			<id>maven-central</id>
+			<url>http://repo.maven.apache.org/maven2/</url>
+		</pluginRepository>	
+		<pluginRepository>
+			<id>sonatype-public</id>
+			<name>sonatype public</name>
+			<url>https://oss.sonatype.org/content/groups/public/</url>
+		</pluginRepository>		
+	</pluginRepositories>  
     
 	<build>
 		<pluginManagement>
