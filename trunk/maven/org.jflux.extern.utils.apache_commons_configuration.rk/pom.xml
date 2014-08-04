@@ -15,7 +15,6 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-beanutils</artifactId>
-            <version>1.8.2_1</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -27,7 +26,6 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-jxpath</artifactId>
-            <version>1.2_4</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -75,7 +73,6 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-digester</artifactId>
-            <version>1.8_2</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -103,24 +100,20 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-lang</artifactId>
-            <version>2.4_4</version>
         </dependency>
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-collections</artifactId>
-            <version>3.2.1_1</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.jdom</artifactId>
-            <version>1.1_3</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.junit</artifactId>
-            <version>3.8.2_3</version>
             <scope>test</scope>
         </dependency>	
 		<!--
@@ -152,19 +145,16 @@
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.xpp3</artifactId>
-            <version>1.1.4c_4</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.servicemix.bundles</groupId>
             <artifactId>org.apache.servicemix.bundles.commons-configuration</artifactId>
-            <version>1.4_2</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-beanutils</artifactId>
@@ -270,7 +260,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.7</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -282,11 +271,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -298,8 +282,6 @@
                 <dependency>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>org.apache.felix.main</artifactId>
-                    <version>4.2.1</version>
-                    <scope>provided</scope>
                 </dependency>
                 <!-- To include a shell:
                 <dependency>
@@ -314,7 +296,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>compile</id>
@@ -350,7 +331,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.2</version>
                         <executions>
                             <execution>
                                 <id>create-executable-jar</id>
@@ -376,8 +356,6 @@
                 <dependency>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>org.apache.felix.main</artifactId>
-                    <version>4.2.1</version>
-                    <scope>provided</scope>
                 </dependency>
                 <!-- org.apache.felix:org.apache.felix.gogo.shell:0.6.1 useless from Maven since stdin is swallowed -->
             </dependencies>
@@ -386,7 +364,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.6</version>
                         <configuration>
                             <target>
                                 <property name="vm.args" value="" />

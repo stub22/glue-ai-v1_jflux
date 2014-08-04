@@ -17,12 +17,10 @@
         <dependency>
 			<groupId>org.appdapter</groupId>
 			<artifactId>org.appdapter.bundle.core</artifactId>
-			<version>${appdapter.version}</version>
 		</dependency>
         <dependency>
 			<groupId>org.appdapter</groupId>
             <artifactId>ext.bundle.jena_all_2_10_1</artifactId>
-			<version>${appdapter.version}</version>
         </dependency>
         <dependency>
 			<groupId>${project.groupId}</groupId>
@@ -51,7 +49,6 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.7</version>
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -70,8 +67,8 @@
                 <dependency>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>org.apache.felix.main</artifactId>
-                    <version>4.0.3</version>
-                    <scope>provided</scope>
+                    <!--version>4.0.3</version>
+                    <scope>provided</scope-->
                 </dependency>
                 <!-- To include a shell:
                 <dependency>
@@ -86,7 +83,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.7</version>
+                        <!--version>1.7</version-->
                         <executions>
                             <execution>
                                 <id>compile</id>
@@ -122,7 +119,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.3</version>
+                        <!--version>2.3</version-->
                         <executions>
                             <execution>
                                 <id>create-executable-jar</id>
@@ -148,8 +145,8 @@
                 <dependency>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>org.apache.felix.main</artifactId>
-                    <version>4.0.3</version>
-                    <scope>provided</scope>
+                    <!--version>4.0.3</version>
+                    <scope>provided</scope-->
                 </dependency>
                 <!-- org.apache.felix:org.apache.felix.gogo.shell:0.6.1 useless from Maven since stdin is swallowed -->
             </dependencies>
@@ -158,7 +155,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.7</version>
+                        <!--version>1.7</version-->
                         <configuration>
                             <target>
                                 <property name="vm.args" value="" />
