@@ -46,26 +46,27 @@
         <url>https://www.assembla.com/code/jflux/subversion/nodes/trunk/</url>
     </scm>
     <properties>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <encoding>UTF-8</encoding>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netbeans.hint.license>jflux-apache20</netbeans.hint.license>
-        <!-- Refactor of versions used by child modules starts -->
+        <!-- Glue Dependencies -->
         <appdapter.apache.qpid.version>1.0.5</appdapter.apache.qpid.version>
         <appdapter.version>1.2.1-SNAPSHOT</appdapter.version>
+        <!-- Non Glue Dependencies -->
         <avro.version>1.7.2</avro.version>
         <avro.ipc.version>1.6.3</avro.ipc.version>
+        <encoding>UTF-8</encoding>
         <felix.org.osgi.core.version>1.4.0</felix.org.osgi.core.version>
         <felix.org.osgi.compendium.version>1.4.0</felix.org.osgi.compendium.version>
         <felix.gogo.command.version>0.2.2</felix.gogo.command.version>
         <jackson.version>1.7.3</jackson.version>
         <junit.version>4.10</junit.version>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <mockito.version>1.9.5</mockito.version>
+        <netbeans.hint.license>jflux-apache20</netbeans.hint.license>       
         <org.jboss.netty.version>3.2.4.Final</org.jboss.netty.version>
         <org.mortbay.jetty.version>6.1.26</org.mortbay.jetty.version>
         <osgi.core.version>4.3.0</osgi.core.version>
         <paranamer.version>2.3</paranamer.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <servlet.api.version>2.5</servlet.api.version>
         <servicemix.bundles.commons.beanutils.version>1.8.2_1</servicemix.bundles.commons.beanutils.version>
         <servicemix.bundles.commons.collections.version>3.2.1_1</servicemix.bundles.commons.collections.version>
@@ -82,15 +83,14 @@
         <snappy.version>1.0.1-rc3</snappy.version>
         <velocity.version>1.7</velocity.version>
         <!-- Plugin versions -->
+        <version.avro.maven.plugin>1.6.3</version.avro.maven.plugin>
+        <version.maven.antrun.plugin>1.6</version.maven.antrun.plugin>
+        <version.maven.assembly.plugin>2.2</version.maven.assembly.plugin>
+        <version.maven.bundle.plugin>2.3.7</version.maven.bundle.plugin>
         <version.maven.compiler.plugin>2.3.2</version.maven.compiler.plugin>
         <version.maven.resources.plugin>2.4.3</version.maven.resources.plugin>
         <version.maven.surefire.plugin>2.9</version.maven.surefire.plugin>
-        <version.maven.bundle.plugin>2.3.7</version.maven.bundle.plugin>
         <version.org.apache.felix.main>4.2.1</version.org.apache.felix.main>
-        <version.maven.antrun.plugin>1.6</version.maven.antrun.plugin>
-        <version.maven.assembly.plugin>2.2</version.maven.assembly.plugin>
-        <version.avro.maven.plugin>1.6.3</version.avro.maven.plugin>
-        <!-- Refactor of versions used by child modules ends -->
     </properties>
     <dependencyManagement>
         <dependencies>
