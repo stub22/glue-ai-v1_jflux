@@ -4,6 +4,7 @@ import java.util.List;
 import org.osgi.framework.BundleContext;
 import org.appdapter.core.boot.ClassLoaderUtils;
 import org.appdapter.fancy.rclient.EnhancedRepoClient;
+import org.appdapter.fancy.rclient.EnhancedLocalRepoClient;
 import org.appdapter.fancy.rspec.RepoSpec;
 import org.appdapter.fancy.rspec.URLRepoSpec;
 import org.appdapter.core.store.Repo;
@@ -32,7 +33,7 @@ public class Activator extends BundleActivatorBase {
         String TGT_GRAPH_SPARQL_VAR = "qGraph";
         Repo.WithDirectory bmcMemoryRepoHandle = repoSpec.makeRepo();
         EnhancedRepoClient enhancedRepoSpec = 
-                new EnhancedRepoClient(repoSpec, bmcMemoryRepoHandle,
+                new EnhancedLocalRepoClient(repoSpec, bmcMemoryRepoHandle,
                         TGT_GRAPH_SPARQL_VAR, QUERY_SOURCE_GRAPH_QN);
 
         RegisterWiring.loadAndRegisterSpec(context, enhancedRepoSpec, MERGED_MODEL_MANAGER_QN);
