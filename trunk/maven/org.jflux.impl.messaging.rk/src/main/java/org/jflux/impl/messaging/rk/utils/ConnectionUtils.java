@@ -44,6 +44,32 @@ public class ConnectionUtils {
      */
     public final static int TOPIC = 1;
     
+    public final static String USERNAME_KEY =
+            "org.jflux.impl.messaging.rk.user";
+    
+    public final static String PASSWORD_KEY =
+            "org.jflux.impl.messaging.rk.pass";
+    
+    /**
+     * Retrieve the configured username (or the default if no configuration).
+     * @return the Qpid username
+     */
+    public static String getUsername() {
+        String username =
+                System.getProperty(USERNAME_KEY, System.getenv(USERNAME_KEY));
+        return username != null ? username : "admin";
+    }
+
+    /**
+     * Retrieve the configured password (or the default if no configuration).
+     * @return the Qpid password
+     */
+    public static String getPassword() {
+        String password =
+                System.getProperty(PASSWORD_KEY, System.getenv(PASSWORD_KEY));
+        return password != null ? password : "admin";
+    }
+    
     /**
      * Registers the Connection if there is not one already registered to the
      * given id.  If a connection already exists, this connection is not 

@@ -43,7 +43,9 @@ public class SerialNumberSpec extends KnownComponentImpl {
     
     public String getBroadcastId() {
         StringBuilder sb = new StringBuilder();
-        sb.append(mySerialNumber);
+        String serial =
+                mySerialNumber.replaceAll("%", "%25").replaceAll(" ", "%20");
+        sb.append(serial);
         sb.append(myPropString);
         
         return sb.toString();   
@@ -54,8 +56,12 @@ public class SerialNumberSpec extends KnownComponentImpl {
         
         for(String key: myProperties.keySet()) {
             String value = myProperties.get(key);
-            String tmpKey = key.replaceAll(";", "-").replaceAll(",", ".");
-            String tmpValue = value.replaceAll(";", "-").replaceAll(",", ".");
+            String tmpKey =
+                    key.replaceAll(";", "-").replaceAll(",", ".")
+                            .replaceAll("%", "%25").replaceAll(" ", "%20");
+            String tmpValue =
+                    value.replaceAll(";", "-").replaceAll(",", ".")
+                            .replaceAll("%", "%25").replaceAll(" ", "%20");
             
             sb.append(";");
             sb.append(tmpKey);

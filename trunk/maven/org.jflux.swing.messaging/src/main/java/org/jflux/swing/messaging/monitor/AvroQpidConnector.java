@@ -28,13 +28,15 @@ import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.api.messaging.rk.RecordAsyncReceiver.RecordHandler;
 import org.jflux.impl.messaging.rk.JMSAvroRecordAsyncReceiver;
 import org.jflux.impl.messaging.rk.utils.ConnectionManager;
+import org.jflux.impl.messaging.rk.utils.ConnectionUtils;
 
 /**
  *
  * @author matt
  */
 public class AvroQpidConnector extends DefaultNotifier<IndexedRecord> {
-    private final static Logger theLogger = Logger.getLogger(AvroQpidConnector.class.getName());
+    private final static Logger theLogger =
+            Logger.getLogger(AvroQpidConnector.class.getName());
     private String myIPAddress;
     private String myDestinationString;
     
@@ -51,10 +53,15 @@ public class AvroQpidConnector extends DefaultNotifier<IndexedRecord> {
         //IP Address needs port number, the default port is 5672
         try {
             myConnection = ConnectionManager.createConnection(
-                    "admin", "admin", "client1", "test", "tcp://" + myIPAddress + ":5672");
-            myDestination = ConnectionManager.createDestination(myDestinationString);
+                    ConnectionUtils.getUsername(),
+                    ConnectionUtils.getPassword(), "client1", "test",
+                    "tcp://" + myIPAddress + ":5672");
+            myDestination =
+                    ConnectionManager.createDestination(myDestinationString);
             try{
-                mySession = myConnection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
+                mySession =
+                        myConnection.createSession(
+                                false, Session.CLIENT_ACKNOWLEDGE);
                 myConsumer = mySession.createConsumer(myDestination);
                 myConnection.start();
             }catch(JMSException ex){
@@ -62,11 +69,14 @@ public class AvroQpidConnector extends DefaultNotifier<IndexedRecord> {
                 return;
             }
             myNotifier = new RecordNotifier();
-            myReceiver = new JMSAvroRecordAsyncReceiver<IndexedRecord>(IndexedRecord.class, mySchema, myConsumer);
+            myReceiver =
+                    new JMSAvroRecordAsyncReceiver<IndexedRecord>(
+                            IndexedRecord.class, mySchema, myConsumer);
             myReceiver.setRecordHandler(myNotifier);
             myReceiver.start();
         } catch(Exception e) {
-            theLogger.log(Level.SEVERE, "Connection error: {0}", e.getMessage());
+            theLogger.log(
+                    Level.SEVERE, "Connection error: {0}", e.getMessage());
             
             disconnect();
         }
@@ -135,7 +145,8 @@ public class AvroQpidConnector extends DefaultNotifier<IndexedRecord> {
         if(validateIP(ipAddress)) {
             myIPAddress = ipAddress;
         } else {
-            throw new IllegalArgumentException("Invalid IP address" + ipAddress);
+            throw new IllegalArgumentException(
+                    "Invalid IP address" + ipAddress);
         }
     }
     

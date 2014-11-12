@@ -24,13 +24,15 @@ import javax.jms.Session;
 import org.apache.avro.generic.IndexedRecord;
 import org.jflux.api.core.util.DefaultNotifier;
 import org.jflux.impl.messaging.rk.utils.ConnectionManager;
+import org.jflux.impl.messaging.rk.utils.ConnectionUtils;
 
 /**
  *
  * @author matt
  */
 public class AvroQpidConnector extends DefaultNotifier<IndexedRecord> {
-    private final static Logger theLogger = Logger.getLogger(AvroQpidConnector.class.getName());
+    private final static Logger theLogger =
+            Logger.getLogger(AvroQpidConnector.class.getName());
     private String myIPAddress;
     private String myDestinationString;
     
@@ -42,16 +44,24 @@ public class AvroQpidConnector extends DefaultNotifier<IndexedRecord> {
         //IP Address needs port number, the default port is 5672
         try {
             myConnection = ConnectionManager.createConnection(
-                    "admin", "admin", "client1", "test", "tcp://" + myIPAddress + ":5672");
-            myDestination = ConnectionManager.createDestination(myDestinationString);
+                    ConnectionUtils.getUsername(),
+                    ConnectionUtils.getPassword(), "client1", "test",
+                    "tcp://" + myIPAddress + ":5672");
+            myDestination =
+                    ConnectionManager.createDestination(myDestinationString);
             try{
-                mySession = myConnection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
+                mySession =
+                        myConnection.createSession(
+                                false, Session.CLIENT_ACKNOWLEDGE);
                 myConnection.start();
             }catch(JMSException ex){
-                theLogger.log(Level.WARNING, "Unable to create Session: {0}", ex.getMessage());
+                theLogger.log(
+                        Level.WARNING, "Unable to create Session: {0}",
+                        ex.getMessage());
             }
         } catch(Exception e) {
-            theLogger.log(Level.SEVERE, "Connection error: {0}", e.getMessage());
+            theLogger.log(
+                    Level.SEVERE, "Connection error: {0}", e.getMessage());
             
             disconnect();
         }
@@ -103,7 +113,8 @@ public class AvroQpidConnector extends DefaultNotifier<IndexedRecord> {
         if(validateIP(ipAddress)) {
             myIPAddress = ipAddress;
         } else {
-            throw new IllegalArgumentException("Invalid IP address" + ipAddress);
+            throw new IllegalArgumentException(
+                    "Invalid IP address" + ipAddress);
         }
     }
     
