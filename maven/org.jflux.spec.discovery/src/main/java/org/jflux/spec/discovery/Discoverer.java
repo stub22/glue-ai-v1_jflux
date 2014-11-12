@@ -97,11 +97,19 @@ public class Discoverer extends DefaultNotifier<UniqueService>
                 } else if(line.startsWith("LOCATION")) {
                     String serialNumber = line.split(" ")[1];
                     String[] splitSerial = serialNumber.split(";");
-                    serial = splitSerial[0];
+                    serial =
+                            splitSerial[0].replaceAll("%20", " ")
+                                    .replaceAll("%25", "%");
                     
                     for(int i = 1; i < splitSerial.length; i++) {
                         String[] property = splitSerial[i].split(",");
-                        properties.put(property[0], property[1]);
+                        String key =
+                                property[0].replaceAll("%20", " ")
+                                        .replaceAll("%25", "%");
+                        String value =
+                                property[1].replaceAll("%20", " ")
+                                        .replaceAll("%25", "%");
+                        properties.put(key, value);
                     }
                 }
             }

@@ -30,6 +30,7 @@ import org.apache.qpid.url.URLSyntaxException;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.config.Configuration;
 import org.jflux.api.core.config.DefaultConfiguration;
+import org.jflux.impl.messaging.rk.utils.ConnectionUtils;
 
 /**
  *
@@ -71,14 +72,6 @@ public class ConnectionConfigUtils {
      * 
      */
     public final static String DEF_BROKER_PORT = "5672";
-    /**
-     * 
-     */
-    public final static String DEF_BROKER_USERNAME = "admin";
-    /**
-     * 
-     */
-    public final static String DEF_BROKER_PASSWORD = "admin";
     /**
      * 
      */
@@ -148,7 +141,6 @@ public class ConnectionConfigUtils {
      */
     public final static String DEF_DESTINATION_NODE_TYPE = NODE_UNKNOWN;
     
-    
     /**
      * Build a default connection configuration.
      * @return the connection configuration
@@ -158,8 +150,12 @@ public class ConnectionConfigUtils {
         
         conf.addProperty(String.class, CONF_BROKER_IP, "127.0.0.1");
         conf.addProperty(String.class, CONF_BROKER_PORT, "5672");
-        conf.addProperty(String.class, CONF_BROKER_USERNAME, "admin");
-        conf.addProperty(String.class, CONF_BROKER_PASSWORD, "admin");
+        conf.addProperty(
+                String.class, CONF_BROKER_USERNAME,
+                ConnectionUtils.getUsername());
+        conf.addProperty(
+                String.class, CONF_BROKER_PASSWORD,
+                ConnectionUtils.getPassword());
         conf.addProperty(String.class, CONF_BROKER_CLIENT_NAME, "client1");
         conf.addProperty(String.class, CONF_BROKER_VIRTUAL_HOST, "test");
         
