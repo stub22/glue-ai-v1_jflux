@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jflux</groupId>
 		<artifactId>org.jflux.modules.main</artifactId>
-		<version>0.2.3</version>
+		<version>0.2.3-SNAPSHOT</version>
 		<relativePath>../org.jflux.modules.main/pom.xml</relativePath>
 	</parent>
     
