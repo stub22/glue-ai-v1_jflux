@@ -1,0 +1,281 @@
+# modelName=http://www.cogchar.org/schema/scene/instance#register_1
+# modelSize=152
+
+
+
+
+@prefix ccrt:    <urn:ftd:cogchar.org:2012:runtime#> .
+@prefix cs:      <http://www.cogchar.org/schema/scene#> .
+@prefix csi:     <http://www.cogchar.org/schema/scene/instance#> .
+@prefix fc:      <http://www.friedularity.org/Connection#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix jfrt:    <urn:ftd:jflux.org:2012:runtime#> .
+@prefix jfsi:    <http://www.jflux.org/service/instance#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+
+jfsi:animationConnection_Prop_0
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#animationConnection01" ;
+      cs:propValue "csi:connection_22" .
+
+jfsi:animationConnectionServiceReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:animationConnectionService .
+
+jfsi:animationConnectionSpec
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:animationConnection_Prop_0 ;
+      fc:Object ccrt:animationConnection .
+
+jfsi:animationDestination_Prop_0
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#animationDestination01" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:animationDestinationRegSpec
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:animationDestination_Prop_0 ;
+      fc:Object ccrt:animationDestination .
+
+jfrt:bundlecontext
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.BundleContextSpecBuilder" .
+
+jfsi:bundlecontext_prop_0
+      rdf:type jfrt:property ;
+      cs:propKey "bundleContextSpec" ;
+      cs:propValue "http://www.w3.org/2002/07/owl#bundleContextSpec" .
+
+jfsi:bundlecontextSpec
+      rdf:type jfrt:bundlecontext .
+
+jfsi:bundleContextSpecRegistration
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:bundlecontext_prop_0 ;
+      fc:Object jfsi:bundlecontextSpec .
+
+jfsi:headlessAnimation_requestDestReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessAnimation_requestDest .
+
+jfsi:headlessAnimationSessionReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessAnimationSession .
+
+jfsi:headlessSpeech_requestDest_1Reg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessSpeech_requestDest_1 .
+
+jfsi:headlessSpeech_requestDest_2Reg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessSpeech_requestDest_2 .
+
+jfsi:headlessSpeech_requestDest_3Reg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessSpeech_requestDest_3 .
+
+jfsi:headlessSpeech_requestDest_4Reg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessSpeech_requestDest_4 .
+
+jfsi:headlessSpeech_requestDestReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessSpeech_requestDest .
+
+jfsi:headlessSpeechSessionReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessSpeechSession .
+
+jfsi:headlessVision_requestDestReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessVision_requestDest .
+
+jfsi:headlessVisionSessionReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:headlessVisionSession .
+
+jfsi:mostionDestinationRegSpec
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:motionDestination_Prop_0 ;
+      fc:Object ccrt:motionDestination .
+
+jfsi:mostionDestinationRegSpec_1
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:motionDestination_Prop_1 ;
+      fc:Object ccrt:motionDestination_1 .
+
+jfsi:mostionDestinationRegSpec_2
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:motionDestination_Prop_2 ;
+      fc:Object ccrt:motionDestination_2 .
+
+jfsi:motionDestination_Prop_0
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#motionDestination01" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:motionDestination_Prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#motionDestination02" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:motionDestination_Prop_2
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#motionDestination03" ;
+      cs:propValue "csi:destination_22" .
+
+jfrt:property
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.PropertySpecBuilder" .
+
+csi:registrationpec
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.RegistrySpecBuilder" .
+
+jfsi:serviceframe_serviceReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:serviceframe_service .
+
+jfsi:speechConnection_Prop_0
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechConnection01" ;
+      cs:propValue "csi:connection_22" .
+
+jfsi:speechConnectionRegSpec
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:speechConnection_Prop_0 ;
+      fc:Object ccrt:speechConnection .
+
+jfsi:speechConnectionServiceReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:speechConnectionService .
+
+jfsi:speechDestination_Prop_0
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination01" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:speechDestination_Prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination02" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:speechDestination_Prop_2
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination03" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:speechDestination_Prop_3
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination04" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:speechDestination_Prop_4
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination05" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:speechDestinationRegSpec
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:speechDestination_Prop_0 ;
+      fc:Object ccrt:speechDestination .
+
+jfsi:speechDestinationRegSpec_1
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:speechDestination_Prop_1 ;
+      fc:Object ccrt:speechDestination_1 .
+
+jfsi:speechDestinationRegSpec_2
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:speechDestination_Prop_2 ;
+      fc:Object ccrt:speechDestination_2 .
+
+jfsi:speechDestinationRegSpec_3
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:speechDestination_Prop_3 ;
+      fc:Object ccrt:speechDestination_3 .
+
+jfsi:speechDestinationRegSpec_4
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:speechDestination_Prop_4 ;
+      fc:Object ccrt:speechDestination_4 .
+
+jfsi:visionConnection_Prop_0
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionConnection01" ;
+      cs:propValue "csi:connection_22" .
+
+jfsi:visionConnectionRegSpec
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:visionConnection_Prop_0 ;
+      fc:Object ccrt:visionConnection .
+
+jfsi:visionConnectionServiceReg
+      rdf:type csi:registrationpec ;
+      fc:Object jfsi:visionConnectionService .
+
+jfsi:visionDestination_Prop_0
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionDestination01" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:visionDestination_Prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionDestination02" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:visionDestination_Prop_2
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionDestination03" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:visionDestination_Prop_3
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionDestination04" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:visionDestination_Prop_4
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionDestination05" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:visionDestination_Prop_5
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionDestination06" ;
+      cs:propValue "csi:destination_22" .
+
+jfsi:visionDestinationRegSpec
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:visionDestination_Prop_0 ;
+      fc:Object ccrt:visionDestination .
+
+jfsi:visionDestinationRegSpec_1
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:visionDestination_Prop_1 ;
+      fc:Object ccrt:visionDestination_1 .
+
+jfsi:visionDestinationRegSpec_2
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:visionDestination_Prop_2 ;
+      fc:Object ccrt:visionDestination_2 .
+
+jfsi:visionDestinationRegSpec_3
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:visionDestination_Prop_3 ;
+      fc:Object ccrt:visionDestination_3 .
+
+jfsi:visionDestinationRegSpec_4
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:visionDestination_Prop_4 ;
+      fc:Object ccrt:visionDestination_4 .
+
+jfsi:visionDestinationRegSpec_5
+      rdf:type csi:registrationpec ;
+      fc:hasProperty jfsi:visionDestination_Prop_5 ;
+      fc:Object ccrt:visionDestination_5 .
+
+
