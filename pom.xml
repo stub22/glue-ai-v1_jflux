@@ -307,8 +307,8 @@
     <distributionManagement>
         <site>
             <id>nexus-site</id>
-            <!--url>dav:https://oss.sonatype.org/content/sites/site/</url-->
-            <url>dav:http://localhost:8081/nexus/content/sites/site/org/jflux</url>
+            <url>dav:https://oss.sonatype.org/content/sites/site/</url>
+<!--            <url>dav:http://localhost:8081/nexus/content/sites/site/org/jflux</url>-->
         </site>
     </distributionManagement>
     
