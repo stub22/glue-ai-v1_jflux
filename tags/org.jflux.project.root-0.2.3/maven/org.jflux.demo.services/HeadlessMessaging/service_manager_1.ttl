@@ -1,0 +1,497 @@
+# modelName=http://www.cogchar.org/schema/scene/instance#service_manager_1
+# modelSize=277
+
+@prefix cs:      <http://www.cogchar.org/schema/scene#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix jfrt:    <urn:ftd:jflux.org:2012:runtime#> .
+@prefix jfs:     <http://www.jflux.org/service#> .
+@prefix jfsi:    <http://www.jflux.org/service/instance#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+
+
+jfrt:serviceManager
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.ServiceManagerSpecBuilder" .
+
+jfrt:lifecycle
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.ServiceLifecycleSpecBuilder" .
+
+jfrt:property
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.PropertySpecBuilder" .
+
+jfrt:serviceBinding
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.ServiceBindingSpecBuilder" .
+
+jfrt:basicRegistration
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.DefaultRegistrationStrategySpecBuilder" .
+
+jfrt:dependency
+      rdfs:subClassOf ja:Object ;
+      rdf:type rdfs:Class ;
+      ja:assembler "org.jflux.spec.services.ServiceDependencySpecBuilder" .
+
+jfsi:serviceCommandType
+      rdf:type jfrt:property ;
+      cs:propKey "messageType" ;
+      cs:propValue "org.jflux.api.messaging.rk.services.ServiceCommand" .
+
+jfsi:serviceErrorType
+      rdf:type jfrt:property ;
+      cs:propKey "messageType" ;
+      cs:propValue "org.jflux.api.messaging.rk.services.ServiceError" .
+
+jfsi:speechConfigType
+      rdf:type jfrt:property ;
+      cs:propKey "messageType" ;
+      cs:propValue "org.mechio.api.speech.SpeechConfig" .
+
+jfsi:speechEventType
+      rdf:type jfrt:property ;
+      cs:propKey "messageType" ;
+      cs:propValue "org.mechio.api.speech.SpeechEvent" .
+
+jfsi:speechRequestType
+      rdf:type jfrt:property ;
+      cs:propKey "messageType" ;
+      cs:propValue "org.mechio.api.speech.SpeechRequest" .
+
+#################################################
+
+jfsi:visionConnectionService
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:connection_lifecycle ;
+      cs:registrationStrategy
+              jfsi:visionReqCon_registration ;
+      cs:serviceBinding jfsi:visionReqCon_spec_bind .
+
+jfsi:visionReqCon_registration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:visionReqCon_reg_prop_1 ;
+      jfs:serviceJavaFQCN "javax.jms.Connection" .
+
+jfsi:visionReqCon_reg_prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "connectionId" ;
+      cs:propValue "visionConnectionService" .
+
+jfsi:visionReqCon_spec_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:connectionSpec ;
+      cs:hasProperty jfsi:visionReqCon_spec_prop_1 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.ConnectionSpec" .
+
+jfsi:visionReqCon_spec_prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionConnection01" ;
+      cs:propValue "csi:connection_22" .
+
+#################################################
+
+jfsi:headlessVisionSession
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:session_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessVisionSessionRegistration ;
+      cs:serviceBinding jfsi:headlessVisionSess_con_bind .
+
+jfsi:headlessVisionSessionRegistration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessVisionReqSess_reg_prop_01 ;
+      jfs:serviceJavaFQCN "javax.jms.Session" .
+
+jfsi:headlessVisionReqSess_reg_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "sessionId" ;
+      cs:propValue "headlessVisionSession" .
+
+jfsi:headlessVisionSess_con_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:sessionConnection ;
+      cs:hasProperty jfsi:visionReqCon_reg_prop_1 ;
+      jfs:serviceJavaFQCN "javax.jms.Connection" .
+
+#################################################
+
+jfsi:headlessVision_requestDest
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:destination_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessVision_dest_registration ;
+      cs:serviceBinding jfsi:headlessVisionDest_spec_bind .
+
+jfsi:headlessVision_dest_registration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessVisionDest_reg_prop_01 ;
+      jfs:serviceJavaFQCN "javax.jms.Destination" .
+
+jfsi:headlessVisionDest_reg_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "destinationId" ;
+      cs:propValue "headlessVision_requestDest" .
+
+jfsi:headlessVisionDest_spec_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:destinationSpec ;
+      cs:hasProperty jfsi:headlessVisionDest_spec_prop_01 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.DestinationSpec" .
+
+jfsi:headlessVisionDest_spec_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#visionDestination01" ;
+      cs:propValue "csi:destination_22" .
+
+#################################################
+
+jfsi:animationConnectionService
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:connection_lifecycle ;
+      cs:registrationStrategy
+              jfsi:animationReqCon_registration ;
+      cs:serviceBinding jfsi:animationReqCon_spec_bind .
+
+jfsi:animationReqCon_registration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:animationReqCon_reg_prop_1 ;
+      jfs:serviceJavaFQCN "javax.jms.Connection" .
+
+jfsi:animationReqCon_reg_prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "connectionId" ;
+      cs:propValue "animationConnectionService" .
+
+jfsi:animationReqCon_spec_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:connectionSpec ;
+      cs:hasProperty jfsi:animationReqCon_spec_prop_1 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.ConnectionSpec" .
+
+jfsi:animationReqCon_spec_prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#animationConnection01" ;
+      cs:propValue "csi:connection_22" .
+
+#################################################
+
+
+
+jfsi:headlessAnimation_dest_registration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessAnimationDest_reg_prop_01 ;
+      jfs:serviceJavaFQCN "javax.jms.Destination" .
+
+jfsi:headlessAnimation_requestDest
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:destination_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessAnimation_dest_registration ;
+      cs:serviceBinding jfsi:headlessAnimationDest_spec_bind .
+
+jfsi:headlessAnimationDest_reg_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "destinationId" ;
+      cs:propValue "headlessAnimation_requestDest" .
+
+jfsi:headlessAnimationDest_spec_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:destinationSpec ;
+      cs:hasProperty jfsi:headlessAnimationDest_spec_prop_01 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.DestinationSpec" .
+
+jfsi:headlessAnimationDest_spec_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#animationDestination01" ;
+      cs:propValue "csi:destination_22" .
+
+#################################################
+
+jfsi:headlessAnimationReqSess_reg_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "sessionId" ;
+      cs:propValue "headlessAnimationSession" .
+
+jfsi:headlessAnimationSess_con_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:sessionConnection ;
+      jfs:serviceJavaFQCN "javax.jms.Connection" .
+
+jfsi:headlessAnimationSession
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:session_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessAnimationSessionRegistration ;
+      cs:serviceBinding jfsi:headlessAnimationSess_con_bind .
+
+jfsi:headlessAnimationSessionRegistration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessAnimationReqSess_reg_prop_01 ;
+      jfs:serviceJavaFQCN "javax.jms.Session" .
+
+#################################################
+
+jfsi:speech_out_01_groupid
+      rdf:type jfrt:property ;
+      cs:propKey "groupId" ;
+      cs:propValue "robot01/SpeechService" .
+
+#################################################
+
+jfsi:speechConnectionService
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:connection_lifecycle ;
+      cs:registrationStrategy
+              jfsi:sp01reqCon_registration ;
+      cs:serviceBinding jfsi:sp01reqCon_spec_bind .
+
+jfsi:sp01reqCon_registration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:sp01reqCon_reg_prop_1 , jfsi:speech_out_01_groupid ;
+      jfs:serviceJavaFQCN "javax.jms.Connection" .
+
+jfsi:sp01reqCon_reg_prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "connectionId" ;
+      cs:propValue "speechConnectionService" .
+
+jfsi:sp01reqCon_spec_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:connectionSpec ;
+      cs:hasProperty jfsi:sp01reqCon_spec_prop_1 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.ConnectionSpec" .
+
+jfsi:sp01reqCon_spec_prop_1
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechConnection01" ;
+      cs:propValue "csi:connection_22" .
+
+#################################################
+
+jfsi:headlessSpeechSession
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:session_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessSpeechSessionRegistration ;
+      cs:serviceBinding jfsi:headlessSpeechSess_con_bind .
+
+jfsi:headlessSpeechSessionRegistration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessSpeechReqSess_reg_prop_01 ;
+      jfs:serviceJavaFQCN "javax.jms.Session" .
+
+jfsi:headlessSpeechReqSess_reg_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "sessionId" ;
+      cs:propValue "headlessSpeechSession" .
+
+jfsi:headlessSpeechSess_con_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:sessionConnection ;
+      cs:hasProperty jfsi:sp01reqCon_reg_prop_1 ;
+      jfs:serviceJavaFQCN "javax.jms.Connection" .
+
+#################################################
+
+jfsi:headlessSpeech_requestDest
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:destination_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessSpeech_dest_registration ;
+      cs:serviceBinding jfsi:headlessSpeechDest_spec_bind .
+
+jfsi:headlessSpeech_dest_registration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessSpeechDest_reg_prop_01 ;
+      jfs:serviceJavaFQCN "javax.jms.Destination" .
+
+jfsi:headlessSpeechDest_reg_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "destinationId" ;
+      cs:propValue "headlessSpeech_requestDest" .
+
+jfsi:headlessSpeechDest_spec_bind
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:destinationSpec ;
+      cs:hasProperty jfsi:headlessSpeechDest_spec_prop_01 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.DestinationSpec" .
+
+jfsi:headlessSpeechDest_spec_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination01" ;
+      cs:propValue "csi:destination_22" .
+
+#################################################
+
+jfsi:headlessSpeech_requestDest_1
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:destination_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessSpeech_dest_registration_1 ;
+      cs:serviceBinding jfsi:headlessSpeechDest_spec_bind_1 .
+
+jfsi:headlessSpeech_dest_registration_1
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessSpeechDest_reg_prop_02 ;
+      jfs:serviceJavaFQCN "javax.jms.Destination" .
+
+jfsi:headlessSpeechDest_reg_prop_02
+      rdf:type jfrt:property ;
+      cs:propKey "destinationId" ;
+      cs:propValue "headlessSpeech_requestDest_1" .
+
+jfsi:headlessSpeechDest_spec_bind_1
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:destinationSpec ;
+      cs:hasProperty jfsi:headlessSpeechDest_spec_prop_02 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.DestinationSpec" .
+
+jfsi:headlessSpeechDest_spec_prop_02
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination02" ;
+      cs:propValue "csi:destination_22" .
+
+#################################################
+
+jfsi:headlessSpeech_requestDest_2
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:destination_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessSpeech_dest_registration_2 ;
+      cs:serviceBinding jfsi:headlessSpeechDest_spec_bind_2 .
+
+jfsi:headlessSpeech_dest_registration_2
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessSpeechDest_reg_prop_03 ;
+      jfs:serviceJavaFQCN "javax.jms.Destination" .
+
+jfsi:headlessSpeechDest_reg_prop_03
+      rdf:type jfrt:property ;
+      cs:propKey "destinationId" ;
+      cs:propValue "headlessSpeech_requestDest_2" .
+
+jfsi:headlessSpeechDest_spec_bind_2
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:destinationSpec ;
+      cs:hasProperty jfsi:headlessSpeechDest_spec_prop_03 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.DestinationSpec" .
+
+jfsi:headlessSpeechDest_spec_prop_03
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination03" ;
+      cs:propValue "csi:destination_22" .
+
+#################################################
+
+jfsi:headlessSpeech_requestDest_3
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:destination_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessSpeech_dest_registration_3 ;
+      cs:serviceBinding jfsi:headlessSpeechDest_spec_bind_3 .
+
+jfsi:headlessSpeech_dest_registration_3
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessSpeechDest_reg_prop_04 ;
+      jfs:serviceJavaFQCN "javax.jms.Destination" .
+
+jfsi:headlessSpeechDest_reg_prop_04
+      rdf:type jfrt:property ;
+      cs:propKey "destinationId" ;
+      cs:propValue "headlessSpeech_requestDest_3" .
+
+jfsi:headlessSpeechDest_spec_bind_3
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:destinationSpec ;
+      cs:hasProperty jfsi:headlessSpeechDest_spec_prop_04 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.DestinationSpec" .
+
+jfsi:headlessSpeechDest_spec_prop_04
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination04" ;
+      cs:propValue "csi:destination_22" .
+
+#################################################
+
+jfsi:headlessSpeech_requestDest_4
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:destination_lifecycle ;
+      cs:registrationStrategy
+              jfsi:headlessSpeech_dest_registration_4 ;
+      cs:serviceBinding jfsi:headlessSpeechDest_spec_bind_4 .
+
+jfsi:headlessSpeech_dest_registration_4
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:headlessSpeechDest_reg_prop_05 ;
+      jfs:serviceJavaFQCN "javax.jms.Destination" .
+
+jfsi:headlessSpeechDest_reg_prop_05
+      rdf:type jfrt:property ;
+      cs:propKey "destinationId" ;
+      cs:propValue "headlessSpeech_requestDest_4" .
+
+jfsi:headlessSpeechDest_spec_bind_4
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:destinationSpec ;
+      cs:hasProperty jfsi:headlessSpeechDest_spec_prop_05 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.messaging.DestinationSpec" .
+
+jfsi:headlessSpeechDest_spec_prop_05
+      rdf:type jfrt:property ;
+      cs:propKey "http://www.w3.org/2002/07/owl#speechDestination05" ;
+      cs:propValue "csi:destination_22" .
+
+#################################################
+
+jfsi:serviceframe_service
+      rdf:type jfrt:serviceManager ;
+      cs:lifecycleType jfsi:serviceframe_lifecycle ;
+      cs:registrationStrategy
+              jfsi:serviceframe_registration ;
+      cs:serviceBinding jfsi:serviceframe_binding .
+
+jfsi:serviceframe_registration
+      rdf:type jfrt:basicRegistration ;
+      cs:hasProperty jfsi:serviecFrame_reg_prop_01 ;
+      jfs:serviceJavaFQCN "org.jflux.swing.services.ServicesFrame" .
+
+jfsi:serviecFrame_reg_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "serviceFrame" ;
+      cs:propValue "serviceframe_service" .
+
+jfsi:serviceframe_binding
+      rdf:type jfrt:serviceBinding ;
+      cs:Binding jfsi:lazy ;
+      cs:dependencyURI jfsi:bundlecontext_dep ;
+      cs:hasProperty jfsi:serviceFrame_bind_prop_01 ;
+      jfs:serviceJavaFQCN "org.jflux.spec.services.BundleContextSpec" .
+
+jfsi:serviceFrame_bind_prop_01
+      rdf:type jfrt:property ;
+      cs:propKey "bundleContextSpec" ;
+      cs:propValue "http://www.w3.org/2002/07/owl#bundleContextSpec" .
+
+#################################################
+
+
