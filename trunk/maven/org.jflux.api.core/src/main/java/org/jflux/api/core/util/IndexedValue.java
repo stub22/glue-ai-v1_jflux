@@ -18,17 +18,39 @@ package org.jflux.api.core.util;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Index/value pair
  * @author Matthew Stevenson
+ * @param <I> index type
+ * @param <V> value type
  */
 public interface IndexedValue<I,V> {
+
+    /**
+     * Get the index
+     * @return the index
+     */
     public I getIndex();
+
+    /**
+     * Get the value
+     * @return the value
+     */
     public V getValue();
     
+    /**
+     * Simple implementation of IndexedValue
+     * @param <I> index type
+     * @param <V> value type
+     */
     public static class BasicIndexedValue<I,V> implements IndexedValue<I, V> {
         private I myIndex;
         private V myValue;
         
+        /**
+         * Build a BasicIndexedValue from index and value
+         * @param index the index
+         * @param value the value
+         */
         public BasicIndexedValue(I index, V value){
             if(index == null){
                 throw new NullPointerException();
@@ -37,11 +59,19 @@ public interface IndexedValue<I,V> {
             myValue = value;
         }
         
+        /**
+         * Get the index
+         * @return the index
+         */
         @Override
         public I getIndex() {
             return myIndex;
         }
 
+        /**
+         * Get the value
+         * @return the value
+         */
         @Override
         public V getValue() {
             return myValue;
@@ -49,14 +79,34 @@ public interface IndexedValue<I,V> {
         
     }
     
+    /**
+     *
+     * @param <I>
+     */
     public static class IndexAdapter<I> implements Adapter<IndexedValue<I,?>,I>{
+
+        /**
+         *
+         * @param a
+         * @return
+         */
         @Override
         public I adapt(IndexedValue<I, ?> a) {
             return a.getIndex();
         }
     }
     
+    /**
+     * Adapter to strip the index off an IndexedValue
+     * @param <V> type of value
+     */
     public static class ValueAdapter<V> implements Adapter<IndexedValue<?,V>,V>{
+
+        /**
+         * Strips the index off an IndexedValue
+         * @param a an IndexedValue
+         * @return the value
+         */
         @Override
         public V adapt(IndexedValue<?, V> a) {
             return a.getValue();

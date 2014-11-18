@@ -18,9 +18,15 @@ package org.jflux.api.core.node;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * Node for sending information
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <E> information type
  */
 public interface ProducerNode<E> extends Node{
+
+    /**
+     * Get the internal Notifier
+     * @return the internal Notifier
+     */
     public Notifier<E> getNotifier();
 }

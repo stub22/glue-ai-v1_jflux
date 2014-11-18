@@ -20,13 +20,18 @@ import org.jflux.api.core.playable.ConditionalListener;
 import org.jflux.api.core.Listener;
 
 /**
- *
+ * Basic implementation of a ConsumerNode
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <In> information type
  */
 public class DefaultConsumerNode<In> extends 
         BasicPlayable implements ConsumerNode<In> {
     private Listener<In> myListener;
 
+    /**
+     * Builds a DefaultConsumerNode around a listener
+     * @param proc
+     */
     public DefaultConsumerNode(Listener<In> proc){
         if(proc == null){
             throw new NullPointerException();
@@ -34,6 +39,10 @@ public class DefaultConsumerNode<In> extends
         myListener = new ConditionalListener<In>(this, proc);
     }
     
+    /**
+     * Get the internal Listener
+     * @return the internal Listener
+     */
     @Override
     public Listener<In> getListener() {
         return myListener;

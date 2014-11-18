@@ -21,18 +21,24 @@ import java.util.List;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Adapter to convert an item to a List
  * @author Matthew Stevenson
+ * @param <T> input data type
  */
-
-
 public class ListAdapter<T> implements Adapter<T, List<T>> {
     private int myCapacity;
     
+    /**
+     * Builds a ListAdapter with capacity 10
+     */
     public ListAdapter(){
         myCapacity = 10; //ArrayList default capacity
     }
     
+    /**
+     * Builds a ListAdapter with specified capacity
+     * @param capacity
+     */
     public ListAdapter(int capacity){
         if(capacity < 1){
             throw new IllegalArgumentException("Capacity must be greater than zero.");
@@ -40,6 +46,11 @@ public class ListAdapter<T> implements Adapter<T, List<T>> {
         myCapacity = capacity;
     }
     
+    /**
+     * Converts an item to a list
+     * @param a input item
+     * @return List containing item
+     */
     @Override
     public List<T> adapt(T a) {
         List<T> l = new ArrayList<T>(myCapacity);

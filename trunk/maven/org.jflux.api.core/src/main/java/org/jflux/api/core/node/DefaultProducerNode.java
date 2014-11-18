@@ -20,13 +20,18 @@ import org.jflux.api.core.playable.ConditionalNotifier;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * Basic implementation of a ProducerNode
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <Out> information type
  */
 public class DefaultProducerNode<Out> extends 
         BasicPlayable implements ProducerNode<Out> {
     private Notifier<Out> myNotifier;
 
+    /**
+     * Builds a DefaultProducerNode around a Notifier
+     * @param notifier the Notifier
+     */
     public DefaultProducerNode(Notifier<Out> notifier){
         if(notifier == null){
             throw new NullPointerException();
@@ -34,6 +39,10 @@ public class DefaultProducerNode<Out> extends
         myNotifier = new ConditionalNotifier<Out>(this, notifier);
     }
 
+    /**
+     * Get the internal Notifier
+     * @return the internal Notifier
+     */
     @Override
     public Notifier<Out> getNotifier() {
         return myNotifier;

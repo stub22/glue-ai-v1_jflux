@@ -20,16 +20,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Adapter that converts items per an internal Map
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <K> input data type
+ * @param <V> output data type
  */
 public class MapAdapter<K,V> implements Adapter<K,V>{
     private Map<K,V> myMap;
     
+    /**
+     * Creates an empty MapAdapter
+     */
     public MapAdapter(){
         myMap = new HashMap<K, V>();
     }
     
+    /**
+     * Creates a MapAdapter with existing Map
+     * @param map Map to use
+     */
     public MapAdapter(Map<K,V> map){
         if(map == null){
             throw new NullPointerException();
@@ -37,19 +46,39 @@ public class MapAdapter<K,V> implements Adapter<K,V>{
         myMap = map;
     }
     
+    /**
+     * Converts values using the internal Map as a table
+     * @param a input value
+     * @return output value
+     */
     @Override
     public V adapt(K a) {
         return myMap.get(a);
     }
     
+    /**
+     * Gets the internal Map
+     * @return the internal Map
+     */
     public Map<K,V> getMap(){
         return myMap;
     }
     
+    /**
+     * Adapter to yank and process a value out of a Map given a pre-set key
+     * @param <K> key type
+     * @param <V> map value type
+     * @param <T> output type
+     */
     public static class MapValueAdapter<K,V,T> implements Adapter<Map<K,V>,T> {
         private K myKey;
         private Adapter<V,T> myAdapter;
         
+        /**
+         * Builds a MapValueAdapter from a key and Adapter
+         * @param key the key
+         * @param adapter the internal Adapter
+         */
         public MapValueAdapter(K key, Adapter<V,T> adapter){
             if(key == null || adapter == null){
                 throw new NullPointerException();
@@ -58,6 +87,12 @@ public class MapAdapter<K,V> implements Adapter<K,V>{
             myAdapter = adapter;
         }
         
+        /**
+         * Yank a Map's value per the internal key and run it through the
+         * internal Adapter
+         * @param a input map
+         * @return processed value
+         */
         @Override
         public T adapt(Map<K, V> a) {
             if(a == null){

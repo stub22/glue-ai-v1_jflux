@@ -22,13 +22,29 @@ import org.jflux.api.core.chain.AdapterChain.AdapterChainBuilder;
 import org.jflux.api.core.util.DefaultNotifier;
 
 /**
- *
+ * Chains a Notifier to one or more Adapters
  * @author Matthew Stevenson
+ * @param <A> input data type
+ * @param <B> output data type
  */
 public class NotifierChain<A,B> extends DefaultNotifier<B> {
+
+    /**
+     * Internal notifier
+     */
     protected Notifier<A> myInnerNotifier;
+
+    /**
+     * ListenerChain containing Adapters
+     */
     protected ListenerChain<A,B> myListenerChain;
         
+    /**
+     * Builds a NotifierChain from a Notifier and an Adapter
+     * @param <C> data type
+     * @param inputNotifier internal Notifier
+     * @param adapter Adapter to process data
+     */
     public <C> NotifierChain(Notifier<C> inputNotifier, Adapter<C,B> adapter) {
         if(inputNotifier == null || adapter == null){
             throw new NullPointerException();
@@ -48,10 +64,18 @@ public class NotifierChain<A,B> extends DefaultNotifier<B> {
         }
     }
     
+    /**
+     * Get the internal Notifier
+     * @return the internal Notifier
+     */
     public Notifier<A> getInnerNotifier(){
         return myInnerNotifier;
     }
     
+    /**
+     * Get the internal Adapter
+     * @return the internal Adapter
+     */
     public Adapter<A,B> getInnerAdapter(){
         return myListenerChain.getInnerAdapter();
     }
@@ -63,32 +87,67 @@ public class NotifierChain<A,B> extends DefaultNotifier<B> {
         }
     }
 
+    /**
+     * Creates a NotifierChainBuilder from a Notifier
+     * @param <T> data type
+     * @param notifier base Notifier
+     * @return new NotifierChainBuilder
+     */
     public static <T> NotifierChainBuilder<T,T> builder(Notifier<T> notifier){
         return new NotifierChainBuilder<T,T>().setNotifier(notifier);
     }
 
+    /**
+     * Creates an empty NotifierChainBuilder
+     * @param <T> data type
+     * @return empty NotifierChainBuilder
+     */
     public static <T> NotifierChainBuilder<T,T> builder(){
         return new NotifierChainBuilder<T,T>();
     }
     
+    /**
+     * Utility class to build a NotifierChain from components
+     * @param <X> input data type
+     * @param <Y> output data type
+     */
     public static class NotifierChainBuilder<X,Y> {
         private Notifier<X> myNotifier;
         private AdapterChainBuilder<X,Y> myAdapters;
         
+        /**
+         * Creates an empty NotifierChainBuilder
+         */
         public NotifierChainBuilder(){
             myAdapters = new AdapterChainBuilder<X, Y>();
         }
         
+        /**
+         * Set the internal Notifier
+         * @param notifier the Internal notifier
+         * @return the NotifierChainBuilder itself
+         */
         public NotifierChainBuilder<X,Y> setNotifier(Notifier<X> notifier){
             myNotifier = notifier;
             return this;
         }
 
+        /**
+         * Add an Adapter
+         * @param <T> intermediate data type
+         * @param adapter Adapter to add
+         * @return the NotifierChainBuilder itself
+         */
         public <T> NotifierChainBuilder<X,T> attach(Adapter<Y,T> adapter){
             myAdapters.attach(adapter);
             return (NotifierChainBuilder<X,T>)this;
         }
 
+        /**
+         * Generates a new NotifierChain
+         * @param <T> data type
+         * @return new NotifierChain
+         */
         public <T> NotifierChain<T,Y> done(){
             return new NotifierChain<T,Y>(myNotifier, myAdapters.done());
         }

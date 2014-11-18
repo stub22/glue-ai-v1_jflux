@@ -21,16 +21,27 @@ import org.jflux.api.core.node.ProducerNode;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * NodeChain that acts as a single ProducerNode
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <T> output data type
  */
 public class ProducerChain<T> extends NodeChain implements ProducerNode<T> {
     
+    /**
+     * Builds a ProducerChain
+     * @param <P> output data type
+     * @param producer initial ProducerNode
+     * @param chain List of ProcessorNodes fed by the ProducerNode
+     */
     public <P> ProducerChain(
             ProducerNode<P> producer, List<ProcessorNode<?,?>> chain){
         super(producer, chain);
     }
     
+    /**
+     * Get the underlying Notifier
+     * @return the underlying Notifier
+     */
     @Override
     public Notifier<T> getNotifier() {
         List<ProcessorNode> nodes = getProcessorChain();
@@ -42,11 +53,19 @@ public class ProducerChain<T> extends NodeChain implements ProducerNode<T> {
         return null;
     }
     
+    /**
+     * Get the initial Producer
+     * @return the initial Producer
+     */
     @Override
     public ProducerNode getProducer(){
         return super.getProducer();
     }
     
+    /**
+     * Get the ProcessorNodes
+     * @return list of all ProcessorNodes
+     */
     @Override
     public List<ProcessorNode> getProcessorChain(){
         return super.getProcessorChain();

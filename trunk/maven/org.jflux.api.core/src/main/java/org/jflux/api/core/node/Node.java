@@ -18,7 +18,7 @@ package org.jflux.api.core.node;
 import org.jflux.api.core.playable.Playable;
 
 /**
- *
+ * Controllable information handler
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Node extends Playable{

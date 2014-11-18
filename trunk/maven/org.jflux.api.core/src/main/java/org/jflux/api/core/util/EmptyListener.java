@@ -19,13 +19,16 @@ package org.jflux.api.core.util;
 import org.jflux.api.core.Listener;
 
 /**
- *
+ * Listener that does nothing.
  * @author Matthew Stevenson
+ * @param <T> input data type
  */
-
-
 public class EmptyListener<T> implements Listener<T>{
 
+    /**
+     * Do nothing
+     * @param input input data
+     */
     @Override
     public void handleEvent(T input) {}
     

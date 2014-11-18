@@ -18,12 +18,17 @@ package org.jflux.api.core.util;
 import org.jflux.api.core.Listener;
 
 /**
- *
+ * Notifier to process a collection of events
  * @author Matthew Stevenson
+ * @param <T> event type
  */
 public class IteratingNotifier<T> extends 
         DefaultNotifier<T> implements Listener<Iterable<T>>{
 
+    /**
+     * Receives a collection of events and notifies for each one
+     * @param event collection of events
+     */
     @Override
     public void handleEvent(Iterable<T> event) {
         for(T t : event){
@@ -31,9 +36,17 @@ public class IteratingNotifier<T> extends
         }
     }
     
+    /**
+     * Notifier to process an array of events
+     * @param <T> event type
+     */
     public static class IteratingArrayNotifier<T> extends 
             DefaultNotifier<T> implements Listener<T[]>{
 
+        /**
+         * Receives an array of events and notifies for each one
+         * @param event
+         */
         @Override
         public void handleEvent(T[] event) {
             for(T t : event){

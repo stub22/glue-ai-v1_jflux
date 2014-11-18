@@ -22,11 +22,16 @@ import org.jflux.api.core.Notifier;
 import org.jflux.api.core.util.DefaultNotifier;
 
 /**
- *
+ * Notifier whose operation can be controlled as a Playable
  * @author Matthew Stevenson
+ * @param <T> input data type
  */
 public interface PlayableNotifier<T> extends Notifier<T>, Playable{
         
+    /**
+     * Basic implementation of a PlayableNotifier
+     * @param <T> input data type
+     */
     public static class DefaultPlayableNotifier<T> extends
             BasicPlayable implements PlayableNotifier<T> {
         private final static Logger theLogger = 
@@ -34,6 +39,10 @@ public interface PlayableNotifier<T> extends Notifier<T>, Playable{
         
         private Notifier<T> myNotifier;
         
+        /**
+         * Builds a DefaultPlayableNotifier from a regular Notifier
+         * @param notifier base Notifier
+         */
         public DefaultPlayableNotifier(Notifier<T> notifier){
             if(notifier == null){
                 throw new NullPointerException();
@@ -41,24 +50,43 @@ public interface PlayableNotifier<T> extends Notifier<T>, Playable{
             myNotifier = notifier;
         }
         
+        /**
+         * Builds a fresh DefaultPlayableNotifier
+         */
         public DefaultPlayableNotifier(){
             myNotifier = new DefaultNotifier<T>();
         }
         
+        /**
+         * Gets the unmanaged Notifier
+         * @return unmanaged Notifier
+         */
         public Notifier<T> getNotifier(){
             return myNotifier;
         }
         
+        /**
+         * Adds a Listener
+         * @param listener Listener to add
+         */
         @Override
         public void addListener(Listener<T> listener) {
             myNotifier.addListener(listener);
         }
 
+        /**
+         * Removes a Listener
+         * @param listener Listener to remove
+         */
         @Override
         public void removeListener(Listener<T> listener) {
             myNotifier.removeListener(listener);
         }
 
+        /**
+         * Notify Listeners if RUNNING
+         * @param e input data event
+         */
         @Override
         public void notifyListeners(T e) {
             if(getPlayState() == Playable.PlayState.RUNNING){

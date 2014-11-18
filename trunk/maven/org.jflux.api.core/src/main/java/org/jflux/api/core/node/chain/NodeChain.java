@@ -26,8 +26,11 @@ import org.jflux.api.core.playable.PlayableGroup;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * Cluster of Nodes, linking a ProducerNode and ConsumerNode through one or more
+ * ProcessorNodes
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <P> production type
+ * @param <C> consumption type
  */
 public class NodeChain<P,C> extends PlayableGroup implements Node{
     private ProducerNode<P> myProducer;
@@ -119,18 +122,34 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         }
     }
     
+    /**
+     * Get the NodeChain's producer
+     * @return ProducerNode
+     */
     protected ProducerNode<P> getProducer(){
         return myProducer;
     }
     
+    /**
+     * Get the NodeChain's processors
+     * @return List of ProcessorNodes
+     */
     protected List<ProcessorNode<?,?>> getProcessorChain(){
         return myProcessors;
     }
     
+    /**
+     * Get the NodeChain's consumer
+     * @return ConsumerNode
+     */
     protected ConsumerNode<C> getConsumer(){
         return myConsumer;
     }
     
+    /**
+     * Start the NodeChain
+     * @return success or failure
+     */
     @Override
     public boolean start(){
         if(!myWiredFlag){
@@ -138,6 +157,11 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         }
        return super.start();
     }
+
+    /**
+     * Stop the NodeChain
+     * @return success or failure
+     */
     @Override
     public boolean stop(){
         if(myWiredFlag){
@@ -146,6 +170,9 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
        return super.stop();
     }
     
+    /**
+     * Hook up all nodes in the chain (Producer -> Processors -> Consumer)
+     */
     protected void wire(){
         if(myWiredFlag){
             return;
@@ -175,7 +202,9 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         myWiredFlag = true;
     }
     
-    
+    /**
+     * Disconnect all nodes in the chain
+     */
     protected void unwire(){
         if(!myWiredFlag){
             return;
@@ -239,6 +268,10 @@ public class NodeChain<P,C> extends PlayableGroup implements Node{
         n.removeListener(consumer.getListener());
     }
 
+    /**
+     * Get all managed Nodes
+     * @return collection of Nodes
+     */
     @Override
     protected Iterable<Playable> getPlayables() {
         return myPlayables;

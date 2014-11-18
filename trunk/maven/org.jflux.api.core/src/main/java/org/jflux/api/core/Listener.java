@@ -16,8 +16,15 @@
 package org.jflux.api.core;
 
 /**
+ * Interface for listening for an event
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <T> type of event to listen for
  */
 public interface Listener<T> {
+
+    /**
+     * Handles an input event of type T
+     * @param input event data
+     */
     public void handleEvent(T input);
 }

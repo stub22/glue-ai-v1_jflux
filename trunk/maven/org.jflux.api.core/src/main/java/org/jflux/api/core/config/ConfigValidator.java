@@ -20,28 +20,65 @@ import java.util.Set;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Interface for validating a configuration
  * @author Matthew Stevenson
+ * @param <K> type of configuration key
+ * @param <E> type of validation error
  */
 public interface ConfigValidator<K, E> extends 
         Adapter<Configuration<K>,List<E>> {
     
+    /**
+     * Validates configuration
+     * @param a Configuration to validate
+     * @return List of errors
+     */
     @Override
     public List<E> adapt(Configuration<K> a);
     
+    /**
+     * Partial implementation of a ConfigValidator
+     * @param <K> type of Configuration key
+     * @param <E> type of validation error
+     */
     public abstract class AbstractConfigValidator<K,E> implements 
             ConfigValidator<K, E> {
+
+        /**
+         * Get the Set of valid keys
+         * @return Set of valid keys
+         */
         public abstract Set<K> getValidKeySet();
         
         
         //protected abstract <V> Adapter<V,List<E>> getFieldValidator(  
                 //does not compile in JDK >= 1.6.25
-        protected abstract Adapter getFieldValidator(
+
+        /**
+         * Get the validator for a particular key
+         * @param key key to validate
+         * @param config Configuration to operate on
+         * @return validator for key
+         */
+                protected abstract Adapter getFieldValidator(
                 K key, Configuration<K> config);
 
+        /**
+         * Get typed validator for a particular key
+         * @param <V> type of value
+         * @param clazz Class of value
+         * @param key key to validate
+         * @param config Configuration to operate on
+         * @return validator for key
+         */
         protected abstract <V> Adapter<V,List<E>> getFieldValidator(
                 Class<V> clazz, K key, Configuration<K> config);
 
+        /**
+         * Validate a Configuration
+         * @param a Configuration to validate
+         * @return List of errors
+         */
         @Override
         public List<E> adapt(Configuration<K> a) {
             List<E> allErrors = null;

@@ -20,10 +20,17 @@ import java.util.List;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Adapter to flatten a List of Lists
  * @author Matthew Stevenson
+ * @param <T> list item type
  */
 public class ListMergeAdapter<T> implements Adapter<List<List<T>>,List<T>> {
+
+    /**
+     * Flattens a List of Lists to a single List
+     * @param a List of Lists
+     * @return List
+     */
     @Override
     public List<T> adapt(List<List<T>> a) {
         int n = 0;

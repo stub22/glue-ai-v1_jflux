@@ -23,13 +23,22 @@ import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * Utility class to build a NodeChain from components
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <H> input data type
+ * @param <T> output data type
  */
 public class NodeChainBuilder<H,T> {
     private ProducerNode myProducer;
     private List<ProcessorNode> myProcessorList;
     
+    /**
+     * Create a new NodeChainBuilder from an Adapter (-> ProcessorNode)
+     * @param <H> input data type
+     * @param <T> output data type
+     * @param adapter central Adapter
+     * @return new NodeChainBuilder
+     */
     public static <H,T> NodeChainBuilder<H,T> build(Adapter<H,T> adapter){
         if(adapter == null){
             throw new NullPointerException();
@@ -37,6 +46,13 @@ public class NodeChainBuilder<H,T> {
         return build(new DefaultProcessorNode(adapter));
     }
     
+    /**
+     * Create a new NodeChainBuilder from a ProcessorNode
+     * @param <H> input data type
+     * @param <T> output data type
+     * @param proc central ProcessorNode
+     * @return new NodeChainBuilder
+     */
     public static <H,T> NodeChainBuilder<H,T> build(ProcessorNode<H,T> proc){
         if(proc == null){
             throw new NullPointerException();
@@ -44,6 +60,12 @@ public class NodeChainBuilder<H,T> {
         return new NodeChainBuilder<H, H>().attach(proc);
     }
     
+    /**
+     * Create a new NodeChainBuilder from a Notifier (-> ProducerNode)
+     * @param <C> input data type
+     * @param producer initial Notifier
+     * @return new NodeChainBuilder
+     */
     public static <C> NodeChainBuilder<C,C> build(Notifier<C> producer){
         if(producer == null){
             throw new NullPointerException();
@@ -51,6 +73,12 @@ public class NodeChainBuilder<H,T> {
         return build(new DefaultProducerNode<C>(producer));
     }
     
+    /**
+     * Create a new NodeChainBuilder from a ProducerNode
+     * @param <C> input data type
+     * @param producer initial ProducerNode
+     * @return new NodeChainBuilder
+     */
     public static <C> NodeChainBuilder<C,C> build(ProducerNode<C> producer){
         if(producer == null){
             throw new NullPointerException();
@@ -64,6 +92,12 @@ public class NodeChainBuilder<H,T> {
         myProcessorList = new ArrayList<ProcessorNode>();
     }
     
+    /**
+     * Add an Adapter (-> ProcessorNode) to the chain
+     * @param <N> intermediate data type
+     * @param adapter Adapter to add
+     * @return the NodeChainBuilder itself
+     */
     public <N> NodeChainBuilder<H,N> attach(Adapter<T,N> adapter){
         if(adapter == null){
             throw new NullPointerException();
@@ -71,6 +105,12 @@ public class NodeChainBuilder<H,T> {
         return attach(new DefaultProcessorNode<T, N>(adapter));
     }
     
+    /**
+     * Add a ProcessorNode to the chain
+     * @param <N> intermediate data type
+     * @param proc ProcessorNode to add
+     * @return the NodeChainBuilder itself
+     */
     public <N> NodeChainBuilder<H,N> attach(ProcessorNode<T,N> proc){
         if(proc == null){
             throw new NullPointerException();
@@ -79,6 +119,11 @@ public class NodeChainBuilder<H,T> {
         return (NodeChainBuilder<H,N>)this;
     }
     
+    /**
+     * Add a Listener (-> ConsumerNode) to the chain
+     * @param consumer Listener to add
+     * @return the NodeChainBuilder itself
+     */
     public NodeChain attach(Listener<T> consumer){
         if(consumer == null){
             throw new NullPointerException();
@@ -86,6 +131,11 @@ public class NodeChainBuilder<H,T> {
         return attach(new DefaultConsumerNode<T>(consumer));
     }
     
+    /**
+     * Add a ConsumerNode to the chain
+     * @param consumer ConsumerNode to add
+     * @return the NodeChainBuilder itself
+     */
     public NodeChain attach(ConsumerNode<T> consumer){
         if(consumer == null){
             throw new NullPointerException();
@@ -98,22 +148,44 @@ public class NodeChainBuilder<H,T> {
         return new NodeChain(myProducer, myProcessorList, consumer);
     }
     
+    /**
+     * Build the NodeChain
+     * @return the NodeChain
+     */
     public NodeChain getNodeChain(){
         return new NodeChain(myProducer, myProcessorList);
     }
     
+    /**
+     * Build a ConsumerChain using a Listener (-> ConsumerNode)
+     * @param listener Listener
+     * @return new ConsumerChain
+     */
     public ConsumerChain<H> getConsumerChain(Listener<T> listener){
         return getConsumerChain(new DefaultConsumerNode<T>(listener));
     }
     
+    /**
+     * Build a ConsumerChain using a ConsumerNode
+     * @param node ConsumerNode
+     * @return new ConsumerChain
+     */
     public ConsumerChain<H> getConsumerChain(ConsumerNode<T> node){
         return new ConsumerChain(myProcessorList, node);
     }
     
+    /**
+     * Build a ProcessorChain
+     * @return new ProcessorChain
+     */
     public ProcessorChain<H,T> getProcessorChain(){
         return new ProcessorChain(myProcessorList);
     }
     
+    /**
+     * Build a ProducerChain
+     * @return new ProducerChain
+     */
     public ProducerChain<T> getProducerChain(){
         return new ProducerChain(myProducer, myProcessorList);
     }

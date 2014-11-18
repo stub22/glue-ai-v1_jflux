@@ -21,16 +21,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Basic Notifier implementation
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <E> event type
  */
 public class DefaultNotifier<E> implements Notifier<E> {
+
+    /**
+     * List of managed Listeners
+     */
     protected List<Listener<E>> myListeners;
     
+    /**
+     * Builds an empty DefaultNotifier
+     */
     public DefaultNotifier(){
         myListeners = new ArrayList<Listener<E>>();
     }
     
+    /**
+     * Forwards event to all Listeners
+     * @param e event to forward
+     */
     @Override
     public void notifyListeners(E e){
         for(Listener<E> l : myListeners){
@@ -38,6 +50,10 @@ public class DefaultNotifier<E> implements Notifier<E> {
         }
     }
     
+    /**
+     * Adds a Listener to the managed group
+     * @param listener Listener to add
+     */
     @Override
     public void addListener(Listener<E> listener) {
         if(listener == null){
@@ -48,6 +64,10 @@ public class DefaultNotifier<E> implements Notifier<E> {
         }
     }
 
+    /**
+     * Removes a Listener from the managed group
+     * @param listener Listener to remove
+     */
     @Override
     public void removeListener(Listener<E> listener) {
         if(listener == null){

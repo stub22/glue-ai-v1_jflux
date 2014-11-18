@@ -16,23 +16,39 @@
 package org.jflux.api.core.playable;
 
 /**
- *
+ * Collection of Playable objects that can all be set at once
  * @author Matthew Stevenson <www.jflux.org>
  */
 public abstract class PlayableGroup implements Playable{
     private PlayState myPlayState;
     
+    /**
+     * Get all Playables managed by this PlayableGroup
+     * @return collection of Playables
+     */
     protected abstract Iterable<Playable> getPlayables();
 
+    /**
+     * Get the state of the entire group
+     * @return PlayState of the group
+     */
     @Override
     public PlayState getPlayState() {
         return myPlayState;
     }
     
+    /**
+     * Set the PlayState for the group
+     * @param state new PlayState
+     */
     protected void setPlayState(PlayState state){
         myPlayState = state;
     }
 
+    /**
+     * Starts all managed Playables
+     * @return success or failure
+     */
     @Override
     public boolean start() {
         boolean ret = true;
@@ -44,6 +60,10 @@ public abstract class PlayableGroup implements Playable{
         return setState(ret, PlayState.RUNNING);
     }
 
+    /**
+     * Pauses all managed Playables
+     * @return success or failure
+     */
     @Override
     public boolean pause() {
         boolean ret = true;
@@ -55,6 +75,10 @@ public abstract class PlayableGroup implements Playable{
         return setState(ret, PlayState.PAUSED);
     }
 
+    /**
+     * Resumes all managed Playables
+     * @return success or failure
+     */
     @Override
     public boolean resume() {
         boolean ret = true;
@@ -66,6 +90,10 @@ public abstract class PlayableGroup implements Playable{
         return setState(ret, PlayState.RUNNING);
     }
 
+    /**
+     * Stops all managed Playables
+     * @return success or failure
+     */
     @Override
     public boolean stop() {
         boolean ret = true;
