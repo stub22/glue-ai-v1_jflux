@@ -21,8 +21,10 @@ import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * NodeChain that acts as a single ProcessorNode
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <In> input data type
+ * @param <Out> output data type
  */
 public class ProcessorChain<In,Out> extends 
         NodeChain implements ProcessorNode<In, Out> {
@@ -40,16 +42,28 @@ public class ProcessorChain<In,Out> extends
         myNodes = nodes;
     }
     
+    /**
+     * Get the underlying Listener
+     * @return the underlying Listener
+     */
     @Override
     public Listener<In> getListener() {
         return myHeadNode.getListener();
     }
 
+    /**
+     * Get the underlying Notifier
+     * @return the underlying Notifier
+     */
     @Override
     public Notifier<Out> getNotifier() {
         return myTailNode.getNotifier();
     }
     
+    /**
+     * Get all ProcessorNodes
+     * @return List of ProcessorNodes
+     */
     public List<ProcessorNode> getProcessorNodes(){
         return myNodes;
     }

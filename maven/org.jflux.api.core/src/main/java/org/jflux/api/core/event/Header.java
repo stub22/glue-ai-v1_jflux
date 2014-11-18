@@ -19,25 +19,64 @@ import java.util.Map;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Interface for one possible kind of Event metadata
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <SourceRef> type of source reference
+ * @param <Time> time format
  */
 public interface Header<SourceRef, Time> {
+
+    /**
+     * Get the source reference
+     * @return the source reference
+     */
     public SourceRef getSourceReference();
+
+    /**
+     * Get the current time.
+     * @return the current time
+     */
     public Time getTimestamp();
+
+    /**
+     * Get the event type
+     * @return the event type
+     */
     public String getEventType();
+
+    /**
+     * Get the metadata fields
+     * @return Map of metadata fields
+     */
     public Map<String,String> getHeaderProperties();
     
+    /**
+     * Adapter to take a Header and return its event type
+     */
     public static class HeaderTypeAdapter implements Adapter<Header,String> {
+
+        /**
+         * Takes a Header and returns its event type
+         * @param a the Header
+         * @return the event type
+         */
         @Override 
         public String adapt(Header a) {
             return a == null ? null : a.getEventType();
         }
     }
     
+    /**
+     * Adapter to take a Header and return one of its property values
+     */
     public static class HeaderPropertyAdapter implements 
             Adapter<Header,String> {
         private String myPropertyKey;
+
+        /**
+         * Builds a HeaderPropertyAdapter given a property key
+         * @param propertyKey
+         */
         public HeaderPropertyAdapter(String propertyKey){
             if(propertyKey == null){
                 throw new NullPointerException();
@@ -45,6 +84,12 @@ public interface Header<SourceRef, Time> {
             myPropertyKey = propertyKey;
         }
         
+        /**
+         * Takes a header and return a property value according to the stored
+         * property key
+         * @param a the Header
+         * @return a property value
+         */
         @Override 
         public String adapt(Header a) {
             if(a == null || a.getHeaderProperties() == null){

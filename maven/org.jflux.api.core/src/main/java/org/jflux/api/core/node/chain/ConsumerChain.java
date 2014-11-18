@@ -21,16 +21,27 @@ import org.jflux.api.core.node.ProcessorNode;
 import org.jflux.api.core.Listener;
 
 /**
- *
+ * NodeChain that acts as a single ConsumerNode
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <T> input data type
  */
 public class ConsumerChain<T> extends NodeChain implements ConsumerNode<T> {
     
+    /**
+     * Create a new ConsumerChain
+     * @param <P> input data type
+     * @param chain List of ProcessorNodes that feed the end ConsumerNode
+     * @param consumer end ConsumerNode
+     */
     public <P> ConsumerChain(
             List<ProcessorNode<?,?>> chain, ConsumerNode<P> consumer){
         super(chain, consumer);
     }
 
+    /**
+     * Get the underlying Listener
+     * @return the underlying Listener
+     */
     @Override
     public Listener<T> getListener() {
         List<ProcessorNode> nodes = getProcessorChain();
@@ -42,11 +53,19 @@ public class ConsumerChain<T> extends NodeChain implements ConsumerNode<T> {
         return null;
     }
     
+    /**
+     * Get the end ConsumerNode
+     * @return the end ConsumerNode
+     */
     @Override
     public ConsumerNode getConsumer(){
         return super.getConsumer();
     }
     
+    /**
+     * Get the ProcessorNodes
+     * @return List of ProcessorNodes
+     */
     @Override
     public List<ProcessorNode> getProcessorChain(){
         return super.getProcessorChain();

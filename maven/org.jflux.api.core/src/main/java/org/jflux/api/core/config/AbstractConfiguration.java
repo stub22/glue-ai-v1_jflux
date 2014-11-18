@@ -21,11 +21,18 @@ import org.jflux.api.core.Source;
 import org.jflux.api.core.event.ValueChange;
 
 /**
- *
+ * Partial implementation of a Configuration
  * @author Matthew Stevenson
+ * @param <K> type of Configuration keys
  */
 public abstract class AbstractConfiguration<K> implements Configuration<K> {
 
+    /**
+     * Gets the property associated with a key
+     * @param <T> type of the property
+     * @param key the key
+     * @return property associated with a key
+     */
     protected abstract <T> ConfigProperty<T> getConfigProperty(K key);
 
     @Override
@@ -38,6 +45,13 @@ public abstract class AbstractConfiguration<K> implements Configuration<K> {
         return getConfigProperty(clazz, key) != null;
     }
     
+    /**
+     * Gets the property associated with a key (type-safe)
+     * @param <T> type of the property
+     * @param propertyClass class of the property
+     * @param key the key
+     * @return property associated with a key
+     */
     protected <T> ConfigProperty<T> getConfigProperty(Class<T> propertyClass, K key){
         if(propertyClass == null || key == null){
             throw new NullPointerException();

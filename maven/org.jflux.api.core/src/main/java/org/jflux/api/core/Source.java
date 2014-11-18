@@ -16,9 +16,15 @@
 package org.jflux.api.core;
 
 /**
- *
+ * Interface for dynamically retrieving typed data
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <E> type of data to retrieve
  */
 public interface Source<E> {
+
+    /**
+     * Dynamically retrieves data
+     * @return retrieved data
+     */
     public E getValue();
 }

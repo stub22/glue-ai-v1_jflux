@@ -19,8 +19,10 @@ import java.util.List;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Configuration guaranteed to be valid
  * @author Matthew Stevenson
+ * @param <K> key type
+ * @param <C> validator type
  */
 public class ValidatedConfig<K,C extends ConfigValidator> extends 
         ReadOnlyConfig<K> {
@@ -35,15 +37,30 @@ public class ValidatedConfig<K,C extends ConfigValidator> extends
         myValidator = validator;
     }
     
+    /**
+     * Get the validator for proof of validation
+     * @return ConfigValidator used to validate the Configuration
+     */
     public C getValidator(){
         return myValidator;
     }
     
+    /**
+     * Runs a Configuration through a ConfigValidator and generates a
+     * ValidatedConfig
+     * @param <K> key type
+     * @param <E> error type
+     * @param <C> validator type
+     */
     public final static class Validator<K,E,C extends ConfigValidator<K,E>> implements
             Adapter<Configuration<K>,ValidatedConfig<K,C>> {
         private C myValidator;
         private List<E> myErrors;
         
+        /**
+         * Create a Validator from a ConfigValidator
+         * @param configValidator the ConfigValidator
+         */
         public Validator(C configValidator){
             if(configValidator == null){
                 throw new NullPointerException();
@@ -51,6 +68,11 @@ public class ValidatedConfig<K,C extends ConfigValidator> extends
             myValidator = configValidator;
         }
         
+        /**
+         * Validates a Configuration
+         * @param a Configuration to validate
+         * @return ValidatedConfig
+         */
         @Override
         public ValidatedConfig<K,C> adapt(Configuration<K> a) {
             List<E> errors = myValidator.adapt(a);
@@ -61,6 +83,10 @@ public class ValidatedConfig<K,C extends ConfigValidator> extends
             return new ValidatedConfig<K,C>(a, myValidator);
         }
         
+        /**
+         * Get validation errors
+         * @return List of errors
+         */
         public List<E> getErrors(){
             return myErrors;
         }

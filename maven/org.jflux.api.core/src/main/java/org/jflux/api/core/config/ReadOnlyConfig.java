@@ -27,8 +27,9 @@ import org.jflux.api.core.event.ValueChange;
 import org.jflux.api.core.util.DefaultSource;
 
 /**
- *
+ * A read-only implementation of a Configuration
  * @author Matthew Stevenson
+ * @param <K>
  */
 public class ReadOnlyConfig<K> extends AbstractConfiguration<K> {
     private final Map<K,ReadOnlyProperty> myProperties;
@@ -68,6 +69,12 @@ public class ReadOnlyConfig<K> extends AbstractConfiguration<K> {
         return null;
     }
 
+    /**
+     * Get the value associated with a key
+     * @param <T> type of the property
+     * @param key the key
+     * @return value associated with the key
+     */
     @Override
     protected final <T> ConfigProperty<T> getConfigProperty(K key) {
         return myProperties.get(key);
@@ -78,10 +85,19 @@ public class ReadOnlyConfig<K> extends AbstractConfiguration<K> {
         return myProperties.keySet();
     }
     
+    /**
+     * Represents an immutable property
+     * @param <V> type of the property
+     */
     public final static class ReadOnlyProperty<V> implements ConfigProperty<V>{
         private final Class<V> myValueClass;
         private final Source<V> mySource;
 
+        /**
+         * Initializes a property with type and value
+         * @param valueClass type of the property
+         * @param value value of the property
+         */
         public ReadOnlyProperty(Class<V> valueClass, V value) {
             if(valueClass == null){
                 throw new NullPointerException();
@@ -90,6 +106,10 @@ public class ReadOnlyConfig<K> extends AbstractConfiguration<K> {
             mySource = new DefaultSource<V>(value);
         }
 
+        /**
+         * Initializes a property from another property
+         * @param prop the new property
+         */
         public ReadOnlyProperty(ConfigProperty<V> prop){
             this(prop.getPropertyClass(), 
                     prop.getSource() == null 

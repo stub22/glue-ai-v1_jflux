@@ -23,25 +23,50 @@ import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * Utility class for chains
  * @author Matthew Stevenson
  */
 public class ChainUtils {
+
+    /**
+     * Break a Listener into components
+     * @param l the Listener
+     * @return ChainComponents
+     */
     public static ChainComponents explode(Listener l){
         return new ChainComponents(l);
     }
+
+    /**
+     * Break a Notifier into components
+     * @param n the Notifier
+     * @return ChainComponents
+     */
     public static ChainComponents explode(Notifier n){
         return new ChainComponents(n);
     }
+
+    /**
+     * Break an Adapter into components
+     * @param a the Adapter
+     * @return ChainComponents
+     */
     public static ChainComponents explode(Adapter a){
         return new ChainComponents(a);
     }
     
+    /**
+     * Represents the components of a chain
+     */
     public static class ChainComponents {
         private Listener myListener;
         private Notifier myNotifier;
         private List<Adapter> myAdapters;
         
+        /**
+         * Converts a Listener into components
+         * @param l Listener
+         */
         public ChainComponents(Listener l){
             if(l == null){
                 myAdapters = Collections.EMPTY_LIST;
@@ -54,6 +79,10 @@ public class ChainUtils {
             }
         }
         
+        /**
+         * Converts a Notifier into components
+         * @param n Notifier
+         */
         public ChainComponents(Notifier n){
             if(n == null){
                 myAdapters = Collections.EMPTY_LIST;
@@ -66,6 +95,10 @@ public class ChainUtils {
             }
         }
         
+        /**
+         * Converts an Adapter into components
+         * @param a Adapter
+         */
         public ChainComponents(Adapter a){
             if(a == null){
                 myAdapters = Collections.EMPTY_LIST;
@@ -85,22 +118,43 @@ public class ChainUtils {
             }
         }
         
+        /**
+         * Gets the Listener component
+         * @return Listener component
+         */
         public Listener getListener(){
             return myListener;
         }
         
+        /**
+         * Gets the Notifier component
+         * @return Notifier component
+         */
         public Notifier getNotifier(){
             return myNotifier;
         }
         
+        /**
+         * Gets all Adapter components
+         * @return List of Adapter components
+         */
         public List<Adapter> getAdapterList(){
             return myAdapters;
         }
         
+        /**
+         * Gets one Adapter component by index
+         * @param index Adapter index
+         * @return Adapter component
+         */
         public Adapter getAdapter(int index){
             return myAdapters.get(index);
         }
         
+        /**
+         * Gets number of Adapters
+         * @return number of Adapters
+         */
         public int getAdapterCount(){
             return myAdapters.size();
         }

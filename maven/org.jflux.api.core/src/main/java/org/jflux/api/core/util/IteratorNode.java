@@ -24,33 +24,53 @@ import org.jflux.api.core.playable.ConditionalListener;
 import org.jflux.api.core.playable.ConditionalNotifier;
 
 /**
- *
+ * ProcessorNode based around an IteratingNotifier
  * @author Matthew Stevenson
+ * @param <T> data type
  */
 public class IteratorNode<T> extends 
         BasicPlayable implements ProcessorNode<List<T>, T> {
     private Listener<List<T>> myListener;
     private Notifier<T> myNotifier;
     
+    /**
+     * Builds an empty IteratorNode
+     */
     public IteratorNode(){
         IteratingNotifier<T> in = new IteratingNotifier<T>();
         myListener = new ConditionalListener<List<T>>(this, in);
         myNotifier = new ConditionalNotifier<T>(this, in);
     }    
     
+    /**
+     * Get the internal Listener
+     * @return the internal Listener
+     */
     @Override
     public Listener<List<T>> getListener() {
         return myListener;
     }
 
+    /**
+     * Get the internal Notifier
+     * @return the internal Notifier
+     */
     @Override
     public Notifier<T> getNotifier() {
         return myNotifier;
     }
     
+    /**
+     * Notifier to process a List of events
+     * @param <T> event type
+     */
     public static class IteratingNotifier<T> extends 
             DefaultNotifier<T> implements Listener<List<T>>{
 
+        /**
+         * Receives a List of events and notifies for each one
+         * @param event collection of events
+         */
         @Override
         public void handleEvent(List<T> event) {
             for(T t : event){

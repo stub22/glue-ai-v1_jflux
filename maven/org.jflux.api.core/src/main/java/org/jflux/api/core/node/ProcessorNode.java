@@ -19,10 +19,22 @@ import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * Node for both sending and receiving information
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <In> input information type
+ * @param <Out> output information type
  */
 public interface ProcessorNode<In, Out> extends Node {
+
+    /**
+     * Get the internal Listener for receiving
+     * @return the internal Listener
+     */
     public Listener<In> getListener();
+
+    /**
+     * Get the internal Notifier for sending
+     * @return the internal Notifier
+     */
     public Notifier<Out> getNotifier();
 }

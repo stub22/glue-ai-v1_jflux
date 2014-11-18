@@ -19,12 +19,18 @@ import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Source;
 
 /**
- *
+ * Adapter to pull output from a Source
  * @author Matthew Stevenson
+ * @param <A> input data type
+ * @param <B> output data type
  */
 public class SourceAdapter<A, B> implements Adapter<A, B> {
     private Source<B> mySource;
 
+    /**
+     * Builds a SourceAdapter around a Source
+     * @param source
+     */
     public SourceAdapter(Source<B> source){
         if(source == null){
             throw new NullPointerException();
@@ -32,6 +38,11 @@ public class SourceAdapter<A, B> implements Adapter<A, B> {
         mySource = source;
     }
     
+    /**
+     * Disregard the input and return the Source's value
+     * @param a input data
+     * @return Source value
+     */
     @Override
     public B adapt(A a) {
         return mySource.getValue();

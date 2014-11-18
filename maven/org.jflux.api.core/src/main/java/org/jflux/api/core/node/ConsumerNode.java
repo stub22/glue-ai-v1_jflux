@@ -18,9 +18,15 @@ package org.jflux.api.core.node;
 import org.jflux.api.core.Listener;
 
 /**
- *
+ * Node for receiving information
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <E> information type
  */
 public interface ConsumerNode<E> extends Node{
+
+    /**
+     * Get the internal Listener
+     * @return the internal Listener
+     */
     public Listener<E> getListener();
 }

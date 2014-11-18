@@ -18,18 +18,35 @@ package org.jflux.api.core.util;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Adapter that does nothing
  * @author Matthew Stevenson
+ * @param <B> output data type
+ * @param <A> input data type
  */
 public class EmptyAdapter<B, A extends B> implements Adapter<A, B> {
 
+    /**
+     * Returns the input with no modification
+     * @param a input data
+     * @return same as input data
+     */
     @Override
     public B adapt(A a) {
         return a;
     }
     
+    /**
+     * Adapter that only casts to the output type
+     * @param <A> input data type
+     * @param <B> output data type
+     */
     public static class UnsafeCastingAdapter<A, B> implements Adapter<A, B> {
 
+        /**
+         * Cast data from input type to output type
+         * @param a input data
+         * @return same as input data, cast to output type
+         */
         @Override
         public B adapt(A a) {
             return (B)a;

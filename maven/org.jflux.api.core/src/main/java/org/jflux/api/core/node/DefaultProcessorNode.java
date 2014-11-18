@@ -24,8 +24,10 @@ import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * Basic implementation of a ProcessorNode
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <In> input information type
+ * @param <Out> output information type
  */
 public class DefaultProcessorNode<In, Out> extends 
         BasicPlayable implements ProcessorNode<In, Out> {
@@ -33,6 +35,10 @@ public class DefaultProcessorNode<In, Out> extends
     private Listener<In> myInputListener;
     private Notifier<Out> myOutputNotifier;
 
+    /**
+     * Builds a DefaultProcessorNode from an Adapter
+     * @param proc
+     */
     public DefaultProcessorNode(Adapter<In,Out> proc){
         if(proc == null){
             throw new NullPointerException();
@@ -44,11 +50,19 @@ public class DefaultProcessorNode<In, Out> extends
         myProcessor = proc;
     }
     
+    /**
+     * Get the internal Listener for receiving
+     * @return the internal Listener
+     */
     @Override
     public Listener<In> getListener() {
         return myInputListener;
     }
 
+    /**
+     * Get the internal Notifier for sending
+     * @return the internal Notifier
+     */
     @Override
     public Notifier<Out> getNotifier() {
         return myOutputNotifier;

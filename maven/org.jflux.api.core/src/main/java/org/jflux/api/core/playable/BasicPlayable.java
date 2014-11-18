@@ -16,45 +16,72 @@
 package org.jflux.api.core.playable;
 
 /**
- *
+ * Simple implementation of Playable
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class BasicPlayable implements Playable{
     private PlayState myPlayState;
     
+    /**
+     * Create a new BasicPlayable in INITIALIZING state
+     */
     public BasicPlayable(){
         myPlayState = PlayState.INITIALIZING;
     }
     
+    /**
+     * Starts the object
+     * @return success
+     */
     @Override
     public boolean start() {
         myPlayState = PlayState.RUNNING;
         return true;
     }
 
+    /**
+     * Pauses the object
+     * @return success
+     */
     @Override
     public boolean pause() {
         myPlayState = PlayState.PAUSED;
         return true;
     }
 
+    /**
+     * Resumes the object
+     * @return success
+     */
     @Override
     public boolean resume() {
         myPlayState = PlayState.RUNNING;
         return true;
     }
 
+    /**
+     * Stops the object
+     * @return success
+     */
     @Override
     public boolean stop() {
         myPlayState = PlayState.ABORTED;
         return true;
     }
     
+    /**
+     * Complete's the object's operation
+     * @return success
+     */
     protected boolean complete() {
         myPlayState = PlayState.COMPLETED;
         return true;
     }
 
+    /**
+     * Gets the object's state
+     * @return PlayState for the object
+     */
     @Override
     public PlayState getPlayState() {
         return myPlayState;

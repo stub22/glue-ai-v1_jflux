@@ -21,14 +21,20 @@ import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
 
 /**
- *
+ * Notifier that only works if a Playable is running
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <E> input data type
  */
 public class ConditionalNotifier<E> implements Notifier<E> {
     private final static Logger theLogger = Logger.getLogger(ConditionalListener.class.getName());
     private Playable myPlayable;
     private Notifier<E> myNotifier;
     
+    /**
+     * Builds a ConditionalNotifier from a Playable and a Notifier
+     * @param p the Playable
+     * @param n the Notifier
+     */
     public ConditionalNotifier(Playable p, Notifier<E> n){
         if(p == null || n == null){
             throw new NullPointerException();
@@ -37,6 +43,10 @@ public class ConditionalNotifier<E> implements Notifier<E> {
         myNotifier = n;
     }
 
+    /**
+     * Notifies Listeners if and only if in RUNNING state
+     * @param e event data to send
+     */
     @Override
     public void notifyListeners(E e) {
         if(myPlayable.getPlayState() == Playable.PlayState.RUNNING){
@@ -49,11 +59,19 @@ public class ConditionalNotifier<E> implements Notifier<E> {
         }
     }
 
+    /**
+     * Adds a Listener
+     * @param listener Listener to add
+     */
     @Override
     public void addListener(Listener<E> listener) {
         myNotifier.addListener(listener);
     }
 
+    /**
+     * Removes a Listener
+     * @param listener Listener to remove
+     */
     @Override
     public void removeListener(Listener<E> listener) {
         myNotifier.removeListener(listener);

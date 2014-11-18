@@ -24,6 +24,7 @@ import org.jflux.api.core.event.ValueChange;
  * Holds a property from a configuration.
  * 
  * @author Matthew Stevenson
+ * @param <V> type of the property's data
  */
 public interface ConfigProperty<V> {    
     /**

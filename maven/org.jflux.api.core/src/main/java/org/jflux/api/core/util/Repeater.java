@@ -27,6 +27,10 @@ import org.jflux.api.core.Listener;
 
 public class Repeater<E> extends DefaultNotifier<E> implements Listener<E> {
 
+    /**
+     * Forward an event to several listeners
+     * @param event event to forward
+     */
     @Override
     public void handleEvent(E event) {
         notifyListeners(event);

@@ -21,6 +21,10 @@ import org.jflux.api.core.Source;
 /**
  *
  * @author Matthew Stevenson
+ * @param <T>
+ * @param <V>
+ * @param <K>
+ * @param <C>
  */
 public interface ConfiguredFactory<
             T,K,C extends ConfigValidator,V extends ValidatedConfig<K,C>> 

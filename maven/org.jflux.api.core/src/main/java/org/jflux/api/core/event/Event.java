@@ -18,22 +18,55 @@ package org.jflux.api.core.event;
 import org.jflux.api.core.Adapter;
 
 /**
- *
+ * Interface for an event with metadata
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <H> type of metadata
+ * @param <D> type of data
  */
 public interface Event<H, D> {
+
+    /**
+     * Gets the event's metadata
+     * @return the metadata
+     */
     public H getHeader();
     
+    /**
+     * Gets the event's data
+     * @return the data
+     */
     public D getData();
     
+    /**
+     * Adapter to strip out all but an event's metadata
+     * @param <H> type of metadata
+     * @param <D> type of data
+     */
     public static class EventHeaderAdapter<H,D> implements Adapter<Event<H,D>,H> {
+
+        /**
+         * Returns an event's metadata
+         * @param a the event
+         * @return the metadata
+         */
         @Override
         public H adapt(Event<H, D> a) {
             return a.getHeader();
         }
     }
     
+    /**
+     * Adapter to strip out all but an event's data
+     * @param <H> type of metadata
+     * @param <D> type of data
+     */
     public static class EventDataAdapter<H,D> implements Adapter<Event<H,D>,D> {
+
+        /**
+         * Returns an event's data
+         * @param a the event
+         * @return the data
+         */
         @Override
         public D adapt(Event<H, D> a) {
             return a.getData();

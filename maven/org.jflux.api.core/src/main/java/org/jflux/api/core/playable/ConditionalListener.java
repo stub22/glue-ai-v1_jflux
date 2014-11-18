@@ -20,14 +20,20 @@ import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
 
 /**
- *
+ * Listener that only works if a Playable is running
  * @author Matthew Stevenson <www.jflux.org>
+ * @param <E> input data type
  */
 public class ConditionalListener<E> implements Listener<E> {
     private final static Logger theLogger = Logger.getLogger(ConditionalListener.class.getName());
     private Playable myPlayable;
     private Listener<E> myListener;
     
+    /**
+     * Builds a ConditionalListener from a Playable and a Listener
+     * @param p the Playable
+     * @param l the Listener
+     */
     public ConditionalListener(Playable p, Listener<E> l){
         if(p == null || l == null){
             throw new NullPointerException();
@@ -36,6 +42,10 @@ public class ConditionalListener<E> implements Listener<E> {
         myListener = l;
     }
 
+    /**
+     * Processes input event if and only if in RUNNING state
+     * @param event data to process
+     */
     @Override
     public void handleEvent(E event) {
         if(myPlayable.getPlayState() == Playable.PlayState.RUNNING){
