@@ -48,7 +48,7 @@
 	<properties>
 		<!-- Glue Dependencies -->
 		<appdapter.apache.qpid.version>1.0.5</appdapter.apache.qpid.version>
-		<appdapter.version>1.2.2</appdapter.version>
+		<appdapter.version>1.2.3-SNAPSHOT</appdapter.version>
 		<!-- Non Glue Dependencies -->
 		<avro.version>1.7.2</avro.version>
 		<avro.ipc.version>1.6.3</avro.ipc.version>
