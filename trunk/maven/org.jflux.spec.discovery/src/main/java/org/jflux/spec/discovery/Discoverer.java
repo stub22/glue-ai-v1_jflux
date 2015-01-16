@@ -84,6 +84,7 @@ public class Discoverer extends DefaultNotifier<UniqueService>
                 theLogger.error("Unsupported encoding: " + ex.getMessage());
                 continue;
             }
+			System.out.println("Packet Received: " + data);
             
             String[] lines = data.split("\n");
             
