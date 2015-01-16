@@ -19,11 +19,6 @@
             <artifactId>org.jflux.spec.discovery</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>org.jflux.demo.services</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
