@@ -1,0 +1,112 @@
+# load this with..  Repo repo = new UrlRepoSpec("file:/home/matt/dev/projects/com.hrkind.tools/maven/com.hrkind.tools.repoexport/target/HeadlessMessaging/dir.ttl").makeRepo();
+
+
+
+@prefix appsnazz:  <http://www.appdapter.org/ontologies/2010/snazzy.owl#> .
+@prefix apsb:    <http://www.appdapter.org/schema/box#> .
+@prefix apt:     <http://www.appdapter.org/test#> .
+@prefix bc:      <http://www.cogchar.org/bony/config#> .
+@prefix bci:     <http://www.cogchar.org/bony/config/instance#> .
+@prefix cc:      <http://www.cogchar.org/schema/crazyRandom#> .
+@prefix cca:     <http://www.cogchar.org/ontologies/y2012m06/AnimMotivMapBlend.owl#> .
+@prefix ccrt:    <urn:ftd:cogchar.org:2012:runtime#> .
+@prefix ccrti:   <urn:ftd:cogchar.org:2012:runtime_instance#> .
+@prefix cp:      <http://www.cogchar.org/schema/path#> .
+@prefix cpi:     <http://www.cogchar.org/schema/path/instance#> .
+@prefix cs:      <http://www.cogchar.org/schema/scene#> .
+@prefix csi:     <http://www.cogchar.org/schema/scene/instance#> .
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix edi:     <http://www.cogchar.org/TODO/maybe_enhanced_demo/instance#> .
+@prefix edt:     <http://www.cogchar.org/TODO/maybe_enhanced_demo/test_instance#> .
+@prefix f:       <http://www.friedularity.org/config#> .
+@prefix fc:      <http://www.friedularity.org/Connection#> .
+@prefix frt:     <urn:ftd:friendularity.org:2012:runtime#> .
+@prefix goody:   <urn:ftd:cogchar.org:2012:goody#> .
+@prefix gr:      <http://www.cogchar.org/general/config#> .
+@prefix gri:     <http://www.cogchar.org/general/config/instance#> .
+@prefix hev:     <urn:ftd:headyspace.org:2013:estimviz_type#> .
+@prefix hevi:    <urn:ftd:headyspace.org:2013:estimviz_inst#> .
+@prefix hrk:     <http://www.hrkind.com/model#> .
+@prefix hrrt:    <urn:ftd:hrkind.com:2012:runtime#> .
+@prefix ja:      <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix jfrt:    <urn:ftd:jflux.org:2012:runtime#> .
+@prefix jfrti:   <urn:ftd:jflux.org:2012:runtime_instance#> .
+@prefix jfs:     <http://www.jflux.org/service#> .
+@prefix jfsd:    <http://www.jflux.org/service/dependency#> .
+@prefix jfsi:    <http://www.jflux.org/service/instance#> .
+@prefix jme3:    <urn:ftd:cogchar.org:2012:jme3#> .
+@prefix kb:      <http://www.cogchar.org/key/binding#> .
+@prefix lc:      <http://www.cogchar.org/lift/config#> .
+@prefix lcc:     <http://www.cogchar.org/lightscamera/config#> .
+@prefix lcci:    <http://www.cogchar.org/lightscamera/config/instance#> .
+@prefix lci:     <http://www.cogchar.org/lift/config/instance#> .
+@prefix lfa:     <http://www.cogchar.org/lift/flow/action#> .
+@prefix liftcmd:  <http://www.cogchar.org/lift/config/command#> .
+@prefix liftconfig:  <http://www.cogchar.org/lift/config/configroot#> .
+@prefix liftdisp:  <http://www.cogchar.org/lift/action/display#> .
+@prefix liftqa:  <http://www.cogchar.org/lift/question_and_answer#> .
+@prefix liftquery:  <http://www.cogchar.org/lift/action/query#> .
+@prefix liftreg:  <http://www.cogchar.org/lift/action/registration#> .
+@prefix liftsessionvar:  <http://www.cogchar.org/lift/config/sessionVariable#> .
+@prefix liftuser:  <http://www.cogchar.org/lift/user#> .
+@prefix liftvar:  <http://www.cogchar.org/lift/config/variable#> .
+@prefix lua:     <http://www.cogchar.org/lift/user/action#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix path:    <http://www.cogchar.org/schema/path/definition#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rkrt:    <urn:ftd:robokind.org:2012:runtime#> .
+@prefix rktsr:   <urn:ftd:robosphinx.org:2013:SpeechRec#> .
+@prefix scenetrig:  <http://www.cogchar.org/schema/scene/trigger#> .
+@prefix ta:      <http://www.cogchar.org/thing/action#> .
+@prefix tai:     <http://www.cogchar.org/thing/action/instance#> .
+@prefix tap:     <http://www.cogchar.org/TODO/tap#> .
+@prefix thinganim:  <http://www.cogchar.org/schema/thinganim/definition#> .
+@prefix ua:      <http://www.cogchar.org/lift/user/config#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix zanim:   <http://www.hrkind.com/metad/2012/06/zenoAnims.owl#> .
+
+csi:connection_1
+      rdf:type cc:ConnectionModel , ccrt:FileModel ;
+      ccrt:repo csi:filerepo_2014030500_4653_200 ;
+      ccrt:sourcePath "connection_1.ttl" .
+
+csi:destination_1
+      rdf:type cc:DestinationModel , ccrt:FileModel ;
+      ccrt:repo csi:filerepo_2014030500_4653_200 ;
+      ccrt:sourcePath "destination_1.ttl" .
+
+csi:filerepo_2014030500_4653_200
+      rdf:type ccrt:FileRepo ;
+      ccrt:sourcePath "HeadlessMessaging/" .
+
+csi:lifecycle_1
+      rdf:type cc:LifecycleModel , ccrt:FileModel ;
+      ccrt:repo csi:filerepo_2014030500_4653_200 ;
+      ccrt:sourcePath "lifecycle_1.ttl" .
+
+csi:pipeline_sheet_0
+      rdf:type ccrt:FileModel ;
+      ccrt:repo csi:filerepo_2014030500_4653_200 ;
+      ccrt:sourcePath "pipeline_sheet_0.ttl" .
+
+ccrt:qry_sheet_77
+      rdf:type ccrt:QueryTxtModel , ccrt:FileModel ;
+      ccrt:repo csi:filerepo_2014030500_4653_200 ;
+      ccrt:sourcePath "qry_sheet_77.ttl" .
+
+csi:register_1
+      rdf:type cc:registrationSpecModel , ccrt:FileModel ;
+      ccrt:repo csi:filerepo_2014030500_4653_200 ;
+      ccrt:sourcePath "register_1.ttl" .
+
+csi:service_manager_1
+      rdf:type cc:SvcMngrModel , ccrt:FileModel ;
+      ccrt:repo csi:filerepo_2014030500_4653_200 ;
+      ccrt:sourcePath "service_manager_1.ttl" .
+
+
+# modelSize=30
+
+
+# dirModel = 30
