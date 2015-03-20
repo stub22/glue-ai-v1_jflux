@@ -1,7 +1,7 @@
 # load this with..  Repo repo = new UrlRepoSpec("file:/home/matt/dev/projects/com.hrkind.tools/maven/com.hrkind.tools.repoexport/target/HeadlessMessaging/dir.ttl").makeRepo();
 
 
-
+@prefix dphys:	<http://onto.robokind.info/onto/dphys#> .
 @prefix appsnazz:  <http://www.appdapter.org/ontologies/2010/snazzy.owl#> .
 @prefix apsb:    <http://www.appdapter.org/schema/box#> .
 @prefix apt:     <http://www.appdapter.org/test#> .
