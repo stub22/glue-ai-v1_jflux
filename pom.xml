@@ -48,7 +48,7 @@
 	<properties>
 		<!-- Glue Dependencies -->
 		<appdapter.apache.qpid.version>1.0.5</appdapter.apache.qpid.version>
-		<appdapter.version>1.2.4-SNAPSHOT</appdapter.version>
+		<appdapter.version>1.2.3</appdapter.version>
 		<!-- Non Glue Dependencies -->
 		<avro.version>1.7.2</avro.version>
 		<avro.ipc.version>1.6.3</avro.ipc.version>
@@ -144,6 +144,11 @@
 				<groupId>org.appdapter</groupId>
 				<artifactId>ext.bundle.jena_all_2_13_0</artifactId>
 				<version>${appdapter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.appdapter</groupId>
+				<artifactId>ext.bundle.jena_all_2_10_1</artifactId>
+				<version>1.2.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.felix</groupId>
