@@ -22,10 +22,12 @@
             <groupId>org.appdapter</groupId>
             <artifactId>org.appdapter.bundle.core</artifactId>
         </dependency>
+		<!--  We get jena indirectly from o.a.bundle.core.
         <dependency>
             <groupId>org.appdapter</groupId>
             <artifactId>ext.bundle.jena_all_2_10_1</artifactId>
         </dependency>
+		-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>org.jflux.api.common.rk</artifactId>
@@ -61,7 +63,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Fragment-Host>org.appdapter.ext.bundle.jena_all_2_10_1</Fragment-Host>
+                        <Fragment-Host>org.appdapter.ext.bundle.jena_all_2_13_0</Fragment-Host>
                         <Export-Package>org.jflux.spec.messaging.*</Export-Package>
                     </instructions>
                 </configuration>

@@ -17,7 +17,8 @@ public class Activator extends BundleActivatorBase {
     
     @Override
     public void start(BundleContext context) throws Exception {
-        forceLog4jConfig();
+		// forceLog4jConfig();
+		org.appdapter.fancy.log.Log4JUtils.setupScanTestLogging();
 		scheduleFrameworkStartEventHandler(context);
     }
 
