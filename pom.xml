@@ -46,9 +46,12 @@
 		<url>https://www.assembla.com/code/jflux/subversion/nodes/trunk/</url>
 	</scm>
 	<properties>
+		
+		<netbeans.compile.on.save>none</netbeans.compile.on.save>
+		
 		<!-- Glue Dependencies -->
 		<appdapter.apache.qpid.version>1.0.5</appdapter.apache.qpid.version>
-		<appdapter.version>1.2.3</appdapter.version>
+		<appdapter.version>1.2.4-SNAPSHOT</appdapter.version>
 		<!-- Non Glue Dependencies -->
 		<avro.version>1.7.2</avro.version>
 		<avro.ipc.version>1.6.3</avro.ipc.version>
@@ -85,12 +88,19 @@
 		<wagon.webdav.version>1.0-beta-7</wagon.webdav.version>
 		<!-- Plugin versions -->
 		<version.avro.maven.plugin>1.6.3</version.avro.maven.plugin>
+		<org.semweb4j.version>5.0.1</org.semweb4j.version>
+			
 		<version.license.maven.plugin>1.7</version.license.maven.plugin>
 		<version.maven.antrun.plugin>1.6</version.maven.antrun.plugin>
 		<version.maven.assembly.plugin>2.2</version.maven.assembly.plugin>
 		<version.maven.bundle.plugin>2.3.7</version.maven.bundle.plugin>
 		<version.maven.compiler.plugin>2.3.2</version.maven.compiler.plugin>
+
+		<version.maven.jar.plugin>2.3.2</version.maven.jar.plugin>
+		<version.maven.scala.plugin>2.15.2</version.maven.scala.plugin>
+	
 		<version.maven.resources.plugin>2.4.3</version.maven.resources.plugin>
+			
 		<version.maven.site.plugin>3.4</version.maven.site.plugin>
 		<version.maven.surefire.plugin>2.9</version.maven.surefire.plugin>
 		<version.org.apache.felix.main>4.2.1</version.org.apache.felix.main>
@@ -383,6 +393,17 @@
 					<artifactId>avro-maven-plugin</artifactId>
 					<version>${version.avro.maven.plugin}</version>
 				</plugin>
+				<plugin>
+					<groupId>org.semweb4j</groupId>
+					<artifactId>rdfreactor-maven-plugin</artifactId>
+					<version>${org.semweb4j.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${version.maven.jar.plugin}</version>
+				</plugin>
+				
 			</plugins>
 		</pluginManagement>
 	</build>

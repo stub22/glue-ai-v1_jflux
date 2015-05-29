@@ -18,10 +18,12 @@
 			<groupId>org.appdapter</groupId>
 			<artifactId>org.appdapter.bundle.core</artifactId>
 		</dependency>
+		<!-- Get jena indirectly from o.a.bundle.core.
         <dependency>
 			<groupId>org.appdapter</groupId>
             <artifactId>ext.bundle.jena_all_2_10_1</artifactId>
         </dependency>
+		-->
         <dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>org.jflux.api.services</artifactId>
@@ -52,7 +54,12 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Fragment-Host>org.appdapter.ext.bundle.jena_all_2_10_1</Fragment-Host>
+						<!-- Causes wiring exception - needs to also be a direct dep 
+						<Fragment-Host>org.apache.jena.jena-osgi</Fragment-Host>
+						-->
+						<!-- This is not the correct fragment under current config: -->
+                        <Fragment-Host>org.appdapter.ext.bundle.jena_all_2_13_0</Fragment-Host>
+						
                         <Export-Package>org.jflux.spec.services.*</Export-Package>
                     </instructions>
                 </configuration>
