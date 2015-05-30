@@ -156,11 +156,6 @@
 				<version>${appdapter.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.appdapter</groupId>
-				<artifactId>ext.bundle.jena_all_2_10_1</artifactId>
-				<version>1.2.3</version>
-			</dependency>
-			<dependency>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>org.apache.felix.main</artifactId>
 				<version>${version.org.apache.felix.main}</version>
