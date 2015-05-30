@@ -29,7 +29,7 @@ import org.jflux.api.service.extras.PropertyChangeNotifier;
 public abstract class DependencyTracker<T> extends PropertyChangeNotifier {    
     protected Source<Boolean> myCreatedFlag;
     protected BindingStrategy myBindingStrategy;
-    protected DepRefTracker<T> myTracker;
+    protected DepRefTracker myTracker;
     private String myDependencyName;
 
     public DependencyTracker(
@@ -69,17 +69,18 @@ public abstract class DependencyTracker<T> extends PropertyChangeNotifier {
     
     protected abstract void lazyAdd(Reference ref);
     
-    protected abstract void dependencyRemoved(Reference ref);
+    protected abstract void dependencyRemoved(Reference ref, T dep);
     
-    protected class DepRefTracker<T> extends ReferenceTracker<T>{
+    protected class DepRefTracker extends ReferenceTracker<T>{
         @Override protected synchronized void addReference(Reference ref) {
             super.addReference(ref);
             dependencyAdded(ref);
         }
 
         @Override protected synchronized void removeReference(Reference ref) {
-            dependencyRemoved(ref);
+			T dep = getService(ref);
             super.removeReference(ref);
+            dependencyRemoved(ref, dep);
         }
     }
 }

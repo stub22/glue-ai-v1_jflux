@@ -57,12 +57,11 @@ public class MultiDependencyTracker<T> extends DependencyTracker<T> {
     }
     
     @Override
-    protected synchronized void dependencyRemoved(Reference ref){
-        T service = myTracker.getTrackedService(ref);
-        if(service == null){
+    protected synchronized void dependencyRemoved(Reference ref, T dep){
+        if(dep == null){
             return;
         }
-        firePropertyChange(PROP_DEPENDENCY_UNAVAILABLE, service, null);
+        firePropertyChange(PROP_DEPENDENCY_UNAVAILABLE, dep, null);
     }
 
     @Override

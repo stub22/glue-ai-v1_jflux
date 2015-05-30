@@ -32,12 +32,22 @@ import org.jflux.api.service.binding.ServiceBinding;
 import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import org.jflux.api.service.binding.MultiDependencyTracker;
 import org.jflux.api.service.binding.SingleDepencyTracker;
+import org.jflux.api.service.extras.PropertyChangeNotifier;
 
 /**
  *
  * @author matt
  */
-public class ServiceManager<T> implements Manager {
+public class ServiceManager<T> extends PropertyChangeNotifier implements Manager {
+    /**
+     * Property change event name for the managed service being modified.
+     */
+    public final static String PROP_SERVICE_CHANGED = "serviceChanged";
+    /**
+     * Property change event name for a dependency's status changing
+     */
+    public final static String PROP_DEPENDENCY_CHANGED = "dependencyChanged";
+	
     private ServiceLifecycle<T> myLifecycle;
     private Map<String,ServiceBinding> myBindings;
     private Map<String,Object> myCachedDependencies;
@@ -141,6 +151,7 @@ public class ServiceManager<T> implements Manager {
         myServiceRegistrationStrategy.unregister();
         unbindDependencies();
         myStartFlag = false;
+		firePropertyChange(PROP_SERVICE_CHANGED, null, this);
     }
     
     private void bindDependencies(Registry registry){
@@ -172,6 +183,7 @@ public class ServiceManager<T> implements Manager {
             DependencyTracker t = e.getValue();
             t.stop();
             t.removePropertyChangeListener(myChangeListener);
+			firePropertyChange(PROP_DEPENDENCY_CHANGED, null, s.getDependencyName());
         }
         myTrackerMap.clear();
     }
@@ -187,17 +199,26 @@ public class ServiceManager<T> implements Manager {
         }
         myService = t;
         myServiceRegistrationStrategy.register(myService);
+		firePropertyChange(PROP_SERVICE_CHANGED, null, this);
     }
     
     private void updateDependency(String changeType, String dependencyName, Object dependency){
         if(!isSatisfied()){
-            
+			if(myService != null){
+				myServiceRegistrationStrategy.unregister();
+				myLifecycle.disposeService(myService, myCachedDependencies);
+				myService = null;
+			}
+			updateDependencyCache();
+			firePropertyChange(PROP_DEPENDENCY_CHANGED, null, dependencyName);
+			return;
         }
         ServiceBinding spec = myBindings.get(dependencyName);
         switch(spec.getUpdateStrategy()){
             case STATIC : staticUpdate(); break;
             case DYNAMIC : dynamicUpdate(changeType, dependencyName, dependency); break;
         }
+		firePropertyChange(PROP_DEPENDENCY_CHANGED, null, dependencyName);
     }
     
     private void staticUpdate(){
@@ -265,7 +286,7 @@ public class ServiceManager<T> implements Manager {
                 tryCreate();
                 return;
             }
-            String depName = (String)evt.getSource();
+            String depName = ((DependencyTracker)evt.getSource()).getDependencyName();
             updateDependency(evt.getPropertyName(), depName, evt.getNewValue());
         }
     }

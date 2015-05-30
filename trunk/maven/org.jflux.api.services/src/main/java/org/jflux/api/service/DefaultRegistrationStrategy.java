@@ -89,6 +89,7 @@ public class DefaultRegistrationStrategy<T> implements RegistrationStrategy<T> {
     public void unregister() {
         myRegistry.unregister(myCertificate);
         myCertificate = null;
+		myRegisteredService = null;
     }
     
     @Override

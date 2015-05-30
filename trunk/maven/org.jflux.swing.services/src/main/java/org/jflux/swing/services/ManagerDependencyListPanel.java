@@ -86,7 +86,10 @@ public class ManagerDependencyListPanel extends JPanel{
         return myPanelMap.containsKey(depId);
     }
     
-    public void updateDependnecyStatus(String depId, Boolean status){
+    public void updateDependnecyStatus(String depId, Boolean status, Boolean available){
+		if(available == null){
+			available = status;
+		}
         if(depId == null){
             throw new NullPointerException();
         }
@@ -94,7 +97,7 @@ public class ManagerDependencyListPanel extends JPanel{
         if(panel == null){
             return;
         }
-        panel.updateStatus(status);
+        panel.updateStatus(status, available);
         RepaintManager.currentManager(this).markCompletelyDirty(panel);
     }
     

@@ -50,7 +50,7 @@ public class ServiceManagerPanel extends AbstractServicePanel<ServiceManager> {
             Logger.getLogger(ServiceManagerPanel.class.getName());
     private ServiceManager<?> myService;
     private ServiceChangeListener myServiceChangeListener;
-    private ArrayList<ServiceChangeListener> myServiceChangeListeners;
+    private ArrayList<DepChangeListener> myDepChangeListeners;
     private boolean myPropertiesVisible;
     private boolean myDependenciesVisible;
     private BundleContext context;
@@ -61,7 +61,7 @@ public class ServiceManagerPanel extends AbstractServicePanel<ServiceManager> {
         pnlDependencyList.setLayout(
                 new BoxLayout(pnlDependencyList, BoxLayout.Y_AXIS));
         myServiceChangeListener = new ServiceChangeListener();
-        myServiceChangeListeners=new ArrayList<ServiceChangeListener>();
+        myDepChangeListeners=new ArrayList<DepChangeListener>();
         myPropertiesVisible = true;
         tblProperties.setTableHeader(null);
         lblType.setOpaque(false);
@@ -77,34 +77,32 @@ public class ServiceManagerPanel extends AbstractServicePanel<ServiceManager> {
     
     @Override
     public void setService(ServiceManager service){
-        Map<ServiceBinding, DependencyTracker> deps = null;
-        ServiceChangeListener tempService;
-        
         if(myService == service){
             updateServiceInfo();
             return;
         }
         if(myService != null){
-            deps = myService.getDependencies();
+			myService.removePropertyChangeListener(myServiceChangeListener);
+            Map<ServiceBinding, DependencyTracker> deps = myService.getDependencies();
             for(DependencyTracker tracker: deps.values()) {
-                for(ServiceChangeListener listener : myServiceChangeListeners){
+                for(DepChangeListener listener : myDepChangeListeners){
                     tracker.removePropertyChangeListener(listener);
                 }
                 
             }
         }
-        myServiceChangeListeners.clear();
+        myDepChangeListeners.clear();
         myService = service;
         updateServiceInfo();
         setVals();
         setDependencies();
         if(myService != null){
-		    deps=myService.getDependencies();
-
+			myService.addPropertyChangeListener(myServiceChangeListener);
+		    Map<ServiceBinding, DependencyTracker> deps = myService.getDependencies();
 		    if(deps != null){
 		        for(DependencyTracker tracker: deps.values()) {
-                            tempService=new ServiceChangeListener(tracker.getDependencyName());
-                            myServiceChangeListeners.add(tempService);
+					DepChangeListener tempService = new DepChangeListener(tracker.getDependencyName());
+					myDepChangeListeners.add(tempService);
 		            tracker.addPropertyChangeListener(tempService);
 		        }
 		    }
@@ -187,6 +185,7 @@ public class ServiceManagerPanel extends AbstractServicePanel<ServiceManager> {
             return;
         }
         Boolean status = null;
+        Boolean available = null;
         if(myService != null){
             Map<ServiceBinding, DependencyTracker> depMap =
                     myService.getDependencies();
@@ -199,17 +198,13 @@ public class ServiceManagerPanel extends AbstractServicePanel<ServiceManager> {
                 
                 DependencyTracker tracker = e.getValue();
                 Cardinality c = spec.getDependencySpec().getCardinality();
-                if(c.isRequired() && tracker.getTrackedDependency() == null){
-                    status = true;
-                } else {
-                    status = false;
-                }
-                
+				status = !(c.isRequired() && tracker.getTrackedDependency() == null);
+                available = tracker.getTrackedDependency() != null;
                 break;
             }
         }
         
-        pnlDependencyList.updateDependnecyStatus(dependencyId, status);
+        pnlDependencyList.updateDependnecyStatus(dependencyId, status, available);
         updateDependencyCount();
     }
     
@@ -264,22 +259,43 @@ public class ServiceManagerPanel extends AbstractServicePanel<ServiceManager> {
         return myServiceChangeListener;
     }    
     
-    class ServiceChangeListener implements PropertyChangeListener{
+    class DepChangeListener implements PropertyChangeListener{
         private String propName;
         
-        public ServiceChangeListener(String name)
+        public DepChangeListener(String name)
         {
             propName=name;
         }
-        public ServiceChangeListener(){}
+        public DepChangeListener(){}
         
         @Override
         public synchronized void propertyChange(PropertyChangeEvent evt) {
 
             updateServiceInfo();
          
-            if(!(propName.isEmpty()) || !(propName==null))
+            if(propName != null){
                 updateDependencyStatus(propName);
+			}
+        }
+    }
+	
+	class ServiceChangeListener implements PropertyChangeListener{
+        @Override
+        public synchronized void propertyChange(PropertyChangeEvent evt) {
+            if(evt == null){
+                return;
+            }
+            String name = evt.getPropertyName();
+            if(ServiceManager.PROP_SERVICE_CHANGED.equals(name)){
+                setService((ServiceManager)evt.getNewValue());
+            }else if(ServiceManager.PROP_DEPENDENCY_CHANGED.equals(name)){
+                Object obj = evt.getNewValue();
+                if(!(obj instanceof String)){
+                    return;
+                }
+                updateServiceInfo();
+                updateDependencyStatus((String)obj);
+            }
         }
     }
     private void markRepaint(){

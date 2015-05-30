@@ -159,7 +159,7 @@ public class DependencyTrackerTest {
             lazy.add(ref);
         }
 
-        public void dependencyRemoved(Reference ref) {
+        public void dependencyRemoved(Reference ref, Object dep) {
             remove.add(ref);
         }
     }
