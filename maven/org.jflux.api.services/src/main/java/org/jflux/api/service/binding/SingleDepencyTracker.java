@@ -78,17 +78,16 @@ public class SingleDepencyTracker<T> extends DependencyTracker<T> {
     }
 
     @Override
-    protected void dependencyRemoved(Reference ref) {
+    protected void dependencyRemoved(Reference ref, T dep) {
         synchronized (trackerLock) {
-            T service = myTracker.getTrackedService(ref);
-            if (service == null) {
+            if (dep == null) {
                 return;
             }
             T newService = getReplacement(ref);
             if (newService == null) {
-                firePropertyChange(PROP_DEPENDENCY_UNAVAILABLE, service, null);
+                firePropertyChange(PROP_DEPENDENCY_UNAVAILABLE, dep, null);
             } else {
-                firePropertyChange(PROP_DEPENDENCY_CHANGED, service, newService);
+                firePropertyChange(PROP_DEPENDENCY_CHANGED, dep, newService);
             }
         }
     }
@@ -100,7 +99,7 @@ public class SingleDepencyTracker<T> extends DependencyTracker<T> {
             Collections.reverse(tracked);
         }
         for (Reference r : tracked) {
-            if (r == ref) {
+            if (r.equals(ref)) {
                 continue;
             }
             T t = myTracker.getTrackedService(ref);
@@ -114,7 +113,7 @@ public class SingleDepencyTracker<T> extends DependencyTracker<T> {
             Collections.reverse(tracked);
         }
         for (Reference r : tracked) {
-            if (r == ref) {
+            if (r.equals(ref)) {
                 continue;
             }
             T t = myTracker.getService(r);

@@ -76,15 +76,12 @@ public class OSGiReference implements Reference, ServiceReference {
             return false;
         }
         if (getClass() != obj.getClass()) {
+			if(obj instanceof ServiceReference){
+				return myReference.equals(obj);
+			}
             return false;
         }
-        final OSGiReference other = (OSGiReference) obj;
-        if (this.myReference != other.myReference 
-                && (this.myReference == null 
-                        || !this.myReference.equals(other.myReference))) {
-            return false;
-        }
-        return true;
+		return obj.equals(myReference);
     }
 
     @Override

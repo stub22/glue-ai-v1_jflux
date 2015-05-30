@@ -53,7 +53,7 @@ public class ManagerDependencyPanel extends javax.swing.JPanel {
         jScrollPane2.getViewport().setOpaque(false);
         jScrollPane2.addMouseWheelListener(new InnerScrollPaneWheelListener());
         updateDisplay(null);
-        changeColor(null);
+        changeColor(null, null);
     }
 
     public void setDependency(ServiceBinding dependency, Boolean status){
@@ -62,7 +62,7 @@ public class ManagerDependencyPanel extends javax.swing.JPanel {
     }
     
     public void updateDisplay(Boolean status){
-        updateStatus(status);
+        updateStatus(status, null);
         if(myDependency == null){
             lblName.setText("--");
             lblFilter.setText("--");
@@ -88,26 +88,33 @@ public class ManagerDependencyPanel extends javax.swing.JPanel {
         lblType.setText(type);
     }
     
-    public void updateStatus(Boolean status){
+    public void updateStatus(Boolean status, Boolean available){
+		if(available == null){
+			available = status;
+		}
         if(myStatus == status){
             return;
         }
-        changeColor(status);
+        changeColor(status, available);
     }
     
-    private void changeColor(Boolean status){
+    private void changeColor(Boolean status, Boolean available){
         String text;
         Color bg;
         myStatus = status;
         if(status == null){
-            text = theNullStatus;
             bg = theNullColor;
         }else if(status){
-            text = theAvailableStatus;
             bg = theAvailableColor;
         }else{
-            text = theUnavailableStatus;
             bg = theUnavailableColor;
+        }
+        if(available == null){
+            text = theNullStatus;
+        }else if(available){
+            text = theAvailableStatus;
+        }else{
+            text = theUnavailableStatus;
         }
         lblStatus.setText(text);
         setBackground(bg);
