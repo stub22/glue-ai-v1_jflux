@@ -6,7 +6,7 @@ import org.appdapter.core.boot.ClassLoaderUtils;
 import org.appdapter.fancy.rclient.EnhancedRepoClient;
 import org.appdapter.fancy.rclient.EnhancedLocalRepoClient;
 import org.appdapter.fancy.rspec.RepoSpec;
-import org.appdapter.fancy.rspec.URLRepoSpec;
+import org.appdapter.xload.rspec.URLRepoSpec;  // Using this class requires us to import  appdapter.xload
 import org.appdapter.core.store.Repo;
 import org.appdapter.osgi.core.BundleActivatorBase;
 import org.jflux.spec.services.RegisterWiring;
