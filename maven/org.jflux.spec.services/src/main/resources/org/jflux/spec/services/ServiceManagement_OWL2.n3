@@ -1,0 +1,402 @@
+@prefix : <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> .
+
+<http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> rdf:type owl:Ontology ;
+                                                           
+                                                           rdfs:comment "Defines concepts used for the registration and initialization of service lifecycles, their dependencies, and data specifications." .
+
+
+#################################################################
+#
+#    Annotation properties
+#
+#################################################################
+
+
+###  http://www.w3.org/2002/07/owl#maxCardinality
+
+owl:maxCardinality rdf:type owl:AnnotationProperty .
+
+
+
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasBindingStrategy
+
+:hasBindingStrategy rdf:type owl:ObjectProperty ;
+                    
+                    owl:maxCardinality "1" ;
+                    
+                    rdfs:range :ServiceBindingStrategyThing ;
+                    
+                    rdfs:domain :ServiceBindingThing ;
+                    
+                    rdfs:subPropertyOf :ourObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasLifecycleServiceDependency
+
+:hasLifecycleServiceDependency rdf:type owl:ObjectProperty ;
+                               
+                               rdfs:range :ServiceDependencyThing ;
+                               
+                               rdfs:domain :ServiceLifecycleThing ;
+                               
+                               rdfs:subPropertyOf :ourObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasProperty
+
+:hasProperty rdf:type owl:ObjectProperty ;
+             
+             rdfs:range :PropertySpec ;
+             
+             rdfs:domain :SThing ;
+             
+             rdfs:subPropertyOf :ourObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasRegistration
+
+:hasRegistration rdf:type owl:ObjectProperty ;
+                 
+                 owl:maxCardinality "1" ;
+                 
+                 rdfs:domain :ServiceManagerThing ;
+                 
+                 rdfs:range :ServiceRegistrationThing ;
+                 
+                 rdfs:subPropertyOf :ourObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasServiceBinding
+
+:hasServiceBinding rdf:type owl:ObjectProperty ;
+                   
+                   rdfs:range :ServiceBindingThing ;
+                   
+                   rdfs:domain :ServiceManagerThing ;
+                   
+                   rdfs:subPropertyOf :ourObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasServiceBindingDependency
+
+:hasServiceBindingDependency rdf:type owl:ObjectProperty ;
+                             
+                             owl:maxCardinality "1" ;
+                             
+                             rdfs:domain :ServiceBindingThing ;
+                             
+                             rdfs:range :ServiceDependencyThing ;
+                             
+                             rdfs:subPropertyOf :ourObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasUpdateStrategy
+
+:hasUpdateStrategy rdf:type owl:ObjectProperty ;
+                   
+                   owl:maxCardinality "1" ;
+                   
+                   rdfs:domain :ServiceLifecycleThing ;
+                   
+                   rdfs:range :ServiceUpdateThing ;
+                   
+                   rdfs:subPropertyOf :ourObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ourObjectProperty
+
+:ourObjectProperty rdf:type owl:ObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#startsLifecycle
+
+:startsLifecycle rdf:type owl:ObjectProperty ;
+                 
+                 owl:maxCardinality "1" ;
+                 
+                 rdfs:range :ServiceLifecycleThing ;
+                 
+                 rdfs:domain :ServiceManagerThing ;
+                 
+                 rdfs:subPropertyOf :ourObjectProperty .
+
+
+
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasClassName
+
+:hasClassName rdf:type owl:DatatypeProperty ;
+              
+              rdfs:subPropertyOf :ourDataProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasFullyQualifiedClassName
+
+:hasFullyQualifiedClassName rdf:type owl:DatatypeProperty ;
+                            
+                            owl:maxCardinality "1" ;
+                            
+                            rdfs:domain :ServiceManagerItem ;
+                            
+                            rdfs:subPropertyOf :hasClassName ;
+                            
+                            rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasLocalName
+
+:hasLocalName rdf:type owl:DatatypeProperty ;
+              
+              owl:maxCardinality "1" ;
+              
+              rdfs:domain :ServiceDependencyThing ;
+              
+              rdfs:subPropertyOf :ourDataProperty ;
+              
+              rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasPropertyKey
+
+:hasPropertyKey rdf:type owl:DatatypeProperty ;
+                
+                owl:maxCardinality "1" ;
+                
+                rdfs:domain :PropertySpec ;
+                
+                rdfs:subPropertyOf :ourDataProperty ;
+                
+                rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasPropertyValue
+
+:hasPropertyValue rdf:type owl:DatatypeProperty ;
+                  
+                  owl:maxCardinality "1" ;
+                  
+                  rdfs:domain :PropertySpec ;
+                  
+                  rdfs:subPropertyOf :ourDataProperty ;
+                  
+                  rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasRegisteredClassName
+
+:hasRegisteredClassName rdf:type owl:DatatypeProperty ;
+                        
+                        owl:maxCardinality "1" ;
+                        
+                        rdfs:domain :ServiceLifecycleThing ;
+                        
+                        rdfs:subPropertyOf :hasClassName ;
+                        
+                        rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasServiceCardinality
+
+:hasServiceCardinality rdf:type owl:DatatypeProperty ;
+                       
+                       owl:maxCardinality "1" ;
+                       
+                       rdfs:subPropertyOf :ourDataProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#isDependencyRequired
+
+:isDependencyRequired rdf:type owl:DatatypeProperty ;
+                      
+                      owl:maxCardinality "1" ;
+                      
+                      rdfs:subPropertyOf :ourDataProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ourDataProperty
+
+:ourDataProperty rdf:type owl:DatatypeProperty .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#BasicRegistrationThing
+
+:BasicRegistrationThing rdf:type owl:Class ;
+                        
+                        rdfs:subClassOf :ServiceRegistrationThing .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#DataSpecItem
+
+:DataSpecItem rdf:type owl:Class ;
+              
+              rdfs:subClassOf :SThing ;
+              
+              rdfs:comment "These items are registered to an OSGi registry for a lifecycle to use as a dependency during the \"createService\" step of service start up.  These items can be registered with a set of properties that can be used as a filter in the event mulitiple items of the same type are registered, however, these properties are entirely optional."@en .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#Dynamic
+
+:Dynamic rdf:type owl:Class ;
+         
+         rdfs:subClassOf :ServiceUpdateThing .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#Eager
+
+:Eager rdf:type owl:Class ;
+       
+       rdfs:subClassOf :ServiceBindingStrategyThing .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#Lazy
+
+:Lazy rdf:type owl:Class ;
+      
+      rdfs:subClassOf :ServiceBindingStrategyThing .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#PropertySpec
+
+:PropertySpec rdf:type owl:Class ;
+              
+              rdfs:subClassOf :DataSpecItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SThing
+
+:SThing rdf:type owl:Class .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceBindingStrategyThing
+
+:ServiceBindingStrategyThing rdf:type owl:Class ;
+                             
+                             rdfs:subClassOf :ServiceManagerItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceBindingThing
+
+:ServiceBindingThing rdf:type owl:Class ;
+                     
+                     rdfs:subClassOf :ServiceManagerItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceDependencyThing
+
+:ServiceDependencyThing rdf:type owl:Class ;
+                        
+                        rdfs:subClassOf :ServiceManagerItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceLifecycleThing
+
+:ServiceLifecycleThing rdf:type owl:Class ;
+                       
+                       rdfs:subClassOf :ServiceManagerItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceManagerItem
+
+:ServiceManagerItem rdf:type owl:Class ;
+                    
+                    rdfs:subClassOf :SThing ;
+                    
+                    rdfs:comment "These items are used for the creation and start of a lifecycle.  This includes the registration strategies used by a specific lifecycle, information about the depenencies needed for service creation, and information on the system strategy used to register a service lifecycle."@en .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceManagerThing
+
+:ServiceManagerThing rdf:type owl:Class ;
+                     
+                     rdfs:subClassOf :ServiceManagerItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceRegistrationThing
+
+:ServiceRegistrationThing rdf:type owl:Class ;
+                          
+                          rdfs:subClassOf :ServiceManagerItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceUpdateThing
+
+:ServiceUpdateThing rdf:type owl:Class ;
+                    
+                    rdfs:subClassOf :ServiceManagerItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#Static
+
+:Static rdf:type owl:Class ;
+        
+        rdfs:subClassOf :ServiceUpdateThing .
+
+
+
+
+###  Generated by the OWL API (version 3.5.1) http://owlapi.sourceforge.net
+
