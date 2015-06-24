@@ -8,7 +8,9 @@
 
 <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> rdf:type owl:Ontology ;
                                                            
-                                                           rdfs:comment "Defines concepts used for the registration and initialization of service lifecycles, their dependencies, and data specifications." .
+                                                           rdfs:comment "Defines concepts used for the registration and initialization of service lifecycles, their dependencies, and data specifications." ;
+                                                           
+                                                           owl:imports <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2> .
 
 
 #################################################################
@@ -39,11 +41,11 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                     
                     owl:maxCardinality "1" ;
                     
-                    rdfs:range :ServiceBindingStrategyThing ;
+                    rdfs:domain :SManBinding ;
                     
-                    rdfs:domain :ServiceBindingThing ;
+                    rdfs:range :SManBindingStrategy ;
                     
-                    rdfs:subPropertyOf :ourObjectProperty .
+                    rdfs:subPropertyOf :smanObjProperty .
 
 
 
@@ -51,23 +53,23 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :hasLifecycleServiceDependency rdf:type owl:ObjectProperty ;
                                
-                               rdfs:range :ServiceDependencyThing ;
+                               rdfs:range :SManDependency ;
                                
-                               rdfs:domain :ServiceLifecycleThing ;
+                               rdfs:domain :SvcManLifecycleEntity ;
                                
-                               rdfs:subPropertyOf :ourObjectProperty .
+                               rdfs:subPropertyOf :smanObjProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasProperty
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasOSGiSvcPropBinding
 
-:hasProperty rdf:type owl:ObjectProperty ;
-             
-             rdfs:range :PropertySpec ;
-             
-             rdfs:domain :SThing ;
-             
-             rdfs:subPropertyOf :ourObjectProperty .
+:hasOSGiSvcPropBinding rdf:type owl:ObjectProperty ;
+                       
+                       rdfs:domain :ServiceManagerItem ;
+                       
+                       rdfs:subPropertyOf :smanObjProperty ;
+                       
+                       rdfs:range <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#OSGiServPropBinding> .
 
 
 
@@ -77,11 +79,11 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                  
                  owl:maxCardinality "1" ;
                  
-                 rdfs:domain :ServiceManagerThing ;
+                 rdfs:range :SManReg ;
                  
-                 rdfs:range :ServiceRegistrationThing ;
+                 rdfs:domain :SvcManEntity ;
                  
-                 rdfs:subPropertyOf :ourObjectProperty .
+                 rdfs:subPropertyOf :smanObjProperty .
 
 
 
@@ -89,11 +91,11 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :hasServiceBinding rdf:type owl:ObjectProperty ;
                    
-                   rdfs:range :ServiceBindingThing ;
+                   rdfs:range :SManBinding ;
                    
-                   rdfs:domain :ServiceManagerThing ;
+                   rdfs:domain :SvcManEntity ;
                    
-                   rdfs:subPropertyOf :ourObjectProperty .
+                   rdfs:subPropertyOf :smanObjProperty .
 
 
 
@@ -103,11 +105,11 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                              
                              owl:maxCardinality "1" ;
                              
-                             rdfs:domain :ServiceBindingThing ;
+                             rdfs:domain :SManBinding ;
                              
-                             rdfs:range :ServiceDependencyThing ;
+                             rdfs:range :SManDependency ;
                              
-                             rdfs:subPropertyOf :ourObjectProperty .
+                             rdfs:subPropertyOf :smanObjProperty .
 
 
 
@@ -117,17 +119,17 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                    
                    owl:maxCardinality "1" ;
                    
-                   rdfs:domain :ServiceLifecycleThing ;
+                   rdfs:range :SManUpdate ;
                    
-                   rdfs:range :ServiceUpdateThing ;
+                   rdfs:domain :SvcManLifecycleEntity ;
                    
-                   rdfs:subPropertyOf :ourObjectProperty .
+                   rdfs:subPropertyOf :smanObjProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ourObjectProperty
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#smanObjProperty
 
-:ourObjectProperty rdf:type owl:ObjectProperty .
+:smanObjProperty rdf:type owl:ObjectProperty .
 
 
 
@@ -137,11 +139,11 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                  
                  owl:maxCardinality "1" ;
                  
-                 rdfs:range :ServiceLifecycleThing ;
+                 rdfs:domain :SvcManEntity ;
                  
-                 rdfs:domain :ServiceManagerThing ;
+                 rdfs:range :SvcManLifecycleEntity ;
                  
-                 rdfs:subPropertyOf :ourObjectProperty .
+                 rdfs:subPropertyOf :smanObjProperty .
 
 
 
@@ -158,7 +160,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :hasClassName rdf:type owl:DatatypeProperty ;
               
-              rdfs:subPropertyOf :ourDataProperty .
+              rdfs:subPropertyOf :smanDataProperty .
 
 
 
@@ -182,39 +184,11 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
               
               owl:maxCardinality "1" ;
               
-              rdfs:domain :ServiceDependencyThing ;
+              rdfs:domain :SManDependency ;
               
-              rdfs:subPropertyOf :ourDataProperty ;
+              rdfs:subPropertyOf :smanDataProperty ;
               
               rdfs:range xsd:string .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasPropertyKey
-
-:hasPropertyKey rdf:type owl:DatatypeProperty ;
-                
-                owl:maxCardinality "1" ;
-                
-                rdfs:domain :PropertySpec ;
-                
-                rdfs:subPropertyOf :ourDataProperty ;
-                
-                rdfs:range xsd:string .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasPropertyValue
-
-:hasPropertyValue rdf:type owl:DatatypeProperty ;
-                  
-                  owl:maxCardinality "1" ;
-                  
-                  rdfs:domain :PropertySpec ;
-                  
-                  rdfs:subPropertyOf :ourDataProperty ;
-                  
-                  rdfs:range xsd:string .
 
 
 
@@ -224,7 +198,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                         
                         owl:maxCardinality "1" ;
                         
-                        rdfs:domain :ServiceLifecycleThing ;
+                        rdfs:domain :SvcManLifecycleEntity ;
                         
                         rdfs:subPropertyOf :hasClassName ;
                         
@@ -238,7 +212,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                        
                        owl:maxCardinality "1" ;
                        
-                       rdfs:subPropertyOf :ourDataProperty .
+                       rdfs:subPropertyOf :smanDataProperty .
 
 
 
@@ -248,13 +222,13 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                       
                       owl:maxCardinality "1" ;
                       
-                      rdfs:subPropertyOf :ourDataProperty .
+                      rdfs:subPropertyOf :smanDataProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ourDataProperty
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#smanDataProperty
 
-:ourDataProperty rdf:type owl:DatatypeProperty .
+:smanDataProperty rdf:type owl:DatatypeProperty .
 
 
 
@@ -267,91 +241,43 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#BasicRegistrationThing
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManBinding
 
-:BasicRegistrationThing rdf:type owl:Class ;
-                        
-                        rdfs:subClassOf :ServiceRegistrationThing .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#DataSpecItem
-
-:DataSpecItem rdf:type owl:Class ;
-              
-              rdfs:subClassOf :SThing ;
-              
-              rdfs:comment "These items are registered to an OSGi registry for a lifecycle to use as a dependency during the \"createService\" step of service start up.  These items can be registered with a set of properties that can be used as a filter in the event mulitiple items of the same type are registered, however, these properties are entirely optional."@en .
+:SManBinding rdf:type owl:Class ;
+             
+             rdfs:subClassOf :ServiceManagerItem .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#Dynamic
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManBindingStrategy
 
-:Dynamic rdf:type owl:Class ;
-         
-         rdfs:subClassOf :ServiceUpdateThing .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#Eager
-
-:Eager rdf:type owl:Class ;
-       
-       rdfs:subClassOf :ServiceBindingStrategyThing .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#Lazy
-
-:Lazy rdf:type owl:Class ;
-      
-      rdfs:subClassOf :ServiceBindingStrategyThing .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#PropertySpec
-
-:PropertySpec rdf:type owl:Class ;
-              
-              rdfs:subClassOf :DataSpecItem .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SThing
-
-:SThing rdf:type owl:Class .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceBindingStrategyThing
-
-:ServiceBindingStrategyThing rdf:type owl:Class ;
-                             
-                             rdfs:subClassOf :ServiceManagerItem .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceBindingThing
-
-:ServiceBindingThing rdf:type owl:Class ;
+:SManBindingStrategy rdf:type owl:Class ;
                      
                      rdfs:subClassOf :ServiceManagerItem .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceDependencyThing
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManDependency
 
-:ServiceDependencyThing rdf:type owl:Class ;
-                        
-                        rdfs:subClassOf :ServiceManagerItem .
+:SManDependency rdf:type owl:Class ;
+                
+                rdfs:subClassOf :ServiceManagerItem .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceLifecycleThing
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManReg
 
-:ServiceLifecycleThing rdf:type owl:Class ;
-                       
-                       rdfs:subClassOf :ServiceManagerItem .
+:SManReg rdf:type owl:Class ;
+         
+         rdfs:subClassOf :ServiceManagerItem .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManUpdate
+
+:SManUpdate rdf:type owl:Class ;
+            
+            rdfs:subClassOf :ServiceManagerItem .
 
 
 
@@ -359,41 +285,75 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :ServiceManagerItem rdf:type owl:Class ;
                     
-                    rdfs:subClassOf :SThing ;
+                    rdfs:subClassOf :SvcManThing ;
                     
                     rdfs:comment "These items are used for the creation and start of a lifecycle.  This includes the registration strategies used by a specific lifecycle, information about the depenencies needed for service creation, and information on the system strategy used to register a service lifecycle."@en .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceManagerThing
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SvcManEntity
 
-:ServiceManagerThing rdf:type owl:Class ;
-                     
-                     rdfs:subClassOf :ServiceManagerItem .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceRegistrationThing
-
-:ServiceRegistrationThing rdf:type owl:Class ;
-                          
-                          rdfs:subClassOf :ServiceManagerItem .
+:SvcManEntity rdf:type owl:Class ;
+              
+              rdfs:subClassOf :ServiceManagerItem .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#ServiceUpdateThing
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SvcManLifecycleEntity
 
-:ServiceUpdateThing rdf:type owl:Class ;
-                    
-                    rdfs:subClassOf :ServiceManagerItem .
+:SvcManLifecycleEntity rdf:type owl:Class ;
+                       
+                       rdfs:subClassOf :ServiceManagerItem .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#Static
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SvcManThing
 
-:Static rdf:type owl:Class ;
-        
-        rdfs:subClassOf :ServiceUpdateThing .
+:SvcManThing rdf:type owl:Class .
+
+
+
+
+
+#################################################################
+#
+#    Individuals
+#
+#################################################################
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManBindStrat_Eager
+
+:SManBindStrat_Eager rdf:type :SManBindingStrategy ,
+                              owl:NamedIndividual .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManBindStrat_Lazy
+
+:SManBindStrat_Lazy rdf:type :SManBindingStrategy ,
+                             owl:NamedIndividual .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManReg_Basic
+
+:SManReg_Basic rdf:type :SManReg ,
+                        owl:NamedIndividual .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManUpdate_Dynamic
+
+:SManUpdate_Dynamic rdf:type :SManUpdate ,
+                             owl:NamedIndividual .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SManUpdate_Static
+
+:SManUpdate_Static rdf:type :SManUpdate ,
+                            owl:NamedIndividual .
 
 
 
