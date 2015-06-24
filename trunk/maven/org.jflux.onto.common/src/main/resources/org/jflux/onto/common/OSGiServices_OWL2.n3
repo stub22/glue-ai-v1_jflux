@@ -60,6 +60,20 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#hasSvcPropKeyName
+
+:hasSvcPropKeyName rdf:type owl:DatatypeProperty ;
+                   
+                   owl:maxCardinality "1" ;
+                   
+                   rdfs:domain :OSGiServPropKey ;
+                   
+                   rdfs:subPropertyOf :osgiServDataProp ;
+                   
+                   rdfs:range xsd:string .
+
+
+
 ###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#hasSvcPropValue
 
 :hasSvcPropValue rdf:type owl:DatatypeProperty ;
