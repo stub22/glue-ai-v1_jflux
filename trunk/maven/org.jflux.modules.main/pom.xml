@@ -27,7 +27,8 @@
         <module>../org.jflux.impl.registry.osgi</module>
         <module>../org.jflux.api.services</module>
         <module>../org.jflux.modules.rk</module>
-        <module>../org.jflux.swing.messaging</module>
+		<module>../org.jflux.onto.common</module>
+		<module>../org.jflux.swing.messaging</module>
         <module>../org.jflux.spec.messaging</module>
         <module>../org.jflux.swing.services</module>
         <module>../org.jflux.spec.services</module>
