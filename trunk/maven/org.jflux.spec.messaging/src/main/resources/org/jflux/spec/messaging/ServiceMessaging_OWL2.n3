@@ -6,7 +6,9 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @base <http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2> .
 
-<http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2> rdf:type owl:Ontology .
+<http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2> rdf:type owl:Ontology ;
+                                                          
+                                                          owl:imports <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2> .
 
 
 #################################################################
@@ -31,35 +33,35 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasNodeType
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasAMQPDest
 
-:hasNodeType rdf:type owl:ObjectProperty ;
+:hasAMQPDest rdf:type owl:ObjectProperty ;
              
              owl:maxCardinality "1" ;
              
+             rdfs:range :AMQPDestination ;
+             
              rdfs:domain :DestinationSpecItem ;
              
-             rdfs:range :NodeType ;
-             
-             rdfs:subPropertyOf :ourObjectProperty .
+             rdfs:subPropertyOf :smsgObjectProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasProperty
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasOSGiSvcPropBinding
 
-:hasProperty rdf:type owl:ObjectProperty ;
-             
-             rdfs:domain :DataSpecItem ;
-             
-             rdfs:range :PropertySpec ;
-             
-             rdfs:subPropertyOf :ourObjectProperty .
+:hasOSGiSvcPropBinding rdf:type owl:ObjectProperty ;
+                       
+                       rdfs:domain :SMsgDataSpecItem ;
+                       
+                       rdfs:subPropertyOf :smsgObjectProperty ;
+                       
+                       rdfs:range <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#OSGiServPropBinding> .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#ourObjectProperty
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#smsgObjectProperty
 
-:ourObjectProperty rdf:type owl:ObjectProperty .
+:smsgObjectProperty rdf:type owl:ObjectProperty .
 
 
 
@@ -80,7 +82,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                
                rdfs:domain :ConnectionSpecItem ;
                
-               rdfs:subPropertyOf :ourDataProperty ;
+               rdfs:subPropertyOf :smsgDataProperty ;
                
                rdfs:range xsd:string .
 
@@ -94,7 +96,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                     
                     rdfs:domain :DestinationSpecItem ;
                     
-                    rdfs:subPropertyOf :ourDataProperty ;
+                    rdfs:subPropertyOf :smsgDataProperty ;
                     
                     rdfs:range xsd:string .
 
@@ -108,7 +110,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
               
               rdfs:domain :ConnectionSpecItem ;
               
-              rdfs:subPropertyOf :ourDataProperty ;
+              rdfs:subPropertyOf :smsgDataProperty ;
               
               rdfs:range xsd:string .
 
@@ -122,7 +124,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
              
              rdfs:domain :ConnectionSpecItem ;
              
-             rdfs:subPropertyOf :ourDataProperty ;
+             rdfs:subPropertyOf :smsgDataProperty ;
              
              rdfs:range xsd:string .
 
@@ -136,37 +138,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
          
          rdfs:domain :ConnectionSpecItem ;
          
-         rdfs:subPropertyOf :ourDataProperty ;
+         rdfs:subPropertyOf :smsgDataProperty ;
          
          rdfs:range xsd:int .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasPropertyKey
-
-:hasPropertyKey rdf:type owl:DatatypeProperty ;
-                
-                owl:maxCardinality "1" ;
-                
-                rdfs:domain :PropertySpec ;
-                
-                rdfs:subPropertyOf :ourDataProperty ;
-                
-                rdfs:range xsd:string .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasPropertyValue
-
-:hasPropertyValue rdf:type owl:DatatypeProperty ;
-                  
-                  owl:maxCardinality "1" ;
-                  
-                  rdfs:domain :PropertySpec ;
-                  
-                  rdfs:subPropertyOf :ourDataProperty ;
-                  
-                  rdfs:range xsd:string .
 
 
 
@@ -178,7 +152,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
              
              rdfs:domain :ConnectionSpecItem ;
              
-             rdfs:subPropertyOf :ourDataProperty ;
+             rdfs:subPropertyOf :smsgDataProperty ;
              
              rdfs:range xsd:string .
 
@@ -192,15 +166,15 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                 
                 rdfs:domain :ConnectionSpecItem ;
                 
-                rdfs:subPropertyOf :ourDataProperty ;
+                rdfs:subPropertyOf :smsgDataProperty ;
                 
                 rdfs:range xsd:string .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#ourDataProperty
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#smsgDataProperty
 
-:ourDataProperty rdf:type owl:DatatypeProperty .
+:smsgDataProperty rdf:type owl:DatatypeProperty .
 
 
 
@@ -213,11 +187,19 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#AMQPDestination
+
+:AMQPDestination rdf:type owl:Class ;
+                 
+                 rdfs:subClassOf :SMsgThing .
+
+
+
 ###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#AMQPQueue
 
 :AMQPQueue rdf:type owl:Class ;
            
-           rdfs:subClassOf :NodeType .
+           rdfs:subClassOf :AMQPDestination .
 
 
 
@@ -225,7 +207,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :AMQPTopic rdf:type owl:Class ;
            
-           rdfs:subClassOf :NodeType .
+           rdfs:subClassOf :AMQPDestination .
 
 
 
@@ -233,23 +215,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :ConnectionSpecItem rdf:type owl:Class ;
                     
-                    rdfs:subClassOf :DataSpecItem .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#DataPropertyItem
-
-:DataPropertyItem rdf:type owl:Class ;
-                  
-                  rdfs:subClassOf :SThing .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#DataSpecItem
-
-:DataSpecItem rdf:type owl:Class ;
-              
-              rdfs:subClassOf :SThing .
+                    rdfs:subClassOf :SMsgDataSpecItem .
 
 
 
@@ -257,29 +223,21 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :DestinationSpecItem rdf:type owl:Class ;
                      
-                     rdfs:subClassOf :DataSpecItem .
+                     rdfs:subClassOf :SMsgDataSpecItem .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#NodeType
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#SMsgDataSpecItem
 
-:NodeType rdf:type owl:Class ;
-          
-          rdfs:subClassOf :SThing .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#PropertySpec
-
-:PropertySpec rdf:type owl:Class ;
-              
-              rdfs:subClassOf :DataPropertyItem .
+:SMsgDataSpecItem rdf:type owl:Class ;
+                  
+                  rdfs:subClassOf :SMsgThing .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#SThing
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#SMsgThing
 
-:SThing rdf:type owl:Class .
+:SMsgThing rdf:type owl:Class .
 
 
 
