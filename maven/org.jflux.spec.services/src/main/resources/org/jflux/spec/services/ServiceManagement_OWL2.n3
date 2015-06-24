@@ -167,29 +167,29 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasClassName
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasFullyQualifiedJClzName
 
-:hasClassName rdf:type owl:DatatypeProperty ;
-              
-              rdfs:domain :JClzEnabled ;
-              
-              rdfs:subPropertyOf :smanDataProperty ;
-              
-              rdfs:range xsd:string .
+:hasFullyQualifiedJClzName rdf:type owl:DatatypeProperty ;
+                           
+                           owl:maxCardinality "1" ;
+                           
+                           rdfs:domain :JClzEnabled ;
+                           
+                           rdfs:subPropertyOf :hasJClzName ;
+                           
+                           rdfs:range xsd:string .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasFullyQualifiedClassName
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasJClzName
 
-:hasFullyQualifiedClassName rdf:type owl:DatatypeProperty ;
-                            
-                            owl:maxCardinality "1" ;
-                            
-                            rdfs:domain :JClzEnabled ;
-                            
-                            rdfs:subPropertyOf :hasClassName ;
-                            
-                            rdfs:range xsd:string .
+:hasJClzName rdf:type owl:DatatypeProperty ;
+             
+             rdfs:domain :JClzEnabled ;
+             
+             rdfs:subPropertyOf :smanDataProperty ;
+             
+             rdfs:range xsd:string .
 
 
 
@@ -207,17 +207,17 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasRegisteredClassName
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasRegisteredJClzName
 
-:hasRegisteredClassName rdf:type owl:DatatypeProperty ;
-                        
-                        owl:maxCardinality "1" ;
-                        
-                        rdfs:domain :SME_Lifecycle ;
-                        
-                        rdfs:subPropertyOf :hasClassName ;
-                        
-                        rdfs:range xsd:string .
+:hasRegisteredJClzName rdf:type owl:DatatypeProperty ;
+                       
+                       owl:maxCardinality "1" ;
+                       
+                       rdfs:domain :SME_Lifecycle ;
+                       
+                       rdfs:subPropertyOf :hasJClzName ;
+                       
+                       rdfs:range xsd:string .
 
 
 
