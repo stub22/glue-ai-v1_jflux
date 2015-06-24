@@ -221,9 +221,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasSvcCardinality
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#isDepCardMultiple
 
-:hasSvcCardinality rdf:type owl:DatatypeProperty ;
+:isDepCardMultiple rdf:type owl:DatatypeProperty ;
                    
                    owl:maxCardinality "1" ;
                    
@@ -231,7 +231,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                    
                    rdfs:subPropertyOf :smanDataProperty ;
                    
-                   rdfs:range xsd:int .
+                   rdfs:range xsd:boolean .
 
 
 
