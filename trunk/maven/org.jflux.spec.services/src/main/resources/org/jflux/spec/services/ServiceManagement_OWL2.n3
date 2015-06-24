@@ -94,7 +94,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                         
                         rdfs:subPropertyOf :smanObjProperty ;
                         
-                        rdfs:range osv:OSGiServPropBinding .
+                        rdfs:range osv:OSGiServPropBinding ;
+                        
+                        rdfs:subPropertyOf osv:hasServPropBinding .
 
 
 
