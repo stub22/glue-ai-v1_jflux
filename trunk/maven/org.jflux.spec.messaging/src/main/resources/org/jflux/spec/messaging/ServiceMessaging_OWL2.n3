@@ -34,17 +34,27 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasAMQPDest
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasDest
 
-:hasAMQPDest rdf:type owl:ObjectProperty ;
+:hasDest rdf:type owl:ObjectProperty ;
+         
+         rdfs:range :MsgDestination ;
+         
+         rdfs:subPropertyOf :smsgObjectProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasDestAMQP
+
+:hasDestAMQP rdf:type owl:ObjectProperty ;
              
              owl:maxCardinality "1" ;
              
-             rdfs:range :AMQP_Destination ;
+             rdfs:domain :MSC_Destination ;
              
-             rdfs:domain :DestinationSpecItem ;
+             rdfs:range :MsgDestAMQP ;
              
-             rdfs:subPropertyOf :smsgObjectProperty .
+             rdfs:subPropertyOf :hasDest .
 
 
 
@@ -52,7 +62,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :hasOSGiServPropBinding rdf:type owl:ObjectProperty ;
                         
-                        rdfs:domain :SMsgDataSpecItem ;
+                        rdfs:domain :MsgSvcConf ;
                         
                         rdfs:subPropertyOf :smsgObjectProperty ;
                         
@@ -81,9 +91,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                
                owl:maxCardinality "1" ;
                
-               rdfs:domain :ConnectionSpecItem ;
+               rdfs:domain :MSC_Connection ;
                
-               rdfs:subPropertyOf :smsgDataProperty ;
+               rdfs:subPropertyOf :msgDataProperty ;
                
                rdfs:range xsd:string .
 
@@ -95,9 +105,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                     
                     owl:maxCardinality "1" ;
                     
-                    rdfs:domain :DestinationSpecItem ;
+                    rdfs:domain :MSC_Destination ;
                     
-                    rdfs:subPropertyOf :smsgDataProperty ;
+                    rdfs:subPropertyOf :msgDataProperty ;
                     
                     rdfs:range xsd:string .
 
@@ -109,9 +119,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
               
               owl:maxCardinality "1" ;
               
-              rdfs:domain :ConnectionSpecItem ;
+              rdfs:domain :MSC_Connection ;
               
-              rdfs:subPropertyOf :smsgDataProperty ;
+              rdfs:subPropertyOf :msgDataProperty ;
               
               rdfs:range xsd:string .
 
@@ -123,9 +133,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
              
              owl:maxCardinality "1" ;
              
-             rdfs:domain :ConnectionSpecItem ;
+             rdfs:domain :MSC_Connection ;
              
-             rdfs:subPropertyOf :smsgDataProperty ;
+             rdfs:subPropertyOf :msgDataProperty ;
              
              rdfs:range xsd:string .
 
@@ -137,9 +147,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
          
          owl:maxCardinality "1" ;
          
-         rdfs:domain :ConnectionSpecItem ;
+         rdfs:domain :MSC_Connection ;
          
-         rdfs:subPropertyOf :smsgDataProperty ;
+         rdfs:subPropertyOf :msgDataProperty ;
          
          rdfs:range xsd:int .
 
@@ -151,9 +161,9 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
              
              owl:maxCardinality "1" ;
              
-             rdfs:domain :ConnectionSpecItem ;
+             rdfs:domain :MSC_Connection ;
              
-             rdfs:subPropertyOf :smsgDataProperty ;
+             rdfs:subPropertyOf :msgDataProperty ;
              
              rdfs:range xsd:string .
 
@@ -165,17 +175,17 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                 
                 owl:maxCardinality "1" ;
                 
-                rdfs:domain :ConnectionSpecItem ;
+                rdfs:domain :MSC_Connection ;
                 
-                rdfs:subPropertyOf :smsgDataProperty ;
+                rdfs:subPropertyOf :msgDataProperty ;
                 
                 rdfs:range xsd:string .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#smsgDataProperty
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#msgDataProperty
 
-:smsgDataProperty rdf:type owl:DatatypeProperty .
+:msgDataProperty rdf:type owl:DatatypeProperty .
 
 
 
@@ -188,57 +198,65 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#AMQP_Destination
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_Connection
 
-:AMQP_Destination rdf:type owl:Class ;
-                  
-                  rdfs:subClassOf :SMsgThing .
+:MSC_Connection rdf:type owl:Class ;
+                
+                rdfs:subClassOf :MsgSvcConf .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#AMQP_Queue
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_Destination
 
-:AMQP_Queue rdf:type owl:Class ;
+:MSC_Destination rdf:type owl:Class ;
+                 
+                 rdfs:subClassOf :MsgSvcConf .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgDestAMQP
+
+:MsgDestAMQP rdf:type owl:Class ;
+             
+             rdfs:subClassOf :MsgDestination .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgDestination
+
+:MsgDestination rdf:type owl:Class ;
+                
+                rdfs:subClassOf :MsgSvcThing .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgQueueAMQP
+
+:MsgQueueAMQP rdf:type owl:Class ;
+              
+              rdfs:subClassOf :MsgDestAMQP .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgSvcConf
+
+:MsgSvcConf rdf:type owl:Class ;
             
-            rdfs:subClassOf :AMQP_Destination .
+            rdfs:subClassOf :MsgSvcThing .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#AMQP_Topic
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgSvcThing
 
-:AMQP_Topic rdf:type owl:Class ;
-            
-            rdfs:subClassOf :AMQP_Destination .
+:MsgSvcThing rdf:type owl:Class .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#ConnectionSpecItem
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgTopicAMQP
 
-:ConnectionSpecItem rdf:type owl:Class ;
-                    
-                    rdfs:subClassOf :SMsgDataSpecItem .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#DestinationSpecItem
-
-:DestinationSpecItem rdf:type owl:Class ;
-                     
-                     rdfs:subClassOf :SMsgDataSpecItem .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#SMsgDataSpecItem
-
-:SMsgDataSpecItem rdf:type owl:Class ;
-                  
-                  rdfs:subClassOf :SMsgThing .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#SMsgThing
-
-:SMsgThing rdf:type owl:Class .
+:MsgTopicAMQP rdf:type owl:Class ;
+              
+              rdfs:subClassOf :MsgDestAMQP .
 
 
 
