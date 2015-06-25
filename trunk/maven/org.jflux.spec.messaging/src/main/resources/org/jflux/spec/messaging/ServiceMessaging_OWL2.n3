@@ -1,15 +1,16 @@
-@prefix : <http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#> .
+@prefix : <http://onto.jflux.org/onto/201503/MessageSvc_OWL2#> .
 @prefix osv: <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix msvc: <http://onto.jflux.org/onto/201503/MessageSvc_OWL2#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@base <http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2> .
+@base <http://onto.jflux.org/onto/201503/MessageSvc_OWL2> .
 
-<http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2> rdf:type owl:Ontology ;
-                                                          
-                                                          owl:imports <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2> .
+<http://onto.jflux.org/onto/201503/MessageSvc_OWL2> rdf:type owl:Ontology ;
+                                                    
+                                                    owl:imports <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2> .
 
 
 #################################################################
@@ -34,7 +35,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasOSGiServPropBinding
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasOSGiServPropBinding
 
 :hasOSGiServPropBinding rdf:type owl:ObjectProperty ;
                         
@@ -46,7 +47,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#smsgObjectProperty
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#smsgObjectProperty
 
 :smsgObjectProperty rdf:type owl:ObjectProperty .
 
@@ -61,7 +62,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasClientName
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasClientName
 
 :hasClientName rdf:type owl:DatatypeProperty ;
                
@@ -75,7 +76,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasDestAddressAMQP
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasDestAddressAMQP
 
 :hasDestAddressAMQP rdf:type owl:DatatypeProperty ;
                     
@@ -89,7 +90,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasIPAddress
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasIPAddress
 
 :hasIPAddress rdf:type owl:DatatypeProperty ;
               
@@ -103,7 +104,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasPassword
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasPassword
 
 :hasPassword rdf:type owl:DatatypeProperty ;
              
@@ -117,7 +118,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasPort
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasPort
 
 :hasPort rdf:type owl:DatatypeProperty ;
          
@@ -131,7 +132,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasUserName
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasUserName
 
 :hasUserName rdf:type owl:DatatypeProperty ;
              
@@ -145,7 +146,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasVirtualHost
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasVirtualHost
 
 :hasVirtualHost rdf:type owl:DatatypeProperty ;
                 
@@ -159,7 +160,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#msgDataProperty
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#msgDataProperty
 
 :msgDataProperty rdf:type owl:DatatypeProperty .
 
@@ -174,7 +175,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_ConnAMQP
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_ConnAMQP
 
 :MSC_ConnAMQP rdf:type owl:Class ;
               
@@ -182,7 +183,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_Connection
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_Connection
 
 :MSC_Connection rdf:type owl:Class ;
                 
@@ -190,7 +191,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_DestAMQP
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_DestAMQP
 
 :MSC_DestAMQP rdf:type owl:Class ;
               
@@ -198,7 +199,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_Destination
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_Destination
 
 :MSC_Destination rdf:type owl:Class ;
                  
@@ -206,7 +207,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_QueueAMQP
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_QueueAMQP
 
 :MSC_QueueAMQP rdf:type owl:Class ;
                
@@ -214,7 +215,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_TopicAMQP
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_TopicAMQP
 
 :MSC_TopicAMQP rdf:type owl:Class ;
                
@@ -222,7 +223,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgSvcConf
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MsgSvcConf
 
 :MsgSvcConf rdf:type owl:Class ;
             
@@ -230,7 +231,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgSvcThing
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MsgSvcThing
 
 :MsgSvcThing rdf:type owl:Class .
 
