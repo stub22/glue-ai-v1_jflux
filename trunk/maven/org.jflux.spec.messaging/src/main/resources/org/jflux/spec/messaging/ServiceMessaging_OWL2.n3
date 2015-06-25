@@ -75,13 +75,13 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasDestinationName
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasDestAddressAMQP
 
-:hasDestinationName rdf:type owl:DatatypeProperty ;
+:hasDestAddressAMQP rdf:type owl:DatatypeProperty ;
                     
                     owl:maxCardinality "1" ;
                     
-                    rdfs:domain :MSC_Destination ;
+                    rdfs:domain :MSC_DestAMQP ;
                     
                     rdfs:subPropertyOf :msgDataProperty ;
                     
@@ -172,6 +172,14 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #    Classes
 #
 #################################################################
+
+
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_ConnAMQP
+
+:MSC_ConnAMQP rdf:type owl:Class ;
+              
+              rdfs:subClassOf :MSC_Connection .
+
 
 
 ###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_Connection
