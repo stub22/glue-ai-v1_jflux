@@ -41,15 +41,15 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                         
                         rdfs:domain :MsgSvcConf ;
                         
-                        rdfs:subPropertyOf :smsgObjectProperty ;
+                        rdfs:subPropertyOf :msgSvcObjProp ;
                         
                         rdfs:range osv:OSGiServPropBinding .
 
 
 
-###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#smsgObjectProperty
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#msgSvcObjProp
 
-:smsgObjectProperty rdf:type owl:ObjectProperty .
+:msgSvcObjProp rdf:type owl:ObjectProperty .
 
 
 
@@ -70,7 +70,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                
                rdfs:domain :MSC_Connection ;
                
-               rdfs:subPropertyOf :msgDataProperty ;
+               rdfs:subPropertyOf :msgSvcDataProp ;
                
                rdfs:range xsd:string .
 
@@ -84,7 +84,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                     
                     rdfs:domain :MSC_DestAMQP ;
                     
-                    rdfs:subPropertyOf :msgDataProperty ;
+                    rdfs:subPropertyOf :msgSvcDataProp ;
                     
                     rdfs:range xsd:string .
 
@@ -98,7 +98,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
               
               rdfs:domain :MSC_Connection ;
               
-              rdfs:subPropertyOf :msgDataProperty ;
+              rdfs:subPropertyOf :msgSvcDataProp ;
               
               rdfs:range xsd:string .
 
@@ -112,7 +112,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
              
              rdfs:domain :MSC_Connection ;
              
-             rdfs:subPropertyOf :msgDataProperty ;
+             rdfs:subPropertyOf :msgSvcDataProp ;
              
              rdfs:range xsd:string .
 
@@ -126,7 +126,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
          
          rdfs:domain :MSC_Connection ;
          
-         rdfs:subPropertyOf :msgDataProperty ;
+         rdfs:subPropertyOf :msgSvcDataProp ;
          
          rdfs:range xsd:int .
 
@@ -140,7 +140,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
              
              rdfs:domain :MSC_Connection ;
              
-             rdfs:subPropertyOf :msgDataProperty ;
+             rdfs:subPropertyOf :msgSvcDataProp ;
              
              rdfs:range xsd:string .
 
@@ -154,15 +154,15 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
                 
                 rdfs:domain :MSC_Connection ;
                 
-                rdfs:subPropertyOf :msgDataProperty ;
+                rdfs:subPropertyOf :msgSvcDataProp ;
                 
                 rdfs:range xsd:string .
 
 
 
-###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#msgDataProperty
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#msgSvcDataProp
 
-:msgDataProperty rdf:type owl:DatatypeProperty .
+:msgSvcDataProp rdf:type owl:DatatypeProperty .
 
 
 
