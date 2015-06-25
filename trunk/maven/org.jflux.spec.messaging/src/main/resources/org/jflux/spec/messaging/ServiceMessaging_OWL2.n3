@@ -34,32 +34,6 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasDest
-
-:hasDest rdf:type owl:ObjectProperty ;
-         
-         rdfs:range :MSC_Destination ;
-         
-         rdfs:subPropertyOf :smsgObjectProperty .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasDestAMQP
-
-:hasDestAMQP rdf:type owl:ObjectProperty ;
-             
-             owl:maxCardinality "1" ;
-             
-             rdfs:comment """Do we really need this property?
-Ca we just use hasDest?
-What should the domain be?""" ;
-             
-             rdfs:range :MSC_DestAMQP ;
-             
-             rdfs:subPropertyOf :hasDest .
-
-
-
 ###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#hasOSGiServPropBinding
 
 :hasOSGiServPropBinding rdf:type owl:ObjectProperty ;
