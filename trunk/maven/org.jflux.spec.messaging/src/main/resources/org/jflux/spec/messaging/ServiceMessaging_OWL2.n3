@@ -38,7 +38,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :hasDest rdf:type owl:ObjectProperty ;
          
-         rdfs:range :MsgDestination ;
+         rdfs:range :MSC_Destination ;
          
          rdfs:subPropertyOf :smsgObjectProperty .
 
@@ -50,9 +50,11 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
              
              owl:maxCardinality "1" ;
              
-             rdfs:domain :MSC_Destination ;
+             rdfs:comment """Do we really need this property?
+Ca we just use hasDest?
+What should the domain be?""" ;
              
-             rdfs:range :MsgDestAMQP ;
+             rdfs:range :MSC_DestAMQP ;
              
              rdfs:subPropertyOf :hasDest .
 
@@ -206,6 +208,14 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_DestAMQP
+
+:MSC_DestAMQP rdf:type owl:Class ;
+              
+              rdfs:subClassOf :MSC_Destination .
+
+
+
 ###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_Destination
 
 :MSC_Destination rdf:type owl:Class ;
@@ -214,27 +224,19 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgDestAMQP
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_QueueAMQP
 
-:MsgDestAMQP rdf:type owl:Class ;
-             
-             rdfs:subClassOf :MsgDestination .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgDestination
-
-:MsgDestination rdf:type owl:Class ;
-                
-                rdfs:subClassOf :MsgSvcThing .
+:MSC_QueueAMQP rdf:type owl:Class ;
+               
+               rdfs:subClassOf :MSC_DestAMQP .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgQueueAMQP
+###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MSC_TopicAMQP
 
-:MsgQueueAMQP rdf:type owl:Class ;
-              
-              rdfs:subClassOf :MsgDestAMQP .
+:MSC_TopicAMQP rdf:type owl:Class ;
+               
+               rdfs:subClassOf :MSC_DestAMQP .
 
 
 
@@ -249,14 +251,6 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 ###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgSvcThing
 
 :MsgSvcThing rdf:type owl:Class .
-
-
-
-###  http://onto.jflux.org/onto/201503/ServiceMessaging_OWL2#MsgTopicAMQP
-
-:MsgTopicAMQP rdf:type owl:Class ;
-              
-              rdfs:subClassOf :MsgDestAMQP .
 
 
 
