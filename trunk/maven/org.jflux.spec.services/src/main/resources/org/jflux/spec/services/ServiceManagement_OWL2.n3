@@ -5,6 +5,7 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sman: <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#> .
 @base <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> .
 
 <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> rdf:type owl:Ontology ;
@@ -266,6 +267,22 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #################################################################
 
 
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#AttribBinding
+
+:AttribBinding rdf:type owl:Class ;
+               
+               rdfs:subClassOf :SvcManThing .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#AttribKey
+
+:AttribKey rdf:type owl:Class ;
+           
+           rdfs:subClassOf :SvcManThing .
+
+
+
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#JClzEnabled
 
 :JClzEnabled rdf:type owl:Class ;
@@ -351,6 +368,18 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SvcManThing
 
 :SvcManThing rdf:type owl:Class .
+
+
+
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#OSGiServPropBinding
+
+osv:OSGiServPropBinding rdfs:subClassOf :AttribBinding .
+
+
+
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#OSGiServPropKey
+
+osv:OSGiServPropKey rdfs:subClassOf :AttribKey .
 
 
 
