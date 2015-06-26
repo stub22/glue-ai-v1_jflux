@@ -157,7 +157,7 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 :hasSvcRegAttribValAssign rdf:type owl:ObjectProperty ;
                           
-                          rdfs:comment """Should the domain of this type really be SME_Manager?
+                          rdfs:comment """Should the domain of this property really be SME_Manager?
 In the code it looks like it should be the Registration\"Strategy\",
 but the use of that term to bind our attrib-vals collides a bit with
 our general concept and other use of the word \"Strategy\".""" ;
@@ -326,6 +326,18 @@ osv:hasServPropKey rdfs:subPropertyOf :isForAttribKey .
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#smanDataProperty
 
 :smanDataProperty rdf:type owl:DatatypeProperty .
+
+
+
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#hasServPropKeyName
+
+osv:hasServPropKeyName rdfs:subPropertyOf :hasAttribKeyNameString .
+
+
+
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#hasServPropValue
+
+osv:hasServPropValue rdfs:subPropertyOf :hasAttribValString .
 
 
 
