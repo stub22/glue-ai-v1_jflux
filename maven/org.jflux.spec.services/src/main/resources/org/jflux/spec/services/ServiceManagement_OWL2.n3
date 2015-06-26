@@ -22,6 +22,24 @@
 #################################################################
 
 
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#mayBeFilteredUsingAttribKey
+
+:mayBeFilteredUsingAttribKey rdf:type owl:AnnotationProperty ;
+                             
+                             rdfs:range :AttribKey ;
+                             
+                             rdfs:domain :SME_Dependency ;
+                             
+                             rdfs:subPropertyOf :smanAnnotProp .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#smanAnnotProp
+
+:smanAnnotProp rdf:type owl:AnnotationProperty .
+
+
+
 ###  http://www.w3.org/2002/07/owl#maxCardinality
 
 owl:maxCardinality rdf:type owl:AnnotationProperty .
