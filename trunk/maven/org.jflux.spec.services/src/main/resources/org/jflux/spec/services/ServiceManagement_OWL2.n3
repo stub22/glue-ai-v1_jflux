@@ -194,7 +194,7 @@ our general concept and other use of the word \"Strategy\".""" ;
                 
                 rdfs:range :AttribKey ;
                 
-                rdfs:domain :AttribKeyUser ;
+                rdfs:domain :AttribKeyUsage ;
                 
                 rdfs:subPropertyOf :smanObjProperty .
 
@@ -376,13 +376,13 @@ osv:hasServPropValue rdfs:subPropertyOf :hasAttribValString .
 
 
 
-###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#AttribKeyUser
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#AttribKeyUsage
 
-:AttribKeyUser rdf:type owl:Class ;
-               
-               rdfs:subClassOf :SvcManThing ;
-               
-               rdfs:comment "This type exists just to identify the domain of property   isForAttribKey.." .
+:AttribKeyUsage rdf:type owl:Class ;
+                
+                rdfs:subClassOf :SvcManThing ;
+                
+                rdfs:comment "This type exists just to identify the domain of property   isForAttribKey.." .
 
 
 
@@ -390,7 +390,7 @@ osv:hasServPropValue rdfs:subPropertyOf :hasAttribValString .
 
 :AttribValAssign rdf:type owl:Class ;
                  
-                 rdfs:subClassOf :AttribKeyUser .
+                 rdfs:subClassOf :AttribKeyUsage .
 
 
 
@@ -398,7 +398,7 @@ osv:hasServPropValue rdfs:subPropertyOf :hasAttribValString .
 
 :AttribValFilter rdf:type owl:Class ;
                  
-                 rdfs:subClassOf :AttribKeyUser ;
+                 rdfs:subClassOf :AttribKeyUsage ;
                  
                  rdfs:comment "Still working out the distinction between an AttribValBinding and an AttribValFilter." .
 
