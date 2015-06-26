@@ -40,7 +40,6 @@
                     <instructions>
                         <Bundle-Activator>org.jflux.onto.common.Activator</Bundle-Activator>
                          <Export-Package>
-							 org.jflux.onto.common.osg.*,
 							 org.jflux.onto.common.*
 						 </Export-Package>
                     </instructions>
