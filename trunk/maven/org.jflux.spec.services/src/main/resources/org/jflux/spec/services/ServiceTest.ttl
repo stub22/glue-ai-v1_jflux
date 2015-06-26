@@ -21,7 +21,7 @@
 
 :serv_Reg	rdf:type	:SMS_SvcRegStrategy;
 		:hasRegStrategy	:SVC_REG_STRAT_BASIC;
-		:hasFullyQualifiedJClzName "org.jflux.swing.services.ServicesFrame" .
+		:hasFullyQualifiedJClzName "org.jflux.swing.services.ServicesFrame" ;
 		:hasOSGiServPropBinding	:regProp_01 .
 
 :regProp_01	rdf:type osgi:OSGiServPropBinding;
@@ -35,7 +35,7 @@
 
 :service_one_bind	rdf:type	:SME_Binding;
 		:hasBindingStrategy	:BIND_STRAT_LAZY;
-		:hasSvcBindDep	:service_one_dep . 
+		:hasSvcBindDep	:service_one_dep ; 
 		:hasFullyQualifiedJClzName	"org.jflux.spec.services.BundleContextSpec";
 		:hasOSGiServPropBinding		:servProp_01 .
 
