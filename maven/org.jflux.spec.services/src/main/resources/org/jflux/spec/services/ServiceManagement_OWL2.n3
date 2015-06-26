@@ -380,7 +380,9 @@ osv:hasServPropValue rdfs:subPropertyOf :hasAttribValString .
 
 :AttribKeyUser rdf:type owl:Class ;
                
-               rdfs:subClassOf :SvcManThing .
+               rdfs:subClassOf :SvcManThing ;
+               
+               rdfs:comment "This type exists just to identify the domain of property   isForAttribKey.." .
 
 
 
