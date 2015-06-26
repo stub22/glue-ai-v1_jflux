@@ -54,8 +54,8 @@
 				<configuration>
 					<instructions>
 						<!-- To find this value, looked for Bundle-SymbolicName in manifest of jena-osgi.jar	-->
-						<Fragment-Host>org.apache.jena.osgi</Fragment-Host>
-						
+<!--						<Fragment-Host>org.apache.jena.osgi</Fragment-Host>-->
+						<Bundle-Activator>org.jflux.spec.services.Activator</Bundle-Activator>
                         <Export-Package>org.jflux.spec.services.*</Export-Package>
 					</instructions>
 				</configuration>
