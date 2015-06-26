@@ -12,10 +12,14 @@ import org.apache.qpid.client.AMQAnyDestination;
 import org.jflux.api.service.ServiceDependency;
 import org.jflux.api.service.ServiceLifecycle;
 import org.jflux.impl.messaging.rk.utils.ConnectionUtils;
+import org.jflux.spec.messaging.rdf2go.MSCQueueAMQP;
+
+
 
 /**
  *
  * @author Amy Jessica Book <jgpallack@gmail.com>
+ * @author Major Jacquote <mjacquote@gmail.com>
  */
 
 public class DestinationLifecycle implements ServiceLifecycle<Destination> {
@@ -25,7 +29,7 @@ public class DestinationLifecycle implements ServiceLifecycle<Destination> {
     
     private final static ServiceDependency[] theDependencyArray = {
         new ServiceDependency(
-            theDestinationSpec, DestinationSpec.class.getName(),
+            theDestinationSpec, MSCQueueAMQP.class.getName(),
             ServiceDependency.Cardinality.MANDATORY_UNARY,
             ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP)
     };
@@ -44,12 +48,11 @@ public class DestinationLifecycle implements ServiceLifecycle<Destination> {
 
     @Override
     public Destination createService(Map<String, Object> dependencyMap) {
-        DestinationSpec spec =
-                (DestinationSpec)dependencyMap.get(theDestinationSpec);
-        String destName = spec.getName();
-        int destType = spec.getType();
+        MSCQueueAMQP spec =
+                (MSCQueueAMQP)dependencyMap.get(theDestinationSpec);
         
-        String destRepr = buildNameString(destName, destType);
+		
+        String destRepr = spec.getDestAddressAMQP();
         
         try {
             return new AMQAnyDestination(destRepr);

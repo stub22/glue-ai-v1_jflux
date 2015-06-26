@@ -22,12 +22,12 @@
 			<groupId>org.appdapter</groupId>
 			<artifactId>org.appdapter.bundle.core</artifactId>
 		</dependency>
-        <dependency>
+<!--        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>4.3.0</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>

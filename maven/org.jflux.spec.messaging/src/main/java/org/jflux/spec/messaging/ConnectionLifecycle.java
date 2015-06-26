@@ -27,6 +27,7 @@ import org.jflux.api.service.ServiceLifecycle;
 import org.apache.qpid.client.AMQConnectionFactory;
 import org.apache.qpid.url.URLSyntaxException;
 import org.jflux.api.service.ServiceDependency;
+import org.jflux.spec.messaging.rdf2go.MSCConnection;
 
 /**
  * This lifecycle comprises the JFlux object registry interface for the
@@ -38,6 +39,7 @@ import org.jflux.api.service.ServiceDependency;
  * object to gracefully handle changes in its environment.
  * 
  * @author Jason R. Eads <eadsjr>
+ * @author Major Jacquote <mjacquote@gmail.com>
  */
 public class ConnectionLifecycle implements ServiceLifecycle<Connection> {
     private final static Logger theLogger = Logger.getLogger(ConnectionLifecycle.class.getName());
@@ -65,7 +67,7 @@ public class ConnectionLifecycle implements ServiceLifecycle<Connection> {
      * This provides the dependencies which JFlux will provide.
      */
     private final static ServiceDependency[] theDependencyArray = {
-        new ServiceDependency(theConnectionSpec, ConnectionSpec.class.getName(), ServiceDependency.Cardinality.MANDATORY_UNARY, ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP)
+        new ServiceDependency(theConnectionSpec, MSCConnection.class.getName(), ServiceDependency.Cardinality.MANDATORY_UNARY, ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP)
     };
     
     /**
@@ -99,16 +101,16 @@ public class ConnectionLifecycle implements ServiceLifecycle<Connection> {
     public Connection createService(Map<String,Object> dependencyMap) {
         
         // Collect the connection specification 
-        ConnectionSpec myConnectionSpec = (ConnectionSpec)dependencyMap.get(theConnectionSpec);
+        MSCConnection myConnectionSpec = (MSCConnection)dependencyMap.get(theConnectionSpec);
         
         // The address extension to the url
         String address = String.format(theTCPAddressFormatString,
-                myConnectionSpec.getIpAddress(),
+                myConnectionSpec.getIPAddress(),
                 myConnectionSpec.getPort());
 
         // The URL used for QPID messaging.
         String amqpURL = String.format(theAMQPFormatString,
-                myConnectionSpec.getUsername(),
+                myConnectionSpec.getUserName(),
                 myConnectionSpec.getPassword(),
                 myConnectionSpec.getClientName(),
                 myConnectionSpec.getVirtualHost(),
