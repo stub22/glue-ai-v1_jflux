@@ -46,7 +46,7 @@
 
 
 :servProp_01_Key	rdf:type	osgi:OSGiServPropKey;
-			osgi:hasServPropKeyName	"bundleContextSpec".
+			osgi:hasServPropKeyName	"bundleContext".
 
 :service_one_dep	rdf:type :SME_Dependency ;
 		:isDepRequired	"true"^^xsd:boolean;

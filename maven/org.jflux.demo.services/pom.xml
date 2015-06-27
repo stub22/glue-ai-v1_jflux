@@ -28,12 +28,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>org.jflux.swing.services</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-			<groupId>org.appdapter</groupId>
-			<artifactId>org.appdapter.bundle.xload</artifactId>
-			<version>${appdapter.version}</version>
-		</dependency>		
+        </dependency>	
     </dependencies>
 
     <build>
