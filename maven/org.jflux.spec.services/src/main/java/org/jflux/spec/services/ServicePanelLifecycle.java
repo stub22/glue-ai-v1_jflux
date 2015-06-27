@@ -18,7 +18,7 @@ public class ServicePanelLifecycle implements ServiceLifecycle<ServicesFrame> {
 
     private final static String contextDependency = "bundlecontext_dep";
     private final static ServiceDependency[] theDependencyArray = {
-        new ServiceDependency(contextDependency, BundleContextSpec.class.getName(), ServiceDependency.Cardinality.MANDATORY_UNARY,
+        new ServiceDependency(contextDependency, BundleContext.class.getName(), ServiceDependency.Cardinality.MANDATORY_UNARY,
         ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP)
     };
     private final static String[] theClassNameArray = {
@@ -38,7 +38,7 @@ public class ServicePanelLifecycle implements ServiceLifecycle<ServicesFrame> {
     @Override
     public ServicesFrame createService(Map<String, Object> dependencyMap) {
 
-        BundleContext context = ((BundleContextSpec) dependencyMap.get(contextDependency)).getContext();
+        BundleContext context = (BundleContext) dependencyMap.get(contextDependency);
 //        setLookAndFeel();
         return startServicePanel(context);
     }

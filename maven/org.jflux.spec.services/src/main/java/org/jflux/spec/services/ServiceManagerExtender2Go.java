@@ -65,7 +65,7 @@ public class ServiceManagerExtender2Go
 	 */
 	private final Registry myRegistry;
 	private final Model model2go;
-
+	private final Model indvModel;
 	/**
 	 * The logger, used for reporting errors.
 	 */
@@ -77,7 +77,7 @@ public class ServiceManagerExtender2Go
 						
 							
 	public ServiceManagerExtender2Go(
-			BundleContext context, Registry registry, String serviceFilter) {
+			BundleContext context, Registry registry, String serviceFilter, String ttlPath, String ontoPath) {
 		super(SMEManager.class, context, serviceFilter);
 		myRegistry = registry;
 		myManagedServicesMap
@@ -86,9 +86,13 @@ public class ServiceManagerExtender2Go
 		theStrategiesByR2goURI= new HashMap<URIImpl,ServiceBinding.BindingStrategy>();
 		theStrategiesByR2goURI.put(URI_BS_EAGER, ServiceBinding.BindingStrategy.EAGER);
 		
-		com.hp.hpl.jena.rdf.model.Model jenaModel = RDFDataMgr.loadModel("../src/main/resources/org/jflux/spec/services/ServiceTest.ttl");
+		com.hp.hpl.jena.rdf.model.Model jenaModel = RDFDataMgr.loadModel(ttlPath);
 		model2go = new org.ontoware.rdf2go.impl.jena.ModelImplJena(jenaModel);
 		model2go.open();
+		
+		com.hp.hpl.jena.rdf.model.Model jenaModel2 = RDFDataMgr.loadModel(ontoPath);
+		indvModel = new org.ontoware.rdf2go.impl.jena.ModelImplJena(jenaModel2);
+		indvModel.open();
 	}
 
 	/**
@@ -222,13 +226,14 @@ public class ServiceManagerExtender2Go
 
 	private BindingStrategy getBindingStrat(SMEBinding sbt) {
 		SMSBindStrategy sbst = sbt.getBindStrategy();
-		SMSBindStrategy indv = new SMSBindStrategy(model2go,yieldR2GoURI(ServiceManagement_OWL2.BIND_STRAT_EAGER), false );
+
+		//SMSBindStrategy indv = new SMSBindStrategy(indvModel, yieldR2GoURI(ServiceManagement_OWL2.BIND_STRAT_EAGER), false );
 		
-		if (sbst.equals(indv)) {
+		/*if (sbst.equals(indv)) {
 			return ServiceBinding.BindingStrategy.EAGER;
-		} else {
+		} else {*/
 			return ServiceBinding.BindingStrategy.LAZY;
-		}
+		//}
 	}
 
 	private String getLifecyceleFCQN(SMEManager serviceManagerEntity) {
@@ -254,9 +259,9 @@ public class ServiceManagerExtender2Go
 	}
 	
 	
-	//TODO: Replace with a
+	//TODO: Replace this method with a hashmap of BindingStrat individuals. 
 	private URI yieldR2GoURI(com.hp.hpl.jena.rdf.model.Resource id) {
-		
+		String uri = id.getURI();
 		return new URIImpl(id.getURI());
 	}
 }

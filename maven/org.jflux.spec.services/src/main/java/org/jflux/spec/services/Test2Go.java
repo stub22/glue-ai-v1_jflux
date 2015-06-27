@@ -25,8 +25,13 @@ import org.jflux.impl.registry.OSGiRegistry;
 
 
 public class Test2Go {
-	public ArrayList<ManagedService> registerServiceManagersThing() {
-		com.hp.hpl.jena.rdf.model.Model jenaModel = RDFDataMgr.loadModel("../src/main/resources/org/jflux/spec/services/ServiceTest.ttl");
+	
+	
+	
+	public ArrayList<ManagedService> registerServiceManagersThing(String modelPath) {
+		
+		
+		com.hp.hpl.jena.rdf.model.Model jenaModel = RDFDataMgr.loadModel(modelPath);
 		Model model2go = new org.ontoware.rdf2go.impl.jena.ModelImplJena(jenaModel);
 		model2go.open();
 		BundleContext ctx = OSGiUtils.getBundleContext(Test2Go.class);
@@ -50,10 +55,10 @@ public class Test2Go {
 	}
 	
 	public ServiceManagerExtender2Go startSpecExtender(
-            BundleContext bundleCtx, String optionalSpecFilter) {
+            BundleContext bundleCtx, String optionalSpecFilter, String ttlPath, String ontoPath) {
         Registry reg = new OSGiRegistry(bundleCtx);
         ServiceManagerExtender2Go serviceManagerExtender2go = new ServiceManagerExtender2Go(
-                bundleCtx, reg, optionalSpecFilter);
+                bundleCtx, reg, optionalSpecFilter, ttlPath, ontoPath);
         serviceManagerExtender2go.start();
         return serviceManagerExtender2go;
     }
