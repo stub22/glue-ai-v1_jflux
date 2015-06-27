@@ -28,7 +28,7 @@ public class Test2Go {
 	
 	
 	
-	public ArrayList<ManagedService> registerServiceManagersThing(String modelPath) {
+	public ArrayList<ManagedService> registerServiceManagerEntites(String modelPath) {
 		
 		
 		com.hp.hpl.jena.rdf.model.Model jenaModel = RDFDataMgr.loadModel(modelPath);
