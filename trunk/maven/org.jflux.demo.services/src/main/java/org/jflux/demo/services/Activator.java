@@ -13,10 +13,11 @@ public class Activator extends BundleActivatorBase {
     //private final static String MERGED_MODEL_MANAGER_QN = "csi:merged_manager_1001";
     
 	
-	//These need to point to the paths of the ServiceTest.ttl file and ServiceManagement_OWL2.n3
-	//They are relative here, but in practice only absolute paths have worked.
-	private final static String SERVICE_MODEL_PATH = "file:Services/ServiceTest.ttl";
-	private final static String ONTOLOGY_MODEL_PATH = "file:Services/ServiceManagement_OWL2.n3";
+	
+	//SERVICE_MODEL_PATH is the turtle file with the information for the services to be launched.
+	//SVN_MGMT_ONTOLOGY_MODEL_PATH is the ontology that SERVICE_MODEL_PATH uses. 
+	private final static String SERVICE_MODEL_PATH = "file:../org.jflux.spec.services/src/main/resources/org/jflux/spec/services/ServiceTest.ttl";
+	private final static String SVN_MGMT_ONTOLOGY_MODEL_PATH = "file:../org.jflux.spec.services/src/main/resources/org/jflux/spec/services/ServiceManagement_OWL2.n3";
 	
 	
     @Override
@@ -37,8 +38,8 @@ public class Activator extends BundleActivatorBase {
 	   ms.start();
 	   
 	   //TODO: open models here and pass them to Test2Go
-	   test.registerServiceManagersThing(SERVICE_MODEL_PATH);
-	   test.startSpecExtender(context, null,SERVICE_MODEL_PATH,ONTOLOGY_MODEL_PATH);
+	   test.registerServiceManagerEntites(SERVICE_MODEL_PATH);
+	   test.startSpecExtender(context, null,SERVICE_MODEL_PATH,SVN_MGMT_ONTOLOGY_MODEL_PATH);
     }
 
     @Override
