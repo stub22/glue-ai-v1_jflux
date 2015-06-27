@@ -15,8 +15,8 @@ public class Activator extends BundleActivatorBase {
 	
 	//These need to point to the paths of the ServiceTest.ttl file and ServiceManagement_OWL2.n3
 	//They are relative here, but in practice only absolute paths have worked.
-	private final static String SERVICE_MODEL_PATH = "file://./Services/ServiceTest.ttl";
-	private final static String ONTOLOGY_MODEL_PATH = "file://./Services/ServiceManagement_OWL2.n3";
+	private final static String SERVICE_MODEL_PATH = "file:Services/ServiceTest.ttl";
+	private final static String ONTOLOGY_MODEL_PATH = "file:Services/ServiceManagement_OWL2.n3";
 	
 	
     @Override

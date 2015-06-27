@@ -5,6 +5,7 @@
 @prefix xml: <http://www.w3.org/XML/1998/namespace> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sman: <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#> .
 @base <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> .
 
 <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> rdf:type owl:Ontology ;
@@ -19,6 +20,24 @@
 #    Annotation properties
 #
 #################################################################
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#mayBeFilteredUsingAttribKey
+
+:mayBeFilteredUsingAttribKey rdf:type owl:AnnotationProperty ;
+                             
+                             rdfs:range :AttribKey ;
+                             
+                             rdfs:domain :SME_Dependency ;
+                             
+                             rdfs:subPropertyOf :smanAnnotProp .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#smanAnnotProp
+
+:smanAnnotProp rdf:type owl:AnnotationProperty .
+
 
 
 ###  http://www.w3.org/2002/07/owl#maxCardinality
@@ -114,6 +133,18 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasSvcAttribValFilter
+
+:hasSvcAttribValFilter rdf:type owl:ObjectProperty ;
+                       
+                       rdfs:range :AttribValFilter ;
+                       
+                       rdfs:domain :SME_Binding ;
+                       
+                       rdfs:subPropertyOf :smanObjProperty .
+
+
+
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasSvcBindDep
 
 :hasSvcBindDep rdf:type owl:ObjectProperty ;
@@ -140,6 +171,35 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasSvcRegAttribValAssign
+
+:hasSvcRegAttribValAssign rdf:type owl:ObjectProperty ;
+                          
+                          rdfs:comment """Should the domain of this property really be SME_Manager?
+In the code it looks like it should be the Registration\"Strategy\",
+but the use of that term to bind our attrib-vals collides a bit with
+our general concept and other use of the word \"Strategy\".""" ;
+                          
+                          rdfs:range :AttribValAssign ;
+                          
+                          rdfs:domain :SME_Manager ;
+                          
+                          rdfs:subPropertyOf :smanObjProperty .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#isForAttribKey
+
+:isForAttribKey rdf:type owl:ObjectProperty ;
+                
+                rdfs:range :AttribKey ;
+                
+                rdfs:domain :AttribKeyUsage ;
+                
+                rdfs:subPropertyOf :smanObjProperty .
+
+
+
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#smanObjProperty
 
 :smanObjProperty rdf:type owl:ObjectProperty .
@@ -160,6 +220,12 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#hasServPropKey
+
+osv:hasServPropKey rdfs:subPropertyOf :isForAttribKey .
+
+
+
 
 
 #################################################################
@@ -167,6 +233,30 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #    Data properties
 #
 #################################################################
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasAttribKeyNameString
+
+:hasAttribKeyNameString rdf:type owl:DatatypeProperty ;
+                        
+                        rdfs:domain :StringyAttribKey ;
+                        
+                        rdfs:subPropertyOf :smanDataProperty ;
+                        
+                        rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasAttribValString
+
+:hasAttribValString rdf:type owl:DatatypeProperty ;
+                    
+                    rdfs:domain :StringyAttribPair ;
+                    
+                    rdfs:subPropertyOf :smanDataProperty ;
+                    
+                    rdfs:range xsd:string .
+
 
 
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#hasFullyQualifiedJClzName
@@ -257,6 +347,18 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#hasServPropKeyName
+
+osv:hasServPropKeyName rdfs:subPropertyOf :hasAttribKeyNameString .
+
+
+
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#hasServPropValue
+
+osv:hasServPropValue rdfs:subPropertyOf :hasAttribValString .
+
+
+
 
 
 #################################################################
@@ -264,6 +366,42 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 #    Classes
 #
 #################################################################
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#AttribKey
+
+:AttribKey rdf:type owl:Class ;
+           
+           rdfs:subClassOf :SvcManThing .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#AttribKeyUsage
+
+:AttribKeyUsage rdf:type owl:Class ;
+                
+                rdfs:subClassOf :SvcManThing ;
+                
+                rdfs:comment "This type exists just to identify the domain of property   isForAttribKey.." .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#AttribValAssign
+
+:AttribValAssign rdf:type owl:Class ;
+                 
+                 rdfs:subClassOf :AttribKeyUsage .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#AttribValFilter
+
+:AttribValFilter rdf:type owl:Class ;
+                 
+                 rdfs:subClassOf :AttribKeyUsage ;
+                 
+                 rdfs:comment "Still working out the distinction between an AttribValBinding and an AttribValFilter." .
+
 
 
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#JClzEnabled
@@ -330,6 +468,23 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 
 
 
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#StringyAttribKey
+
+:StringyAttribKey rdf:type owl:Class ;
+                  
+                  rdfs:subClassOf :AttribKey .
+
+
+
+###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#StringyAttribPair
+
+:StringyAttribPair rdf:type owl:Class ;
+                   
+                   rdfs:subClassOf :AttribValAssign ,
+                                   :AttribValFilter .
+
+
+
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SvcManEntity
 
 :SvcManEntity rdf:type owl:Class ;
@@ -351,6 +506,18 @@ owl:maxCardinality rdf:type owl:AnnotationProperty .
 ###  http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#SvcManThing
 
 :SvcManThing rdf:type owl:Class .
+
+
+
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#OSGiServPropBinding
+
+osv:OSGiServPropBinding rdfs:subClassOf :StringyAttribPair .
+
+
+
+###  http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#OSGiServPropKey
+
+osv:OSGiServPropKey rdfs:subClassOf :StringyAttribKey .
 
 
 
