@@ -13,42 +13,42 @@
 							   owl:imports <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2> .
 
 
-:ServiceOne	rdf:type :SME_Manager;
+:service_frame_manager	rdf:type :SME_Manager;
 		:startsLifecycle :serviceFrameLc;
-		:hasRegStrategy	:serv_Reg;
-		:hasSvcBinding	:service_one_bind .
+		:hasRegStrategy	:service_frame_registration;
+		:hasSvcBinding	:service_frame_binding_01 .
 
 
-:serv_Reg	rdf:type	:SMS_SvcRegStrategy;
+:service_frame_registration	rdf:type	:SMS_SvcRegStrategy;
 		:hasRegStrategy	:SVC_REG_STRAT_BASIC;
 		:hasFullyQualifiedJClzName "org.jflux.swing.services.ServicesFrame";
-		:hasOSGiServPropBinding	:regProp_01 .
+		:hasOSGiServPropBinding	:service_frame_reg_prop_01 .
 
-:regProp_01	rdf:type osgi:OSGiServPropBinding;
-		osgi:hasServPropKey	:regProp_01_Key;
+:service_frame_reg_prop_01	rdf:type osgi:OSGiServPropBinding;
+		osgi:hasServPropKey	:service_frame_reg_prop_01_Key;
 		osgi:hasServPropValue	"serviceframe_service".
 
 
-:regProp_01_Key	rdf:type	osgi:OSGiServPropKey;
+:service_frame_reg_prop_01_Key	rdf:type	osgi:OSGiServPropKey;
 		osgi:hasServPropKeyName	"serviceFrame".
 
 
-:service_one_bind	rdf:type	:SME_Binding;
-		:hasBindingStrategy	:BIND_STRAT_LAZY;
-		:hasSvcBindDep	:service_one_dep ;
+:service_frame_binding_01	rdf:type	:SME_Binding;
+		:hasBindStrategy	:BIND_STRAT_LAZY;
+		:hasSvcBindDep	:service_frame_dep_01 ;
 		:hasFullyQualifiedJClzName	"org.osgi.framework.BundleContext";
-		:hasOSGiServPropBinding		:servProp_01 .
+		:hasOSGiServPropBinding		:service_frame_binding_prop_01 .
 
 
-:servProp_01	rdf:type osgi:OSGiServPropBinding;
-		osgi:hasServPropKey	:servProp_01_Key;
+:service_frame_binding_prop_01	rdf:type osgi:OSGiServPropBinding;
+		osgi:hasServPropKey	:service_frame_binding_prop_01_Key;
 		osgi:hasServPropValue	"http://www.w3.org/2002/07/owl#bundleContextSpec".
 
 
-:servProp_01_Key	rdf:type	osgi:OSGiServPropKey;
+:service_frame_binding_prop_01_Key	rdf:type	osgi:OSGiServPropKey;
 			osgi:hasServPropKeyName	"bundleContext".
 
-:service_one_dep	rdf:type :SME_Dependency ;
+:service_frame_dep_01	rdf:type :SME_Dependency ;
 		:isDepRequired	"true"^^xsd:boolean;
 		:isDepCardMultiple "false"^^xsd:boolean;
 		:hasFullyQualifiedJClzName	"org.osgi.framework.BundleContext";
@@ -57,6 +57,6 @@
 
 
 :serviceFrameLc		rdf:type	:SME_Lifecycle;
-			:hasLifeDep	:ServiceOneDep;
+			:hasLifeDep	:service_frame_dep_01;
 			:hasFullyQualifiedJClzName	"org.jflux.spec.services.ServicePanelLifecycle";
 			:hasRegisteredJClzName		"org.jflux.swing.services.ServicesFrame".
