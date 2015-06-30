@@ -13,6 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+
 package org.jflux.spec.services;
 
 
@@ -39,15 +41,15 @@ import org.jflux.spec.services.rdf2go.SMEDependency;
 import org.jflux.spec.services.rdf2go.SMSSvcRegStrategy;
 import org.jflux.spec.services.rdf2go.SMSBindStrategy;
 import org.ontoware.rdf2go.model.Model;
-import org.ontoware.rdf2go.model.node.URI;
 import org.ontoware.rdf2go.model.node.impl.URIImpl;
-import org.apache.jena.riot.RDFDataMgr;
 import org.ontoware.aifbcommons.collection.ClosableIterator;
 import org.ontoware.rdf2go.model.node.Resource;
 import org.jflux.api.registry.basic.BasicDescriptor;
 import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import org.jflux.spec.services.jvocab.ServiceManagement_OWL2;
 import java.util.HashMap;
+
+
 
 /**
  *
@@ -65,34 +67,41 @@ public class ServiceManagerExtender2Go
 	 */
 	private final Registry myRegistry;
 	private final Model model2go;
-	private final Model indvModel;
 	/**
 	 * The logger, used for reporting errors.
 	 */
 	private final static Logger theLogger
 			= Logger.getLogger(ServiceManagerExtender2Go.class.getName());
 	
-	private static final URIImpl URI_BS_EAGER = new URIImpl(ServiceManagement_OWL2.BIND_STRAT_EAGER.getURI(), false);
+	private final URIImpl URI_BS_EAGER;
+	private final URIImpl URI_BS_LAZY;
 	private final Map<URIImpl,ServiceBinding.BindingStrategy> theStrategiesByR2goURI;
-						
+	
+					
 							
 	public ServiceManagerExtender2Go(
-			BundleContext context, Registry registry, String serviceFilter, String ttlPath, String ontoPath) {
+			BundleContext context, Registry registry, String serviceFilter, Model m) {
 		super(SMEManager.class, context, serviceFilter);
 		myRegistry = registry;
 		myManagedServicesMap
 				= new HashMap<SMEManager, ServiceManager>();
 		
+		URI_BS_EAGER= new URIImpl(ServiceManagement_OWL2.BIND_STRAT_EAGER.getURI(), false);
+		URI_BS_LAZY = new URIImpl(ServiceManagement_OWL2.BIND_STRAT_LAZY.getURI(), false);
+		
 		theStrategiesByR2goURI= new HashMap<URIImpl,ServiceBinding.BindingStrategy>();
 		theStrategiesByR2goURI.put(URI_BS_EAGER, ServiceBinding.BindingStrategy.EAGER);
+		theStrategiesByR2goURI.put(URI_BS_LAZY, ServiceBinding.BindingStrategy.LAZY);
+		model2go=m;
 		
-		com.hp.hpl.jena.rdf.model.Model jenaModel = RDFDataMgr.loadModel(ttlPath);
-		model2go = new org.ontoware.rdf2go.impl.jena.ModelImplJena(jenaModel);
-		model2go.open();
+		if(!model2go.isOpen()){
+			model2go.open();
+		}
 		
-		com.hp.hpl.jena.rdf.model.Model jenaModel2 = RDFDataMgr.loadModel(ontoPath);
-		indvModel = new org.ontoware.rdf2go.impl.jena.ModelImplJena(jenaModel2);
-		indvModel.open();
+		//com.hp.hpl.jena.rdf.model.Model jenaModel = RDFDataMgr.loadModel(ttlPath);
+		//model2go = new org.ontoware.rdf2go.impl.jena.ModelImplJena(jenaModel);
+		//model2go.open();
+			
 	}
 
 	/**
@@ -125,8 +134,8 @@ public class ServiceManagerExtender2Go
 
 		for (Entry<String, SMEBinding> specItem
 				: getBindingMapForServiceManager(serviceManagerEntity).entrySet()) {
-			SMEBinding sbt = specItem.getValue();
-			SMEDependency sme_dep = getDependencyEntity(sbt);
+			SMEBinding sbe = specItem.getValue();
+			SMEDependency sme_dep = getDependencyEntity(sbe);
 			ServiceDependency dep = getDep(sme_dep.getLocalName(), lifecycle);
 
 			if (dep == null) {
@@ -137,7 +146,7 @@ public class ServiceManagerExtender2Go
 			
 			ServiceBinding binding
 					= new ServiceBinding(
-							dep, getDescriptor(sbt), getBindingStrat(sbt));
+							dep, getDescriptor(sbe), getBindingStrat(sbe));
 			bindings.put(specItem.getKey(), binding);
 		}
 
@@ -196,16 +205,16 @@ public class ServiceManagerExtender2Go
 		return bindings;
 	}
 
-	private SMEDependency getDependencyEntity(SMEBinding sbt) {
+	private SMEDependency getDependencyEntity(SMEBinding sbe) {
 
-		return sbt.getSvcBindDep();
+		return sbe.getSvcBindDep();
 	}
 
-	private BasicDescriptor getDescriptor(SMEBinding sbt) {
-		ClosableIterator iter = sbt.getAllOSGiServPropBinding();
+	private BasicDescriptor getDescriptor(SMEBinding sbe) {
+		ClosableIterator iter = sbe.getAllOSGiServPropBinding();
 		Map<String, String> properties = getPropertyMap(iter);
 
-		BasicDescriptor desc = new BasicDescriptor(sbt.getFullyQualifiedJClzName(), properties);
+		BasicDescriptor desc = new BasicDescriptor(sbe.getFullyQualifiedJClzName(), properties);
 
 		return desc;
 	}
@@ -224,16 +233,10 @@ public class ServiceManagerExtender2Go
 		return strat;
 	}
 
-	private BindingStrategy getBindingStrat(SMEBinding sbt) {
-		SMSBindStrategy sbst = sbt.getBindStrategy();
-
-		//SMSBindStrategy indv = new SMSBindStrategy(indvModel, yieldR2GoURI(ServiceManagement_OWL2.BIND_STRAT_EAGER), false );
+	private BindingStrategy getBindingStrat(SMEBinding sbe) {
+		SMSBindStrategy bindStrat = sbe.getBindStrategy();
 		
-		/*if (sbst.equals(indv)) {
-			return ServiceBinding.BindingStrategy.EAGER;
-		} else {*/
-			return ServiceBinding.BindingStrategy.LAZY;
-		//}
+		return theStrategiesByR2goURI.get((URIImpl)bindStrat.asURI());
 	}
 
 	private String getLifecyceleFCQN(SMEManager serviceManagerEntity) {
@@ -258,10 +261,4 @@ public class ServiceManagerExtender2Go
 		return properties;
 	}
 	
-	
-	//TODO: Replace this method with a hashmap of BindingStrat individuals. 
-	private URI yieldR2GoURI(com.hp.hpl.jena.rdf.model.Resource id) {
-		String uri = id.getURI();
-		return new URIImpl(id.getURI());
-	}
 }

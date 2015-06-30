@@ -1,0 +1,28 @@
+@prefix : <http://onto.jflux.org/onto/201503/MessageSvc_OWL2#> .
+@prefix osv: <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix msvc: <http://onto.jflux.org/onto/201503/MessageSvc_OWL2#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://onto.jflux.org/onto/201503/MessageSvc_OWL2> .
+@prefix osgi: <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#> .
+
+
+:speechConnection_01	rdf:type	:MSC_Connection;
+			:hasClientName	"client1";
+			:hasIPAddress	"127.0.0.1";
+			:hasUserName	"admin";
+			:hasPassword	"admin";
+			:hasPort	"5672"^^xsd:int;
+			:hasVirtualHost	"test" ;
+			:hasOSGiServPropBinding	:connection_prop_01.
+
+:connection_prop_01	rdf:type	osgi:OSGiServPropBinding;
+			osgi:hasServPropKey	:connection_prop_01_prop_01_Key;
+			osgi:hasServPropValue	"csi:connection_22".
+
+
+:connection_prop_01_prop_01_Key	rdf:type	osgi:OSGiServPropKey;
+			osgi:hasServPropKeyName	"http://www.w3.org/2002/07/owl#speechConnection01".
