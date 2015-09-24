@@ -50,7 +50,7 @@
 		<netbeans.compile.on.save>none</netbeans.compile.on.save>
 		
 		<!-- Glue Dependencies -->
-		<appdapter.apache.qpid.version>1.0.5</appdapter.apache.qpid.version>
+		<appdapter.apache.qpid.version>1.2.4-SNAPSHOT</appdapter.apache.qpid.version>
 		<appdapter.version>1.2.4-SNAPSHOT</appdapter.version>
 		<!-- Non Glue Dependencies -->
 		<avro.version>1.7.2</avro.version>
@@ -142,7 +142,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.appdapter</groupId>
-				<artifactId>ext.bundle.apache_qpid_010</artifactId>
+				<artifactId>ext.bundle.apache_qpid_032</artifactId>
 				<version>${appdapter.apache.qpid.version}</version>
 			</dependency>
 			<dependency>
