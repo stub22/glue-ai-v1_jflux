@@ -68,12 +68,19 @@
             <type>jar</type>
             <scope>runtime</scope>
         </dependency>
+	<dependency>
+		  <groupId>io.netty</groupId>
+		  <artifactId>netty</artifactId>
+		  <scope>runtime</scope>
+	  </dependency>  
+		<!-- 2016-03-28 Stu replaced with more modern netty.io dep.
         <dependency>
             <artifactId>netty</artifactId>
             <groupId>org.jboss.netty</groupId>
             <type>jar</type>
             <scope>runtime</scope>
         </dependency>
+		-->
         <dependency>
             <artifactId>velocity</artifactId>
             <groupId>org.apache.velocity</groupId>
