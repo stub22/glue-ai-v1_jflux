@@ -17,15 +17,18 @@ package org.jflux.api.core;
 
 /**
  * Interface to adapt objects between different types
+ *
  * @author Matthew Stevenson <www.jflux.org>
  * @param <A> input object type
- * @param <B> input object type
+ * @param <B> output object type
  */
-public interface Adapter<A,B> {
+public interface Adapter<A, B> {
 
     /**
      * Converts an object of type A to an object of type B
+     *
      * @param a input object
+     *
      * @return output object
      */
     public B adapt(A a);
