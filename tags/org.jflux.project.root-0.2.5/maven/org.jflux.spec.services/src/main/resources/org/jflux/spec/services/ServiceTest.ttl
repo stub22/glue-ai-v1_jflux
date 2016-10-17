@@ -1,0 +1,62 @@
+@prefix : <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2#> .
+@prefix osv: <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> .
+@prefix osgi: <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#> .
+
+
+<http://onto.jflux.org/onto/201503/ServiceManagement_OWL2> rdf:type owl:Ontology ;
+							   owl:imports <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2> .
+
+
+:service_frame_manager	rdf:type :SME_Manager;
+		:startsLifecycle :serviceFrameLc;
+		:hasRegStrategy	:service_frame_registration;
+		:hasSvcBinding	:service_frame_binding_01 .
+
+
+:service_frame_registration	rdf:type	:SMS_SvcRegStrategy;
+		:hasRegStrategy	:SVC_REG_STRAT_BASIC;
+		:hasFullyQualifiedJClzName "org.jflux.swing.services.ServicesFrame";
+		:hasOSGiServPropBinding	:service_frame_reg_prop_01 .
+
+:service_frame_reg_prop_01	rdf:type osgi:OSGiServPropBinding;
+		osgi:hasServPropKey	:service_frame_reg_prop_01_Key;
+		osgi:hasServPropValue	"serviceframe_service".
+
+
+:service_frame_reg_prop_01_Key	rdf:type	osgi:OSGiServPropKey;
+		osgi:hasServPropKeyName	"serviceFrame".
+
+
+:service_frame_binding_01	rdf:type	:SME_Binding;
+		:hasBindStrategy	:BIND_STRAT_LAZY;
+		:hasSvcBindDep	:service_frame_dep_01 ;
+		:hasFullyQualifiedJClzName	"org.osgi.framework.BundleContext";
+		:hasOSGiServPropBinding		:service_frame_binding_prop_01 .
+
+
+:service_frame_binding_prop_01	rdf:type osgi:OSGiServPropBinding;
+		osgi:hasServPropKey	:service_frame_binding_prop_01_Key;
+		osgi:hasServPropValue	"http://www.w3.org/2002/07/owl#bundleContextSpec".
+
+
+:service_frame_binding_prop_01_Key	rdf:type	osgi:OSGiServPropKey;
+			osgi:hasServPropKeyName	"bundleContext".
+
+:service_frame_dep_01	rdf:type :SME_Dependency ;
+		:isDepRequired	"true"^^xsd:boolean;
+		:isDepCardMultiple "false"^^xsd:boolean;
+		:hasFullyQualifiedJClzName	"org.osgi.framework.BundleContext";
+		:hasLocalName			"bundlecontext_dep" ;
+		:hasLifeUpdateStrategy		:LIFE_UP_STRAT_STATIC .
+
+
+:serviceFrameLc		rdf:type	:SME_Lifecycle;
+			:hasLifeDep	:service_frame_dep_01;
+			:hasFullyQualifiedJClzName	"org.jflux.spec.services.ServicePanelLifecycle";
+			:hasRegisteredJClzName		"org.jflux.swing.services.ServicesFrame".

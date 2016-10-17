@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.jflux</groupId>
+        <artifactId>org.jflux.project.root</artifactId>
+        <version>0.2.5</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>	
+	
+    <artifactId>org.jflux.modules.main</artifactId>
+    <name>${project.artifactId} - Main Module</name>
+    <packaging>pom</packaging>
+	
+
+    
+    <modules>
+        <!--JFlux Dependency Free APIs -->
+        <module>../org.jflux.api.core</module>
+        <module>../org.jflux.api.data</module>
+        <module>../org.jflux.api.registry</module>
+        <!--JFlux Non-Java Resources -->
+        <module>../org.jflux.resource.avrogen.templates</module>
+        <!--JFlux Implementations with dependencies from Maven Central-->
+        <module>../org.jflux.impl.encode.avro</module>
+        <module>../org.jflux.impl.transport.qpid</module>
+        <module>../org.jflux.impl.registry.osgi</module>
+        <module>../org.jflux.api.services</module>
+        <module>../org.jflux.modules.rk</module>
+		<module>../org.jflux.onto.common</module>
+		<module>../org.jflux.swing.messaging</module>
+        <module>../org.jflux.spec.messaging</module>
+        <module>../org.jflux.swing.services</module>
+        <module>../org.jflux.spec.services</module>
+        <module>../org.jflux.demo.services</module>
+        <module>../org.jflux.spec.discovery</module>
+        <module>../org.jflux.demo.discovery</module>
+        
+    </modules>
+    
+    <profiles>
+        <profile>
+            <id>test</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <skipTests>false</skipTests>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

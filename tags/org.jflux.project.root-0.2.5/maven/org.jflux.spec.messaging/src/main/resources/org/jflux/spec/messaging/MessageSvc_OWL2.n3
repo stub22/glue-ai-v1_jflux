@@ -1,0 +1,242 @@
+@prefix : <http://onto.jflux.org/onto/201503/MessageSvc_OWL2#> .
+@prefix osv: <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix msvc: <http://onto.jflux.org/onto/201503/MessageSvc_OWL2#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://onto.jflux.org/onto/201503/MessageSvc_OWL2> .
+
+<http://onto.jflux.org/onto/201503/MessageSvc_OWL2> rdf:type owl:Ontology ;
+                                                    
+                                                    owl:imports <http://onto.jflux.org/onto/20150624/OSGiServices_OWL2> .
+
+
+#################################################################
+#
+#    Annotation properties
+#
+#################################################################
+
+
+###  http://www.w3.org/2002/07/owl#maxCardinality
+
+owl:maxCardinality rdf:type owl:AnnotationProperty .
+
+
+
+
+
+#################################################################
+#
+#    Object Properties
+#
+#################################################################
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasOSGiServPropBinding
+
+:hasOSGiServPropBinding rdf:type owl:ObjectProperty ;
+                        
+                        rdfs:domain :MsgSvcConf ;
+                        
+                        rdfs:subPropertyOf :msgSvcObjProp ;
+                        
+                        rdfs:range osv:OSGiServPropBinding .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#msgSvcObjProp
+
+:msgSvcObjProp rdf:type owl:ObjectProperty .
+
+
+
+
+
+#################################################################
+#
+#    Data properties
+#
+#################################################################
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasClientName
+
+:hasClientName rdf:type owl:DatatypeProperty ;
+               
+               owl:maxCardinality "1" ;
+               
+               rdfs:domain :MSC_Connection ;
+               
+               rdfs:subPropertyOf :msgSvcDataProp ;
+               
+               rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasDestAddressAMQP
+
+:hasDestAddressAMQP rdf:type owl:DatatypeProperty ;
+                    
+                    owl:maxCardinality "1" ;
+                    
+                    rdfs:domain :MSC_DestAMQP ;
+                    
+                    rdfs:subPropertyOf :msgSvcDataProp ;
+                    
+                    rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasIPAddress
+
+:hasIPAddress rdf:type owl:DatatypeProperty ;
+              
+              owl:maxCardinality "1" ;
+              
+              rdfs:domain :MSC_Connection ;
+              
+              rdfs:subPropertyOf :msgSvcDataProp ;
+              
+              rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasPassword
+
+:hasPassword rdf:type owl:DatatypeProperty ;
+             
+             owl:maxCardinality "1" ;
+             
+             rdfs:domain :MSC_Connection ;
+             
+             rdfs:subPropertyOf :msgSvcDataProp ;
+             
+             rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasPort
+
+:hasPort rdf:type owl:DatatypeProperty ;
+         
+         owl:maxCardinality "1" ;
+         
+         rdfs:domain :MSC_Connection ;
+         
+         rdfs:subPropertyOf :msgSvcDataProp ;
+         
+         rdfs:range xsd:int .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasUserName
+
+:hasUserName rdf:type owl:DatatypeProperty ;
+             
+             owl:maxCardinality "1" ;
+             
+             rdfs:domain :MSC_Connection ;
+             
+             rdfs:subPropertyOf :msgSvcDataProp ;
+             
+             rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#hasVirtualHost
+
+:hasVirtualHost rdf:type owl:DatatypeProperty ;
+                
+                owl:maxCardinality "1" ;
+                
+                rdfs:domain :MSC_Connection ;
+                
+                rdfs:subPropertyOf :msgSvcDataProp ;
+                
+                rdfs:range xsd:string .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#msgSvcDataProp
+
+:msgSvcDataProp rdf:type owl:DatatypeProperty .
+
+
+
+
+
+#################################################################
+#
+#    Classes
+#
+#################################################################
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_ConnAMQP
+
+:MSC_ConnAMQP rdf:type owl:Class ;
+              
+              rdfs:subClassOf :MSC_Connection .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_Connection
+
+:MSC_Connection rdf:type owl:Class ;
+                
+                rdfs:subClassOf :MsgSvcConf .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_DestAMQP
+
+:MSC_DestAMQP rdf:type owl:Class ;
+              
+              rdfs:subClassOf :MSC_Destination .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_Destination
+
+:MSC_Destination rdf:type owl:Class ;
+                 
+                 rdfs:subClassOf :MsgSvcConf .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_QueueAMQP
+
+:MSC_QueueAMQP rdf:type owl:Class ;
+               
+               rdfs:subClassOf :MSC_DestAMQP .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MSC_TopicAMQP
+
+:MSC_TopicAMQP rdf:type owl:Class ;
+               
+               rdfs:subClassOf :MSC_DestAMQP .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MsgSvcConf
+
+:MsgSvcConf rdf:type owl:Class ;
+            
+            rdfs:subClassOf :MsgSvcThing .
+
+
+
+###  http://onto.jflux.org/onto/201503/MessageSvc_OWL2#MsgSvcThing
+
+:MsgSvcThing rdf:type owl:Class .
+
+
+
+
+###  Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net
+
