@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.jflux</groupId>
-		<artifactId>org.jflux.modules.main</artifactId>
-		<version>0.2.6-SNAPSHOT</version>
-		<relativePath>../org.jflux.modules.main/pom.xml</relativePath>
-	</parent>
-    
+    <parent>
+        <groupId>org.jflux</groupId>
+        <artifactId>org.jflux.modules.main</artifactId>
+        <version>0.2.6-SNAPSHOT</version>
+        <relativePath>../org.jflux.modules.main/pom.xml</relativePath>
+    </parent>
+
     <artifactId>org.jflux.onto.common</artifactId>
     <packaging>bundle</packaging>
 
@@ -17,14 +17,14 @@
     </properties>
 
     <dependencies>
-		<dependency>
-			<groupId>org.appdapter</groupId>
-			<artifactId>org.appdapter.bundle.core</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.appdapter</groupId>
+            <artifactId>org.appdapter.bundle.core</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
-<!--            <version>4.3.0</version>-->
+            <!--            <version>4.3.0</version>-->
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -38,30 +38,30 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>org.jflux.onto.common.Activator</Bundle-Activator>
-                         <Export-Package>
-							 org.jflux.onto.common.*
-						 </Export-Package>
+                        <Export-Package>
+                            org.jflux.onto.common.*
+                        </Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>org.semweb4j</groupId>
-				<artifactId>rdfreactor-maven-plugin</artifactId>
-<!--				<version>5.0.1</version>-->
-				<executions>	
-					<execution>
-						<id>physicsTest</id>
-						<goals>
-							<goal>rdfs-classes</goal>
-						</goals>
-						<configuration>
-							<schemaFile>src/main/resources/org/jflux/onto/common/OSGiServices_OWL2.n3</schemaFile>
-							<packageName>org.jflux.onto.common.osgi</packageName>
-							<rdfReactorLogfile>target/rdfreactor_physicsTest.log</rdfReactorLogfile>
-						</configuration>						
-					</execution>	
-				</executions>
-			</plugin> 
+            <plugin>
+                <groupId>org.semweb4j</groupId>
+                <artifactId>rdfreactor-maven-plugin</artifactId>
+                <!--				<version>5.0.1</version>-->
+                <executions>
+                    <execution>
+                        <id>physicsTest</id>
+                        <goals>
+                            <goal>rdfs-classes</goal>
+                        </goals>
+                        <configuration>
+                            <schemaFile>src/main/resources/org/jflux/onto/common/OSGiServices_OWL2.n3</schemaFile>
+                            <packageName>org.jflux.onto.common.osgi</packageName>
+                            <rdfReactorLogfile>target/rdfreactor_physicsTest.log</rdfReactorLogfile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -72,7 +72,7 @@
                 <dependency>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>org.apache.felix.main</artifactId>
-<!--                    <version>4.0.3</version>-->
+                    <!--                    <version>4.0.3</version>-->
                     <scope>provided</scope>
                 </dependency>
                 <!-- To include a shell:
@@ -150,7 +150,6 @@
                 <dependency>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>org.apache.felix.main</artifactId>
-                    <version>4.0.3</version>
                     <scope>provided</scope>
                 </dependency>
                 <!-- org.apache.felix:org.apache.felix.gogo.shell:0.6.1 useless from Maven since stdin is swallowed -->
