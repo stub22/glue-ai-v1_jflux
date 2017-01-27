@@ -15,65 +15,68 @@
  */
 package org.jflux.api.core.playable;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
 import org.jflux.api.core.Notifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Notifier that only works if a Playable is running
- * @author Matthew Stevenson <www.jflux.org>
+ *
  * @param <E> input data type
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class ConditionalNotifier<E> implements Notifier<E> {
-    private final static Logger theLogger = Logger.getLogger(ConditionalListener.class.getName());
-    private Playable myPlayable;
-    private Notifier<E> myNotifier;
-    
-    /**
-     * Builds a ConditionalNotifier from a Playable and a Notifier
-     * @param p the Playable
-     * @param n the Notifier
-     */
-    public ConditionalNotifier(Playable p, Notifier<E> n){
-        if(p == null || n == null){
-            throw new NullPointerException();
-        }
-        myPlayable = p;
-        myNotifier = n;
-    }
+	private static final Logger theLogger = LoggerFactory.getLogger(ConditionalNotifier.class);
+	private Playable myPlayable;
+	private Notifier<E> myNotifier;
 
-    /**
-     * Notifies Listeners if and only if in RUNNING state
-     * @param e event data to send
-     */
-    @Override
-    public void notifyListeners(E e) {
-        if(myPlayable.getPlayState() == Playable.PlayState.RUNNING){
-            myNotifier.notifyListeners(e);
-        }else{
-            theLogger.log(Level.INFO, 
-                    "PlayState is {0} for Playable: {1}, \nIgnoring event: {2}", 
-                    new Object[]{myPlayable.getPlayState(), 
-                        myPlayable.toString(), e});
-        }
-    }
+	/**
+	 * Builds a ConditionalNotifier from a Playable and a Notifier
+	 *
+	 * @param p the Playable
+	 * @param n the Notifier
+	 */
+	public ConditionalNotifier(Playable p, Notifier<E> n) {
+		if (p == null || n == null) {
+			throw new NullPointerException();
+		}
+		myPlayable = p;
+		myNotifier = n;
+	}
 
-    /**
-     * Adds a Listener
-     * @param listener Listener to add
-     */
-    @Override
-    public void addListener(Listener<E> listener) {
-        myNotifier.addListener(listener);
-    }
+	/**
+	 * Notifies Listeners if and only if in RUNNING state
+	 *
+	 * @param e event data to send
+	 */
+	@Override
+	public void notifyListeners(E e) {
+		if (myPlayable.getPlayState() == Playable.PlayState.RUNNING) {
+			myNotifier.notifyListeners(e);
+		} else {
+			theLogger.info("PlayState is {} for Playable: {}, \nIgnoring event: {}",
+					myPlayable.getPlayState(), myPlayable.toString(), e);
+		}
+	}
 
-    /**
-     * Removes a Listener
-     * @param listener Listener to remove
-     */
-    @Override
-    public void removeListener(Listener<E> listener) {
-        myNotifier.removeListener(listener);
-    }
+	/**
+	 * Adds a Listener
+	 *
+	 * @param listener Listener to add
+	 */
+	@Override
+	public void addListener(Listener<E> listener) {
+		myNotifier.addListener(listener);
+	}
+
+	/**
+	 * Removes a Listener
+	 *
+	 * @param listener Listener to remove
+	 */
+	@Override
+	public void removeListener(Listener<E> listener) {
+		myNotifier.removeListener(listener);
+	}
 }
