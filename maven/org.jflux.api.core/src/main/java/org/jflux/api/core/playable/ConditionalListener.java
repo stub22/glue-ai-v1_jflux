@@ -15,46 +15,46 @@
  */
 package org.jflux.api.core.playable;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jflux.api.core.Listener;
 
 /**
  * Listener that only works if a Playable is running
- * @author Matthew Stevenson <www.jflux.org>
+ *
  * @param <E> input data type
+ * @author Matthew Stevenson <www.jflux.org>
  */
 public class ConditionalListener<E> implements Listener<E> {
-    private final static Logger theLogger = Logger.getLogger(ConditionalListener.class.getName());
-    private Playable myPlayable;
-    private Listener<E> myListener;
-    
-    /**
-     * Builds a ConditionalListener from a Playable and a Listener
-     * @param p the Playable
-     * @param l the Listener
-     */
-    public ConditionalListener(Playable p, Listener<E> l){
-        if(p == null || l == null){
-            throw new NullPointerException();
-        }
-        myPlayable = p;
-        myListener = l;
-    }
+	private static final org.slf4j.Logger theLogger = org.slf4j.LoggerFactory.getLogger(ConditionalListener.class);
+	private Playable myPlayable;
+	private Listener<E> myListener;
 
-    /**
-     * Processes input event if and only if in RUNNING state
-     * @param event data to process
-     */
-    @Override
-    public void handleEvent(E event) {
-        if(myPlayable.getPlayState() == Playable.PlayState.RUNNING){
-            myListener.handleEvent(event);
-        }else{
-            theLogger.log(Level.INFO, 
-                    "PlayState is {0} for Playable: {1}, \nIgnoring event: {2}", 
-                    new Object[]{myPlayable.getPlayState(), 
-                        myPlayable.toString(), event});
-        }
-    }
+	/**
+	 * Builds a ConditionalListener from a Playable and a Listener
+	 *
+	 * @param p the Playable
+	 * @param l the Listener
+	 */
+	public ConditionalListener(Playable p, Listener<E> l) {
+		if (p == null || l == null) {
+			throw new NullPointerException();
+		}
+		myPlayable = p;
+		myListener = l;
+	}
+
+	/**
+	 * Processes input event if and only if in RUNNING state
+	 *
+	 * @param event data to process
+	 */
+	@Override
+	public void handleEvent(E event) {
+		if (myPlayable.getPlayState() == Playable.PlayState.RUNNING) {
+			myListener.handleEvent(event);
+		} else {
+			theLogger.info("PlayState is {} for Playable: {}, \nIgnoring event: {}",
+					myPlayable.getPlayState(),
+					myPlayable.toString(), event);
+		}
+	}
 }

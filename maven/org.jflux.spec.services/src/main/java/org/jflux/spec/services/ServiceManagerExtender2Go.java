@@ -18,41 +18,40 @@
 package org.jflux.spec.services;
 
 
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jflux.api.registry.Registry;
+import org.jflux.api.registry.basic.BasicDescriptor;
 import org.jflux.api.service.DefaultRegistrationStrategy;
 import org.jflux.api.service.RegistrationStrategy;
 import org.jflux.api.service.ServiceDependency;
 import org.jflux.api.service.ServiceLifecycle;
 import org.jflux.api.service.ServiceManager;
 import org.jflux.api.service.binding.ServiceBinding;
-import org.osgi.framework.BundleContext;
+import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import org.jflux.impl.services.rk.osgi.ServiceClassListener;
 import org.jflux.onto.common.osgi.OSGiServPropBinding;
-import org.jflux.spec.services.rdf2go.SMEManager;
-import org.jflux.spec.services.rdf2go.SMELifecycle;
+import org.jflux.spec.services.jvocab.ServiceManagement_OWL2;
 import org.jflux.spec.services.rdf2go.SMEBinding;
 import org.jflux.spec.services.rdf2go.SMEDependency;
-import org.jflux.spec.services.rdf2go.SMSSvcRegStrategy;
+import org.jflux.spec.services.rdf2go.SMELifecycle;
+import org.jflux.spec.services.rdf2go.SMEManager;
 import org.jflux.spec.services.rdf2go.SMSBindStrategy;
-import org.ontoware.rdf2go.model.Model;
-import org.ontoware.rdf2go.model.node.impl.URIImpl;
+import org.jflux.spec.services.rdf2go.SMSSvcRegStrategy;
 import org.ontoware.aifbcommons.collection.ClosableIterator;
+import org.ontoware.rdf2go.model.Model;
 import org.ontoware.rdf2go.model.node.Resource;
-import org.jflux.api.registry.basic.BasicDescriptor;
-import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
-import org.jflux.spec.services.jvocab.ServiceManagement_OWL2;
-import java.util.HashMap;
+import org.ontoware.rdf2go.model.node.impl.URIImpl;
+import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 
 /**
- *
  * @author Major Jacquote II
  */
 public class ServiceManagerExtender2Go
@@ -70,38 +69,36 @@ public class ServiceManagerExtender2Go
 	/**
 	 * The logger, used for reporting errors.
 	 */
-	private final static Logger theLogger
-			= Logger.getLogger(ServiceManagerExtender2Go.class.getName());
-	
+	private static final Logger theLogger = LoggerFactory.getLogger(ServiceManagerExtender2Go.class);
+
 	private final URIImpl URI_BS_EAGER;
 	private final URIImpl URI_BS_LAZY;
-	private final Map<URIImpl,ServiceBinding.BindingStrategy> theStrategiesByR2goURI;
-	
-					
-							
+	private final Map<URIImpl, ServiceBinding.BindingStrategy> theStrategiesByR2goURI;
+
+
 	public ServiceManagerExtender2Go(
 			BundleContext context, Registry registry, String serviceFilter, Model m) {
 		super(SMEManager.class, context, serviceFilter);
 		myRegistry = registry;
 		myManagedServicesMap
-				= new HashMap<SMEManager, ServiceManager>();
-		
-		URI_BS_EAGER= new URIImpl(ServiceManagement_OWL2.BIND_STRAT_EAGER.getURI(), false);
+				= new HashMap<>();
+
+		URI_BS_EAGER = new URIImpl(ServiceManagement_OWL2.BIND_STRAT_EAGER.getURI(), false);
 		URI_BS_LAZY = new URIImpl(ServiceManagement_OWL2.BIND_STRAT_LAZY.getURI(), false);
-		
-		theStrategiesByR2goURI= new HashMap<URIImpl,ServiceBinding.BindingStrategy>();
+
+		theStrategiesByR2goURI = new HashMap<>();
 		theStrategiesByR2goURI.put(URI_BS_EAGER, ServiceBinding.BindingStrategy.EAGER);
 		theStrategiesByR2goURI.put(URI_BS_LAZY, ServiceBinding.BindingStrategy.LAZY);
-		model2go=m;
-		
-		if(!model2go.isOpen()){
+		model2go = m;
+
+		if (!model2go.isOpen()) {
 			model2go.open();
 		}
-		
+
 		//com.hp.hpl.jena.rdf.model.Model jenaModel = RDFDataMgr.loadModel(ttlPath);
 		//model2go = new org.ontoware.rdf2go.impl.jena.ModelImplJena(jenaModel);
 		//model2go.open();
-			
+
 	}
 
 	/**
@@ -113,7 +110,7 @@ public class ServiceManagerExtender2Go
 	protected void addService(SMEManager serviceManagerEntity) {
 		ServiceLifecycle lifecycle;
 		Map<String, ServiceBinding> bindings
-				= new HashMap<String, ServiceBinding>();
+				= new HashMap<>();
 
 		if (serviceManagerEntity == null
 				|| myManagedServicesMap.containsKey(serviceManagerEntity)) {
@@ -126,8 +123,7 @@ public class ServiceManagerExtender2Go
 					= Class.forName(lifecycleFQCN);
 			lifecycle = (ServiceLifecycle) lifecycleClass.newInstance();
 		} catch (Exception e) {
-			theLogger.log(
-					Level.SEVERE, "Unable to instantiate class: {0}",
+			theLogger.error("Unable to instantiate class: {}",
 					lifecycleFQCN);
 			return;
 		}
@@ -139,14 +135,14 @@ public class ServiceManagerExtender2Go
 			ServiceDependency dep = getDep(sme_dep.getLocalName(), lifecycle);
 
 			if (dep == null) {
-				theLogger.log(Level.SEVERE, "Dependency with name: {0} was not found.", sme_dep.getLocalName());
+				theLogger.error("Dependency with name: {} was not found.", sme_dep.getLocalName());
 				continue;
 			}
 
-			
+
 			ServiceBinding binding
 					= new ServiceBinding(
-							dep, getDescriptor(sbe), getBindingStrat(sbe));
+					dep, getDescriptor(sbe), getBindingStrat(sbe));
 			bindings.put(specItem.getKey(), binding);
 		}
 
@@ -189,7 +185,7 @@ public class ServiceManagerExtender2Go
 
 	private Map<String, SMEBinding> getBindingMapForServiceManager(SMEManager serviceManagerEntity) {
 		ClosableIterator iter = serviceManagerEntity.getAllSvcBinding();
-		Map<String, SMEBinding> bindings = new HashMap<String, SMEBinding>();
+		Map<String, SMEBinding> bindings = new HashMap<>();
 
 		while (iter.hasNext()) {
 			Resource obj = (Resource) iter.next();
@@ -221,7 +217,7 @@ public class ServiceManagerExtender2Go
 
 	private RegistrationStrategy getRegStrat(SMEManager serviceManagerEntity) {
 		SMSSvcRegStrategy regStrat = serviceManagerEntity.getRegStrategy();
-		List<String> classNames = new ArrayList<String>();
+		List<String> classNames = new ArrayList<>();
 		ClosableIterator iter = serviceManagerEntity.getAllOSGiServPropBinding();
 		Map<String, String> properties = getPropertyMap(iter);
 
@@ -235,8 +231,8 @@ public class ServiceManagerExtender2Go
 
 	private BindingStrategy getBindingStrat(SMEBinding sbe) {
 		SMSBindStrategy bindStrat = sbe.getBindStrategy();
-		
-		return theStrategiesByR2goURI.get((URIImpl)bindStrat.asURI());
+
+		return theStrategiesByR2goURI.get((URIImpl) bindStrat.asURI());
 	}
 
 	private String getLifecyceleFCQN(SMEManager serviceManagerEntity) {
@@ -250,7 +246,7 @@ public class ServiceManagerExtender2Go
 	}
 
 	private Map<String, String> getPropertyMap(ClosableIterator iter) {
-		Map<String, String> properties = new HashMap<String, String>();
+		Map<String, String> properties = new HashMap<>();
 
 		while (iter.hasNext()) {
 			Resource obj = (Resource) iter.next();

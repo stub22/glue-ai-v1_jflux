@@ -15,53 +15,50 @@
  */
 package org.jflux.api.data.routing;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
 import org.jflux.api.core.util.MapAdapter;
+import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Matthew Stevenson <www.jflux.org>
  */
 public interface Router<T> extends Listener<T> {
-    final static Logger theLogger = Logger.getLogger(Router.class.getName());
-    
-    public static class DefaultRouter<K,T> implements Router<T> {
-        private Adapter<T,K> myKeyAdapter;
-        private MapAdapter<K,Listener<T>> myRouteMap;
-        
-        public DefaultRouter(Adapter<T,K> keyAdapter){
-            if(keyAdapter == null){
-                throw new NullPointerException();
-            }
-            myRouteMap = new MapAdapter<K, Listener<T>>();
-            myKeyAdapter = keyAdapter;
-        }
-        
-        @Override
-        public void handleEvent(T event) {
-            //theLogger.log(Level.INFO, "Routing item: {0}", event);
-            K key = myKeyAdapter.adapt(event);
-            Listener<T> route = myRouteMap.adapt(key);
-            route.handleEvent(event);
-        }
-        
-        public void addRoute(K key, Listener<T> route){
-            if(myRouteMap.getMap().containsKey(key)){
-                theLogger.log(Level.INFO, 
-                        "Replacing existing route for key: {0}", key);
-            }else{
-                theLogger.log(Level.INFO, 
-                        "Adding router path for key: {0}", key);
-            }
-            myRouteMap.getMap().put(key, route);
-        }
-        
-        public void removeRoute(K key){
-            theLogger.log(Level.INFO, "Removing router path for key: {0}", key);
-            myRouteMap.getMap().remove(key);
-        }
-    }
+	static final org.slf4j.Logger theLogger = LoggerFactory.getLogger(Router.class);
+
+	public static class DefaultRouter<K, T> implements Router<T> {
+		private Adapter<T, K> myKeyAdapter;
+		private MapAdapter<K, Listener<T>> myRouteMap;
+
+		public DefaultRouter(Adapter<T, K> keyAdapter) {
+			if (keyAdapter == null) {
+				throw new NullPointerException();
+			}
+			myRouteMap = new MapAdapter<>();
+			myKeyAdapter = keyAdapter;
+		}
+
+		@Override
+		public void handleEvent(T event) {
+			//theLogger.log(Level.INFO, "Routing item: {}", event);
+			K key = myKeyAdapter.adapt(event);
+			Listener<T> route = myRouteMap.adapt(key);
+			route.handleEvent(event);
+		}
+
+		public void addRoute(K key, Listener<T> route) {
+			if (myRouteMap.getMap().containsKey(key)) {
+				theLogger.info("Replacing existing route for key: {}", key);
+			} else {
+				theLogger.info("Adding router path for key: {}", key);
+			}
+			myRouteMap.getMap().put(key, route);
+		}
+
+		public void removeRoute(K key) {
+			theLogger.info("Removing router path for key: {}", key);
+			myRouteMap.getMap().remove(key);
+		}
+	}
 }
