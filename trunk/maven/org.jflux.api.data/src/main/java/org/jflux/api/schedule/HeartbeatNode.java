@@ -15,118 +15,116 @@
  */
 package org.jflux.api.schedule;
 
+import org.jflux.api.core.Notifier;
+import org.jflux.api.core.Source;
+import org.jflux.api.core.node.DefaultProducerNode;
+import org.jflux.api.core.util.DefaultNotifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.jflux.api.core.Notifier;
-import org.jflux.api.core.Source;
-import org.jflux.api.core.node.DefaultProducerNode;
-import org.jflux.api.core.playable.Playable.PlayState;
-import org.jflux.api.core.util.DefaultNotifier;
 
 /**
- *
  * @author Matthew Stevenson <www.jflux.org>
  */
-public class HeartbeatNode<T> extends 
-        DefaultProducerNode<T> implements ScheduleNode<T,TimeUnit> {
-    private final static Logger theLogger = Logger.getLogger(HeartbeatNode.class.getName());
-    
-    private Source<T> myFactory;
-    private ScheduledExecutorService myExecutor;
-    private long myInitialDelay;
-    private long myPeriod;
-    private TimeUnit myTimeUnit;
-    private ScheduledFuture<?> myFuture;
-    
-    public HeartbeatNode(Source<T> factory, 
-            long initialDelay, long period, TimeUnit timeUnit){
-        super(new DefaultNotifier<T>());
-        if(factory == null || timeUnit == null){
-            throw new NullPointerException();
-        }
-        myInitialDelay = initialDelay;
-        myPeriod = period;
-        myTimeUnit = timeUnit;
-        myFactory = factory;
-    }
-    
-    public synchronized void setPeriod(long period){
-        myPeriod = period;
-        if(PlayState.RUNNING != getPlayState()){
-            return;
-        }
-        long delay = myInitialDelay;
-        myInitialDelay = 0L;
-        pause();
-        start();
-        myInitialDelay = delay;
-    }
+public class HeartbeatNode<T> extends
+		DefaultProducerNode<T> implements ScheduleNode<T, TimeUnit> {
+	private static final Logger theLogger = LoggerFactory.getLogger(HeartbeatNode.class);
 
-    @Override
-    public boolean start() {
-        if(myFuture != null){
-            if(myFuture.isDone()){
-                myFuture = null;
-            }else{
-                return true;
-            }
-        }
-        if(myExecutor == null){
-            myExecutor = new ScheduledThreadPoolExecutor(1);   
-        }
-        myFuture = myExecutor.scheduleAtFixedRate(
-                new MessagePump(), myInitialDelay, myPeriod, myTimeUnit);
-        return super.start();
-    }
+	private Source<T> myFactory;
+	private ScheduledExecutorService myExecutor;
+	private long myInitialDelay;
+	private long myPeriod;
+	private TimeUnit myTimeUnit;
+	private ScheduledFuture<?> myFuture;
 
-    @Override
-    public boolean pause() {
-        if(myFuture != null){
-            myFuture.cancel(false);
-            myFuture = null;
-        }
-        return super.pause();
-    }
+	public HeartbeatNode(Source<T> factory,
+						 long initialDelay, long period, TimeUnit timeUnit) {
+		super(new DefaultNotifier<T>());
+		if (factory == null || timeUnit == null) {
+			throw new NullPointerException();
+		}
+		myInitialDelay = initialDelay;
+		myPeriod = period;
+		myTimeUnit = timeUnit;
+		myFactory = factory;
+	}
 
-    @Override
-    public boolean resume() {
-        return start();
-    }
+	public synchronized void setPeriod(long period) {
+		myPeriod = period;
+		if (PlayState.RUNNING != getPlayState()) {
+			return;
+		}
+		long delay = myInitialDelay;
+		myInitialDelay = 0L;
+		pause();
+		start();
+		myInitialDelay = delay;
+	}
 
-    @Override
-    public boolean stop() {
-        if(myFuture != null){
-            myFuture.cancel(false);
-            myFuture = null;
-            myExecutor.shutdown();
-            myExecutor = null;
-        }
-        return super.stop();
-    }
-    
-    class MessagePump implements Runnable {
+	@Override
+	public boolean start() {
+		if (myFuture != null) {
+			if (myFuture.isDone()) {
+				myFuture = null;
+			} else {
+				return true;
+			}
+		}
+		if (myExecutor == null) {
+			myExecutor = new ScheduledThreadPoolExecutor(1);
+		}
+		myFuture = myExecutor.scheduleAtFixedRate(
+				new MessagePump(), myInitialDelay, myPeriod, myTimeUnit);
+		return super.start();
+	}
 
-        @Override
-        public void run() {
-            if(myFactory == null || getPlayState() != PlayState.RUNNING){
-                return;
-            }
-            T t = myFactory.getValue();
-            Notifier<T> n = getNotifier();
-            if(n == null || t == null){
-                return;
-            }
-            try{
-                n.notifyListeners(t);
-            }catch(RuntimeException ex){
-                theLogger.log(Level.WARNING, 
-                        "Runtime Exception in Heartbeat Node");
-            }
-        }
-        
-    }
+	@Override
+	public boolean pause() {
+		if (myFuture != null) {
+			myFuture.cancel(false);
+			myFuture = null;
+		}
+		return super.pause();
+	}
+
+	@Override
+	public boolean resume() {
+		return start();
+	}
+
+	@Override
+	public boolean stop() {
+		if (myFuture != null) {
+			myFuture.cancel(false);
+			myFuture = null;
+			myExecutor.shutdown();
+			myExecutor = null;
+		}
+		return super.stop();
+	}
+
+	class MessagePump implements Runnable {
+
+		@Override
+		public void run() {
+			if (myFactory == null || getPlayState() != PlayState.RUNNING) {
+				return;
+			}
+			T t = myFactory.getValue();
+			Notifier<T> n = getNotifier();
+			if (n == null || t == null) {
+				return;
+			}
+			try {
+				n.notifyListeners(t);
+			} catch (RuntimeException ex) {
+				theLogger.warn("Runtime Exception in Heartbeat Node");
+			}
+		}
+
+	}
 }

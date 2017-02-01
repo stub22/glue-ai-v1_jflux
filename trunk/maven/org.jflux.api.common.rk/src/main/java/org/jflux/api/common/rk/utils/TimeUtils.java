@@ -16,78 +16,83 @@
 
 package org.jflux.api.common.rk.utils;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility methods for dealing with time.
- * 
+ *
  * @author Matthew Stevenson <www.jflux.org>
  */
 public class TimeUtils {
-    private final static Logger theLogger = Logger.getLogger(TimeUtils.class.getName());
+	private static final Logger theLogger = LoggerFactory.getLogger(TimeUtils.class);
 
-    /**
-     * Returns the current clock time.
-     * @return current clock time
-     */
-    public static long now(){
-        return System.currentTimeMillis();
-    }
+	/**
+	 * Returns the current clock time.
+	 *
+	 * @return current clock time
+	 */
+	public static long now() {
+		return System.currentTimeMillis();
+	}
 
-    /**
-     * Attempts to sleep for the specified length
-     * @param msec number of milliseconds to sleep
-     */
-    public static void sleep(long msec){
-        try{
-            Thread.sleep(msec);
-        }catch(InterruptedException ex){
-            theLogger.log(Level.WARNING, "Thread sleep interrupted.", ex);
-        }
-    }
+	/**
+	 * Attempts to sleep for the specified length
+	 *
+	 * @param msec number of milliseconds to sleep
+	 */
+	public static void sleep(long msec) {
+		try {
+			Thread.sleep(msec);
+		} catch (InterruptedException ex) {
+			theLogger.warn("Thread sleep interrupted.", ex);
+		}
+	}
 
-    /**
-     * Formats a timespan in milliseconds
-     * @param millisec number of milliseconds
-     * @return a string of hours:minutes:seconds:milliseconds
-     */
-    public static String timeString(long millisec){
-        return timeString(millisec, 0);
-    }
-    /**
-     * Formats a timespan in milliseconds
-     * @param millisec number of milliseconds
-     * @param len minimum String length, padded with 0s
-     * @return a string of hours:minutes:seconds:milliseconds
-     */
-    public static String timeString(long millisec, int len){
-        boolean neg = millisec < 0;
-        if(neg){
-            millisec *= -1;
-        }
-        String ret = "";
-        for(int i=0; i<3; i++, len--){
-            long val = millisec % 10;
-            ret = val + ret;
-            millisec /= 10;
-        }
-        do{
-            long val = millisec % 60;
-            ret = val + ":" + ret;
-            if(val < 10){
-                ret = "0" + ret;
-            }
-            millisec /= 60;
-            len-=2;
-        }while(millisec > 0);
-        while(len > 0){
-            ret = "00:" + ret;
-            len -= 2;
-        }
-        if(neg){
-            ret = "-" + ret;
-        }
-        return ret;
-    }
+	/**
+	 * Formats a timespan in milliseconds
+	 *
+	 * @param millisec number of milliseconds
+	 * @return a string of hours:minutes:seconds:milliseconds
+	 */
+	public static String timeString(long millisec) {
+		return timeString(millisec, 0);
+	}
+
+	/**
+	 * Formats a timespan in milliseconds
+	 *
+	 * @param millisec number of milliseconds
+	 * @param len      minimum String length, padded with 0s
+	 * @return a string of hours:minutes:seconds:milliseconds
+	 */
+	public static String timeString(long millisec, int len) {
+		boolean neg = millisec < 0;
+		if (neg) {
+			millisec *= -1;
+		}
+		String ret = "";
+		for (int i = 0; i < 3; i++, len--) {
+			long val = millisec % 10;
+			ret = val + ret;
+			millisec /= 10;
+		}
+		do {
+			long val = millisec % 60;
+			ret = val + ":" + ret;
+			if (val < 10) {
+				ret = "0" + ret;
+			}
+			millisec /= 60;
+			len -= 2;
+		} while (millisec > 0);
+		while (len > 0) {
+			ret = "00:" + ret;
+			len -= 2;
+		}
+		if (neg) {
+			ret = "-" + ret;
+		}
+		return ret;
+	}
 }

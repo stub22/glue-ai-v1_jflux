@@ -35,7 +35,7 @@ public class Activator implements BundleActivator {
 //        try {
 //            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 //        } catch (Exception ex) {
-//            java.util.logging.Logger.getLogger(AvroTableDemoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//            org.slf4j.LoggerFactory.getLogger(AvroTableDemoFrame.class).error(ex.getMessage(), ex);
 //        }
 //        
 //        java.awt.EventQueue.invokeLater(new Runnable() {

@@ -15,64 +15,67 @@
  */
 package org.jflux.impl.messaging.rk.config;
 
-import org.jflux.api.core.Listener;
-import java.util.Arrays;
-import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
+import org.jflux.api.core.Listener;
 import org.jflux.api.core.config.Configuration;
 import org.jflux.api.core.util.MapAdapter.MapValueAdapter;
-
 import org.jflux.api.core.util.Repeater;
 import org.jflux.impl.services.rk.lifecycle.ManagedService;
 import org.jflux.impl.services.rk.lifecycle.utils.ManagedServiceFactory;
-import static org.jflux.impl.services.rk.lifecycle.config.RKDependencyConfigUtils.*;
-import static org.jflux.impl.services.rk.lifecycle.config.RKLifecycleConfigUtils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+
+import static org.jflux.impl.services.rk.lifecycle.config.RKDependencyConfigUtils.buildLifecycleDependencyConfig;
+import static org.jflux.impl.services.rk.lifecycle.config.RKLifecycleConfigUtils.buildGenericLifecycle;
+import static org.jflux.impl.services.rk.lifecycle.config.RKLifecycleConfigUtils.buildGenericLifecycleConfig;
 
 /**
- *
  * @author Matthew Stevenson
  */
 public class DependentLifecycle {
-    private final static Logger theLogger = Logger.getLogger(MessagingLifecycleGroupConfigUtils.class.getName());
-    
-    private final static String theDependency = "a";
-        
-    public static void createDependencyListener(
-            String idKey, String idStr, Class depClass, 
-            final Listener<Configuration<String>> listener,
-            ManagedServiceFactory factory){
-        
-        Configuration<String> depConf = buildLifecycleDependencyConfig(
-                theDependency, depClass, idKey, idStr, null ,null);
-        final Repeater<Configuration<String>> repeater = new Repeater(){
+	private static final Logger theLogger = LoggerFactory.getLogger(DependentLifecycle.class);
 
-            @Override
-            public void notifyListeners(Object e) {
-                super.notifyListeners(e);
-                //myListeners.clear();
-                //myListeners = null;
-            }
-            
-        };
-        repeater.addListener(listener);
-        final ManagedService ms = factory.createService(buildGenericLifecycle(
-                buildGenericLifecycleConfig(
-                        new String[]{Object.class.getName()}, null, 
-                        Arrays.asList(depConf), 
-                        new MapValueAdapter(theDependency, 
-                new Adapter<Configuration<String>,Configuration<String>>() {
-                    @Override
-                    public Configuration<String> adapt(Configuration<String> a) {
-                        repeater.handleEvent(a);
-                        return a;
-                    }}))), null);
-        repeater.addListener(new Listener<Configuration<String>>() {
-            @Override
-            public void handleEvent(Configuration<String> event) {
-                //ms.dispose();
-            }
-        });
-        ms.setRegistrationEnabled(false);
-        ms.start();
-    }
+	private final static String theDependency = "a";
+
+	public static void createDependencyListener(
+			String idKey, String idStr, Class depClass,
+			final Listener<Configuration<String>> listener,
+			ManagedServiceFactory factory) {
+
+		Configuration<String> depConf = buildLifecycleDependencyConfig(
+				theDependency, depClass, idKey, idStr, null, null);
+		final Repeater<Configuration<String>> repeater = new Repeater() {
+
+			@Override
+			public void notifyListeners(Object e) {
+				super.notifyListeners(e);
+				//myListeners.clear();
+				//myListeners = null;
+			}
+
+		};
+		repeater.addListener(listener);
+		final ManagedService ms = factory.createService(buildGenericLifecycle(
+				buildGenericLifecycleConfig(
+						new String[]{Object.class.getName()}, null,
+						Arrays.asList(depConf),
+						new MapValueAdapter(theDependency,
+								new Adapter<Configuration<String>, Configuration<String>>() {
+									@Override
+									public Configuration<String> adapt(Configuration<String> a) {
+										repeater.handleEvent(a);
+										return a;
+									}
+								}))), null);
+		repeater.addListener(new Listener<Configuration<String>>() {
+			@Override
+			public void handleEvent(Configuration<String> event) {
+				//ms.dispose();
+			}
+		});
+		ms.setRegistrationEnabled(false);
+		ms.start();
+	}
 }
