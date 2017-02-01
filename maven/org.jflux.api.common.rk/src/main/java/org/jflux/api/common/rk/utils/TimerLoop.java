@@ -16,83 +16,88 @@
 
 package org.jflux.api.common.rk.utils;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class for performing an action at regular intervals.
- * 
+ *
  * @author Matthew Stevenson <www.jflux.org>
  */
 //TODO Uses ScheduledExecutor to handle TimerLoop
 public abstract class TimerLoop {
-    private final static Logger theLogger = Logger.getLogger(TimerLoop.class.getName());
-    private long myInterval;
-    private boolean myStop; 
-    
-    /**
-     * Creates a new TimerLoop with the given interval in milliseconds.
-     * @param interval number of milliseconds between performing the action
-     */
-    public TimerLoop(long interval){
-        myStop = true;
-        myInterval = interval;
-    }
+	private static final Logger theLogger = LoggerFactory.getLogger(TimerLoop.class);
+	private long myInterval;
+	private boolean myStop;
 
-    /**
-     * Sets the interval length.
-     * @param interval number of milliseconds between performing the action
-     */
-    public void setIntervalLength(long interval){
-        myInterval = interval;
-    }
+	/**
+	 * Creates a new TimerLoop with the given interval in milliseconds.
+	 *
+	 * @param interval number of milliseconds between performing the action
+	 */
+	public TimerLoop(long interval) {
+		myStop = true;
+		myInterval = interval;
+	}
 
-    /**
-     * Returns the interval length.
-     * @return interval length
-     */
-    public long getIntervalLength(){
-        return myInterval;
-    }
+	/**
+	 * Sets the interval length.
+	 *
+	 * @param interval number of milliseconds between performing the action
+	 */
+	public void setIntervalLength(long interval) {
+		myInterval = interval;
+	}
 
-    /**
-     * Action to perform at regular intervals.
-     * @param time current time
-     * @param interval length of the timer interval
-     */
-    protected abstract void timerTick(long time, long interval);
+	/**
+	 * Returns the interval length.
+	 *
+	 * @return interval length
+	 */
+	public long getIntervalLength() {
+		return myInterval;
+	}
 
-    /**
-     * Start performing the action at intervals.
-     */
-    public void start() {
-        if(!myStop){
-            return;
-        }
-        myStop = false;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(!myStop){
-                    timerStep();
-                }
-            }
-        }).start();
-    }
+	/**
+	 * Action to perform at regular intervals.
+	 *
+	 * @param time     current time
+	 * @param interval length of the timer interval
+	 */
+	protected abstract void timerTick(long time, long interval);
 
-    /**
-     * Stop the timer.
-     */
-    public void stop() {
-        myStop = true;
-    }
+	/**
+	 * Start performing the action at intervals.
+	 */
+	public void start() {
+		if (!myStop) {
+			return;
+		}
+		myStop = false;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (!myStop) {
+					timerStep();
+				}
+			}
+		}).start();
+	}
 
-    private void timerStep(){
-        long start = TimeUtils.now();
-        timerTick(start, myInterval);
-        long elapsed = TimeUtils.now() - start;
-        long sleep = myInterval - elapsed;
-        if(sleep >= 0){
-            TimeUtils.sleep(sleep);
-        }
-    }
+	/**
+	 * Stop the timer.
+	 */
+	public void stop() {
+		myStop = true;
+	}
+
+	private void timerStep() {
+		long start = TimeUtils.now();
+		timerTick(start, myInterval);
+		long elapsed = TimeUtils.now() - start;
+		long sleep = myInterval - elapsed;
+		if (sleep >= 0) {
+			TimeUtils.sleep(sleep);
+		}
+	}
 }

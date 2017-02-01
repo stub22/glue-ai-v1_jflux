@@ -15,94 +15,93 @@
  */
 package org.jflux.impl.messaging.rk.utils;
 
-import org.jflux.impl.messaging.rk.common.ComplexAdapter;
-import org.jflux.impl.messaging.rk.common.QpidUtils;
-import org.jflux.impl.messaging.rk.common.PolymorphicAdapter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.jms.BytesMessage;
-import javax.jms.Session;
 import org.apache.avro.generic.IndexedRecord;
 import org.apache.qpid.client.message.JMSBytesMessage;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Source;
 import org.jflux.impl.messaging.rk.BytesMessageFactory;
+import org.jflux.impl.messaging.rk.common.ComplexAdapter;
+import org.jflux.impl.messaging.rk.common.PolymorphicAdapter;
 import org.jflux.impl.messaging.rk.common.PolymorphicAdapter.AdapterKeyMap;
+import org.jflux.impl.messaging.rk.common.QpidUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jms.BytesMessage;
+import javax.jms.Session;
 
 /**
- *
  * @author Matthew Stevenson <www.robokind.org>
  */
 public class JMSAvroPolymorphicRecordBytesAdapter<Msg> implements Adapter<Msg, BytesMessage> {
-    static final Logger theLogger = 
-            Logger.getLogger(JMSAvroPolymorphicRecordBytesAdapter.class.getName());
-    private PolymorphicAdapter<Msg, BytesMessage> myAdapter;
-    private BytesMessageFactory myBytesMessageFactory;
-    
-    public JMSAvroPolymorphicRecordBytesAdapter(AdapterKeyMap<Msg> keyMap){
-        if(keyMap == null){
-            throw new NullPointerException();
-        }
-        myAdapter = new PolymorphicAdapter<Msg, BytesMessage>(keyMap);
-        myBytesMessageFactory = new BytesMessageFactory();
-    }
-    
-    public void setSession(Session session){
-        myBytesMessageFactory.setSession(session);
-    }
-    
-    public <R extends IndexedRecord> void addAdapter(
-            Adapter<Msg,R> adapter, String contentType){
-        if(adapter == null || contentType == null){
-            throw new NullPointerException();
-        }
-        JMSAvroRecordBytesAdapter<R> bytesAdapter = 
-                new JMSAvroRecordBytesAdapter<R>(
-                        myBytesMessageFactory, contentType);
-        ComplexAdapter<Msg,R,BytesMessage> complexAdapter = 
-                new ComplexAdapter<Msg, R, BytesMessage>(adapter, bytesAdapter);
-        myAdapter.addAdapter(contentType, complexAdapter);
-    }
+	private static final Logger theLogger = LoggerFactory.getLogger(JMSAvroPolymorphicRecordBytesAdapter.class);
+	private PolymorphicAdapter<Msg, BytesMessage> myAdapter;
+	private BytesMessageFactory myBytesMessageFactory;
 
-    @Override
-    public BytesMessage adapt(Msg a) {
-        return myAdapter.adapt(a);
-    }    
-    
-    public static class JMSAvroRecordBytesAdapter<A extends IndexedRecord> implements 
-            Adapter<A, BytesMessage> {
+	public JMSAvroPolymorphicRecordBytesAdapter(AdapterKeyMap<Msg> keyMap) {
+		if (keyMap == null) {
+			throw new NullPointerException();
+		}
+		myAdapter = new PolymorphicAdapter<>(keyMap);
+		myBytesMessageFactory = new BytesMessageFactory();
+	}
 
-        private String myContentType;
-        private Source<JMSBytesMessage> myBytesMessageFactory;
+	public void setSession(Session session) {
+		myBytesMessageFactory.setSession(session);
+	}
 
-        public JMSAvroRecordBytesAdapter(Source<JMSBytesMessage> messageFactory,
-                String contentType){
-            if(messageFactory == null){
-                throw new NullPointerException();
-            }
-            myBytesMessageFactory = messageFactory;
-            myContentType = contentType;
-        }
+	public <R extends IndexedRecord> void addAdapter(
+			Adapter<Msg, R> adapter, String contentType) {
+		if (adapter == null || contentType == null) {
+			throw new NullPointerException();
+		}
+		JMSAvroRecordBytesAdapter<R> bytesAdapter =
+				new JMSAvroRecordBytesAdapter<>(
+						myBytesMessageFactory, contentType);
+		ComplexAdapter<Msg, R, BytesMessage> complexAdapter =
+				new ComplexAdapter<>(adapter, bytesAdapter);
+		myAdapter.addAdapter(contentType, complexAdapter);
+	}
 
-        @Override
-        public BytesMessage adapt(A a) {
-            JMSBytesMessage message = myBytesMessageFactory.getValue();
-            if(message == null){
-                theLogger.warning("The factory failed to create a BytesMessage.");
-                return null;
-            }
-            try{
-                QpidUtils.packAvroMessage(a, message);
-                if(myContentType != null){
-                    message.setContentType(myContentType);
-                    message.setEncoding(myContentType);
-                }
-                return message;
-            }catch(Exception ex){
-                theLogger.log(Level.WARNING, "There was an error packing the "
-                        + "JMSBytesMessage.", ex);
-            }
-            return null;
-        }
-    }
+	@Override
+	public BytesMessage adapt(Msg a) {
+		return myAdapter.adapt(a);
+	}
+
+	public static class JMSAvroRecordBytesAdapter<A extends IndexedRecord> implements
+			Adapter<A, BytesMessage> {
+
+		private String myContentType;
+		private Source<JMSBytesMessage> myBytesMessageFactory;
+
+		public JMSAvroRecordBytesAdapter(Source<JMSBytesMessage> messageFactory,
+										 String contentType) {
+			if (messageFactory == null) {
+				throw new NullPointerException();
+			}
+			myBytesMessageFactory = messageFactory;
+			myContentType = contentType;
+		}
+
+		@Override
+		public BytesMessage adapt(A a) {
+			JMSBytesMessage message = myBytesMessageFactory.getValue();
+			if (message == null) {
+				theLogger.warn("The factory failed to create a BytesMessage.");
+				return null;
+			}
+			try {
+				QpidUtils.packAvroMessage(a, message);
+				if (myContentType != null) {
+					message.setContentType(myContentType);
+					message.setEncoding(myContentType);
+				}
+				return message;
+			} catch (Exception ex) {
+				theLogger.warn("There was an error packing the "
+						+ "JMSBytesMessage.", ex);
+			}
+			return null;
+		}
+	}
 }

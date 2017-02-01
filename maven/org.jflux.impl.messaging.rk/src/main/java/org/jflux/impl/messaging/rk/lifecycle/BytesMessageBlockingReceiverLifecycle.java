@@ -15,104 +15,104 @@
  */
 package org.jflux.impl.messaging.rk.lifecycle;
 
+import org.jflux.api.core.Adapter;
+import org.jflux.api.messaging.rk.Constants;
+import org.jflux.api.messaging.rk.DefaultMessageBlockingReceiver;
+import org.jflux.api.messaging.rk.MessageBlockingReceiver;
+import org.jflux.impl.messaging.rk.JMSBytesRecordBlockingReceiver;
+import org.jflux.impl.messaging.rk.utils.ConnectionManager;
+import org.jflux.impl.services.rk.lifecycle.AbstractLifecycleProvider;
+import org.jflux.impl.services.rk.lifecycle.utils.DescriptorListBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import javax.jms.BytesMessage;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
-import org.jflux.api.core.Adapter;
-import org.jflux.api.messaging.rk.Constants;
-import org.jflux.api.messaging.rk.DefaultMessageBlockingReceiver;
-import org.jflux.api.messaging.rk.MessageBlockingReceiver;
-import org.jflux.impl.services.rk.lifecycle.AbstractLifecycleProvider;
-import org.jflux.impl.services.rk.lifecycle.utils.DescriptorListBuilder;
-import org.jflux.impl.messaging.rk.JMSBytesRecordBlockingReceiver;
-import org.jflux.impl.messaging.rk.utils.ConnectionManager;
 
 /**
- *
  * @author Matthew Stevenson <www.robokind.org>
  */
-public class BytesMessageBlockingReceiverLifecycle<Msg> 
-        extends AbstractLifecycleProvider<
-                MessageBlockingReceiver, 
-                DefaultMessageBlockingReceiver<Msg,BytesMessage>> {
-    private final static Logger theLogger = 
-            Logger.getLogger(BytesMessageBlockingReceiverLifecycle.class.getName());
-    private final static String theSession = "session";
-    private final static String theDestination = "destination";
-    
-    private Adapter<BytesMessage,Msg> myAdapter;
-    
-    public BytesMessageBlockingReceiverLifecycle(Adapter<BytesMessage,Msg> adapter, 
-            Class<Msg> messageClass, String receiverId, 
-            String sessionId, String destinationId){
-        super(new DescriptorListBuilder()
-                .dependency(theSession, Session.class)
-                    .with(ConnectionManager.PROP_CONNECTION_ID, sessionId)
-                .dependency(theDestination, Destination.class)
-                    .with(ConnectionManager.PROP_DESTINATION_ID, destinationId)
-                .getDescriptors());
-        if(adapter == null){
-            throw new NullPointerException();
-        }
-        myAdapter = adapter;
-        if(myRegistrationProperties == null){
-            myRegistrationProperties = new Properties();
-        }
-        myRegistrationProperties.put(
-                Constants.PROP_MESSAGE_TYPE, messageClass.getName());
-        myRegistrationProperties.put(
-                Constants.PROP_RECORD_TYPE, BytesMessage.class.getName());
-        myRegistrationProperties.put(Constants.PROP_MESSAGE_RECEIVER_ID, 
-                receiverId);
-    }
-    
-    @Override
-    protected DefaultMessageBlockingReceiver<Msg,BytesMessage> create(
-            Map<String, Object> dependencies) {
-        Session session = (Session)dependencies.get(theSession);
-        Destination destination = (Destination)dependencies.get(theDestination);
-        MessageConsumer consumer;
-        try{
-            consumer = session.createConsumer(destination);
-        }catch(JMSException ex){
-            theLogger.log(Level.WARNING, "Error creating JMS Consumer.", ex);
-            return null;
-        }
-        DefaultMessageBlockingReceiver<Msg,BytesMessage> receiver = 
-                new DefaultMessageBlockingReceiver<Msg, BytesMessage>();
-        
-        JMSBytesRecordBlockingReceiver recReceiver = 
-                new JMSBytesRecordBlockingReceiver(consumer);
-        receiver.setRecordReceiver(recReceiver);
-        receiver.setAdapter(myAdapter);
-        return receiver;
-    }
+public class BytesMessageBlockingReceiverLifecycle<Msg>
+		extends AbstractLifecycleProvider<
+		MessageBlockingReceiver,
+		DefaultMessageBlockingReceiver<Msg, BytesMessage>> {
+	private static final Logger theLogger = LoggerFactory.getLogger(BytesMessageBlockingReceiverLifecycle.class);
+	private final static String theSession = "session";
+	private final static String theDestination = "destination";
 
-    @Override
-    protected void handleChange(String dependencyId, Object service, 
-            Map<String, Object> dependencies) {
-        if(myService == null){
-            if(isSatisfied()){
-                myService = create(dependencies);
-            }
-            return;
-        }
-        myService.stop();
-        if(isSatisfied()){
-            myService = create(dependencies);
-        }else{
-            myService = null;
-        }
-    }
+	private Adapter<BytesMessage, Msg> myAdapter;
 
-    @Override
-    public Class<MessageBlockingReceiver> getServiceClass() {
-        return MessageBlockingReceiver.class;
-    }
+	public BytesMessageBlockingReceiverLifecycle(Adapter<BytesMessage, Msg> adapter,
+												 Class<Msg> messageClass, String receiverId,
+												 String sessionId, String destinationId) {
+		super(new DescriptorListBuilder()
+				.dependency(theSession, Session.class)
+				.with(ConnectionManager.PROP_CONNECTION_ID, sessionId)
+				.dependency(theDestination, Destination.class)
+				.with(ConnectionManager.PROP_DESTINATION_ID, destinationId)
+				.getDescriptors());
+		if (adapter == null) {
+			throw new NullPointerException();
+		}
+		myAdapter = adapter;
+		if (myRegistrationProperties == null) {
+			myRegistrationProperties = new Properties();
+		}
+		myRegistrationProperties.put(
+				Constants.PROP_MESSAGE_TYPE, messageClass.getName());
+		myRegistrationProperties.put(
+				Constants.PROP_RECORD_TYPE, BytesMessage.class.getName());
+		myRegistrationProperties.put(Constants.PROP_MESSAGE_RECEIVER_ID,
+				receiverId);
+	}
+
+	@Override
+	protected DefaultMessageBlockingReceiver<Msg, BytesMessage> create(
+			Map<String, Object> dependencies) {
+		Session session = (Session) dependencies.get(theSession);
+		Destination destination = (Destination) dependencies.get(theDestination);
+		MessageConsumer consumer;
+		try {
+			consumer = session.createConsumer(destination);
+		} catch (JMSException ex) {
+			theLogger.warn("Error creating JMS Consumer.", ex);
+			return null;
+		}
+		DefaultMessageBlockingReceiver<Msg, BytesMessage> receiver =
+				new DefaultMessageBlockingReceiver<>();
+
+		JMSBytesRecordBlockingReceiver recReceiver =
+				new JMSBytesRecordBlockingReceiver(consumer);
+		receiver.setRecordReceiver(recReceiver);
+		receiver.setAdapter(myAdapter);
+		return receiver;
+	}
+
+	@Override
+	protected void handleChange(String dependencyId, Object service,
+								Map<String, Object> dependencies) {
+		if (myService == null) {
+			if (isSatisfied()) {
+				myService = create(dependencies);
+			}
+			return;
+		}
+		myService.stop();
+		if (isSatisfied()) {
+			myService = create(dependencies);
+		} else {
+			myService = null;
+		}
+	}
+
+	@Override
+	public Class<MessageBlockingReceiver> getServiceClass() {
+		return MessageBlockingReceiver.class;
+	}
 }

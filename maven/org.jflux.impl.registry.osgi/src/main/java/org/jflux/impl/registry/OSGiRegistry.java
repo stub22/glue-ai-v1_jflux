@@ -4,14 +4,6 @@
  */
 package org.jflux.impl.registry;
 
-import java.util.Arrays;
-import java.util.Dictionary;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jflux.api.core.Adapter;
 import org.jflux.api.core.Listener;
 import org.jflux.api.core.util.BatchAdapter;
@@ -31,175 +23,187 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.Dictionary;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Registry implementation for OSGi
+ *
  * @author Matthew Stevenson
  */
 public class OSGiRegistry implements Registry {
-    private final static Logger theLogger = Logger.getLogger(OSGiRegistry.class.getName());
-    private BundleContext myContext;
-    private Map<Listener<RegistryEvent>, ServiceListener> myListenerMap;
-    
-    /**
-     * Creates a timestamped OSGi registry with a timestamp.
-     * @param timestampSource the timestamp
-     */
-    public OSGiRegistry(BundleContext context){
-        if(context == null){
-            throw new NullPointerException();
-        }
-        myContext = context;
-        myListenerMap = new HashMap<Listener<RegistryEvent>, ServiceListener>();
-    }
-    
-    @Override
-    public OSGiReference findSingle(Descriptor desc) {
-        ServiceReference[] refs = find(desc);
-        if(refs == null){
-            return null;
-        }
-        return new OSGiReference(refs[0]);
-    }
+	private static final Logger theLogger = LoggerFactory.getLogger(OSGiRegistry.class);
+	private BundleContext myContext;
+	private Map<Listener<RegistryEvent>, ServiceListener> myListenerMap;
 
-    @Override
-    public List<Reference> findAll(Descriptor desc) {
-        ServiceReference[] refs = find(desc);
-        if(refs == null){
-            return null;
-        }
-        return getRefListAdapter().adapt(Arrays.asList(refs));
-    }
+	/**
+	 * Creates a timestamped OSGi registry with a timestamp.
+	 *
+	 * @param context the bundle's context
+	 */
+	public OSGiRegistry(BundleContext context) {
+		if (context == null) {
+			throw new NullPointerException();
+		}
+		myContext = context;
+		myListenerMap = new HashMap<>();
+	}
 
-    @Override
-    public List<Reference> findCount(
-            Descriptor desc, int max) {
-        return FinderUtils.findCount(this, desc, max);
-    }
-    
-    private ServiceReference[] find(Descriptor a) {
-        String className = a.getClassName();
-        String filter = OSGiRegistryUtil.getPropertiesFilter(a);
-        try{
-            return myContext.getServiceReferences(className, filter);
-        }catch(InvalidSyntaxException ex){
-            theLogger.log(Level.SEVERE, "Invalid LDAP filter: " + filter, ex);
-            return null;
-        }
-    }
-    
-    @Override
-    public <T> T retrieve(final Class<T> clazz, Reference reference) {
-        if(!(reference instanceof OSGiReference)){
-            return null;
-        }
-        Object obj = myContext.getService((OSGiReference)reference);
-        if(obj == null){
-            return null;
-        }
-        try{
-            return (T)obj;
-        }catch(ClassCastException ex){
-            theLogger.log(Level.SEVERE, 
-                    "Unable to cast item to specified type.  "
-                    + "Expected: " + clazz.getName() + ",  "
-                    + "Found: " + obj.getClass().getName(), ex);
-            return null;
-        }
-    }
+	@Override
+	public OSGiReference findSingle(Descriptor desc) {
+		ServiceReference[] refs = find(desc);
+		if (refs == null) {
+			return null;
+		}
+		return new OSGiReference(refs[0]);
+	}
 
-    @Override
-    public Object retrieve(Reference reference) {
-        if(!(reference instanceof OSGiReference)){
-            return null;
-        }
-        ServiceReference ref = ((OSGiReference)reference).getReference();
-        return myContext.getService(ref);
-    }
+	@Override
+	public List<Reference> findAll(Descriptor desc) {
+		ServiceReference[] refs = find(desc);
+		if (refs == null) {
+			return null;
+		}
+		return getRefListAdapter().adapt(Arrays.asList(refs));
+	}
 
-    @Override
-    public void release(Reference reference) {
-        if(!(reference instanceof OSGiReference)){
-            return;
-        }
-        myContext.ungetService(((OSGiReference)reference).getReference());
-    }
+	@Override
+	public List<Reference> findCount(
+			Descriptor desc, int max) {
+		return FinderUtils.findCount(this, desc, max);
+	}
 
-    @Override
-    public OSGiCertificate register(RegistrationRequest request) {
-        String[] classNames = request.getClassNames();
-        Dictionary props = null;
-        if(request.getProperties() != null){
-            props = new Hashtable(request.getProperties());
-        }
-        Object item = request.getItem();
-        ServiceRegistration reg =  myContext.registerService(classNames, item, props);
-        return reg == null ? null : new OSGiCertificate(reg);
-    }
+	private ServiceReference[] find(Descriptor a) {
+		String className = a.getClassName();
+		String filter = OSGiRegistryUtil.getPropertiesFilter(a);
+		try {
+			return myContext.getServiceReferences(className, filter);
+		} catch (InvalidSyntaxException ex) {
+			theLogger.error("Invalid LDAP filter: {}", filter, ex);
+			return null;
+		}
+	}
 
-    @Override
-    public void unregister(Certificate cert) {
-        if(!(cert instanceof OSGiCertificate)){
-            return;
-        }
-        ((OSGiCertificate)cert).unregister();
-    }
+	@Override
+	public <T> T retrieve(final Class<T> clazz, Reference reference) {
+		if (!(reference instanceof OSGiReference)) {
+			return null;
+		}
+		Object obj = myContext.getService((OSGiReference) reference);
+		if (obj == null) {
+			return null;
+		}
+		try {
+			return (T) obj;
+		} catch (ClassCastException ex) {
+			theLogger.error("Unable to cast item to specified type.  "
+					+ "Expected: {},  "
+					+ "Found: {}", clazz.getName(), obj.getClass().getName(), ex);
+			return null;
+		}
+	}
 
-    @Override
-    public void modify(Certificate cert, Modification request) {
-        if(!(cert instanceof OSGiCertificate)){
-            return;
-        }
-        Dictionary props = null;
-        if(request.getProperties() != null){
-            props = new Hashtable<String,String>(request.getProperties());
-        }
-        ((OSGiCertificate)cert).setProperties(props);
-    }
+	@Override
+	public Object retrieve(Reference reference) {
+		if (!(reference instanceof OSGiReference)) {
+			return null;
+		}
+		ServiceReference ref = ((OSGiReference) reference).getReference();
+		return myContext.getService(ref);
+	}
 
-    @Override
-    public void addListener(Descriptor desc, Listener<RegistryEvent> listener) {
-        String filter = OSGiRegistryUtil.getFullFilter(desc);
-        ServiceListener sl = getWrappedListener(listener);
-        try{
-            myContext.addServiceListener(sl, filter);
-        }catch(InvalidSyntaxException ex){
-            theLogger.log(Level.SEVERE, 
-                    "Invalid LDAP filter: " + filter, ex);
-        }
-    }
+	@Override
+	public void release(Reference reference) {
+		if (!(reference instanceof OSGiReference)) {
+			return;
+		}
+		myContext.ungetService(((OSGiReference) reference).getReference());
+	}
 
-    @Override
-    public void removeListener(Listener<RegistryEvent> listener) {
-        ServiceListener sl = getWrappedListener(listener);
-        if(sl != null){
-            myContext.removeServiceListener(sl);
-        }
-    }
-    
-    private ServiceListener getWrappedListener(final Listener<RegistryEvent> listener){
-        ServiceListener l = myListenerMap.get(listener);
-        if(l == null){
-            l = new ServiceListener() {
-                @Override public void serviceChanged(ServiceEvent se) {
-                    if(se == null || se.getServiceReference() == null){
-                        return;
-                    }
-                    RegistryEvent e = new BasicRegistryEvent(
-                            se.getType(), new OSGiReference(se.getServiceReference()));
-                    listener.handleEvent(e);
-                }};
-            myListenerMap.put(listener, l);
-        }
-        return l;
-    }
-    
-    private static Adapter<List<ServiceReference>, List<Reference>> getRefListAdapter(){
-        if(theRefListAdapter == null){
-            theRefListAdapter = new BatchAdapter(OSGiReference.getReferenceAdapter());
-        }
-        return theRefListAdapter;
-    }
-    private static Adapter<List<ServiceReference>, List<Reference>> theRefListAdapter;
-    
+	@Override
+	public OSGiCertificate register(RegistrationRequest request) {
+		String[] classNames = request.getClassNames();
+		Dictionary props = null;
+		if (request.getProperties() != null) {
+			props = new Hashtable(request.getProperties());
+		}
+		Object item = request.getItem();
+		ServiceRegistration reg = myContext.registerService(classNames, item, props);
+		return reg == null ? null : new OSGiCertificate(reg);
+	}
+
+	@Override
+	public void unregister(Certificate cert) {
+		if (!(cert instanceof OSGiCertificate)) {
+			return;
+		}
+		((OSGiCertificate) cert).unregister();
+	}
+
+	@Override
+	public void modify(Certificate cert, Modification request) {
+		if (!(cert instanceof OSGiCertificate)) {
+			return;
+		}
+		Dictionary props = null;
+		if (request.getProperties() != null) {
+			props = new Hashtable<>(request.getProperties());
+		}
+		((OSGiCertificate) cert).setProperties(props);
+	}
+
+	@Override
+	public void addListener(Descriptor desc, Listener<RegistryEvent> listener) {
+		String filter = OSGiRegistryUtil.getFullFilter(desc);
+		ServiceListener sl = getWrappedListener(listener);
+		try {
+			myContext.addServiceListener(sl, filter);
+		} catch (InvalidSyntaxException ex) {
+			theLogger.error("Invalid LDAP filter: {}", filter, ex);
+		}
+	}
+
+	@Override
+	public void removeListener(Listener<RegistryEvent> listener) {
+		ServiceListener sl = getWrappedListener(listener);
+		if (sl != null) {
+			myContext.removeServiceListener(sl);
+		}
+	}
+
+	private ServiceListener getWrappedListener(final Listener<RegistryEvent> listener) {
+		ServiceListener l = myListenerMap.get(listener);
+		if (l == null) {
+			l = new ServiceListener() {
+				@Override
+				public void serviceChanged(ServiceEvent se) {
+					if (se == null || se.getServiceReference() == null) {
+						return;
+					}
+					RegistryEvent e = new BasicRegistryEvent(
+							se.getType(), new OSGiReference(se.getServiceReference()));
+					listener.handleEvent(e);
+				}
+			};
+			myListenerMap.put(listener, l);
+		}
+		return l;
+	}
+
+	private static Adapter<List<ServiceReference>, List<Reference>> getRefListAdapter() {
+		if (theRefListAdapter == null) {
+			theRefListAdapter = new BatchAdapter(OSGiReference.getReferenceAdapter());
+		}
+		return theRefListAdapter;
+	}
+
+	private static Adapter<List<ServiceReference>, List<Reference>> theRefListAdapter;
+
 }
