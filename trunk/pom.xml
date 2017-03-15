@@ -50,8 +50,8 @@
         <netbeans.compile.on.save>none</netbeans.compile.on.save>
 
         <!-- Glue Dependencies -->
-        <appdapter.apache.qpid.version>1.2.4</appdapter.apache.qpid.version>
-        <appdapter.version>1.2.4</appdapter.version>
+        <appdapter.apache.qpid.version>1.2.5-SNAPSHOT</appdapter.apache.qpid.version>
+        <appdapter.version>1.2.5-SNAPSHOT</appdapter.version>
         <!-- Non Glue Dependencies -->
         <avro.version>1.7.2</avro.version>
         <avro.ipc.version>1.6.3</avro.ipc.version>
