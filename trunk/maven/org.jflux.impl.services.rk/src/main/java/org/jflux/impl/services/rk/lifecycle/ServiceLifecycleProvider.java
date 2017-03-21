@@ -44,9 +44,11 @@ import java.util.Properties;
  * dependencies cannot change.  When dependencies are added and removed after
  * initialization, a property change event should be fired.
  *
+ * @deprecated Create a lifecycle that Implements {@link org.jflux.api.service.ServiceLifecycle}
  * @param <T> type of service managed by this lifecycle provider
  * @author Matthew Stevenson <www.robokind.org>
  */
+@Deprecated
 public interface ServiceLifecycleProvider<T> extends PropertyChangeSource {
 	/**
 	 * Property change name for adding a dependency after initializing.
