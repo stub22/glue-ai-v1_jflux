@@ -31,8 +31,12 @@ import org.jflux.impl.messaging.rk.utils.ConnectionManager;
 /**
  *
  * @author Matthew Stevenson <www.robokind.org>
+ *
+ * @deprecated This class uses our old lifecycles. Use
+ * {@link org.jflux.spec.messaging.MessageSenderLifecycle}.
  */
-public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord> 
+@Deprecated
+public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
         extends AbstractLifecycleProvider<
                 MessageSender, JMSAvroMessageSender<Msg,Rec>> {
     private Adapter<Msg,Rec> myAdapter;
@@ -40,8 +44,9 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
 
     protected final static String theSession = "session";
     protected final static String theDestination = "destination";
-    
-    public JMSAvroMessageSenderLifecycle(Adapter<Msg,Rec> adapter, 
+
+    @Deprecated
+    public JMSAvroMessageSenderLifecycle(Adapter<Msg,Rec> adapter,
             Class<Msg> messageClass, Class<Rec> recordClass,
             String senderId, String sessionId, String destinationId,
             String contentType){
@@ -63,23 +68,26 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
                 Constants.PROP_MESSAGE_TYPE, messageClass.getName());
         myRegistrationProperties.put(
                 Constants.PROP_RECORD_TYPE, recordClass.getName());
-        myRegistrationProperties.put(Constants.PROP_MESSAGE_SENDER_ID, 
+        myRegistrationProperties.put(Constants.PROP_MESSAGE_SENDER_ID,
                 senderId);
     }
-    
-    public JMSAvroMessageSenderLifecycle(Adapter<Msg,Rec> adapter, 
+
+    @Deprecated
+    public JMSAvroMessageSenderLifecycle(Adapter<Msg,Rec> adapter,
             Class<Msg> messageClass, Class<Rec> recordClass,
             String senderId, String sessionId, String destinationId){
-        this(adapter, messageClass, recordClass, 
+        this(adapter, messageClass, recordClass,
                 senderId, sessionId, destinationId, null);
     }
-    
+
     @Override
+    @Deprecated
     protected JMSAvroMessageSender<Msg,Rec> create(
             Map<String, Object> dependencies) {
+
         Session session = (Session)dependencies.get(theSession);
         Destination dest = (Destination)dependencies.get(theDestination);
-        JMSAvroMessageSender<Msg,Rec> sender =  
+        JMSAvroMessageSender<Msg,Rec> sender =
                 new JMSAvroMessageSender<Msg, Rec>(session, dest);
         if(myDefaultContentType != null){
             sender.setDefaultContentType(myDefaultContentType);
@@ -90,6 +98,7 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
     }
 
     @Override
+    @Deprecated
     public synchronized void stop() {
         if(myService != null){
             myService.stop();
@@ -97,7 +106,8 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
     }
 
     @Override
-    protected void handleChange(String dependencyId, Object service, 
+    @Deprecated
+    protected void handleChange(String dependencyId, Object service,
             Map<String, Object> dependencies) {
         if(myService == null){
             return;
@@ -111,6 +121,7 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
     }
 
     @Override
+    @Deprecated
     public Class<MessageSender> getServiceClass() {
         return MessageSender.class;
     }

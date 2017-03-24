@@ -38,7 +38,11 @@ import javax.jms.Session;
 
 /**
  * @author Matthew Stevenson <www.robokind.org>
+ *
+ * @deprecated This class uses our old lifecycles. Use
+ * {@link org.jflux.spec.messaging.MessageAsyncReceiverLifecycle}.
  */
+@Deprecated
 public class JMSAvroAsyncReceiverLifecycle<Msg, Rec extends IndexedRecord>
 		extends AbstractLifecycleProvider<
 		MessageAsyncReceiver,
