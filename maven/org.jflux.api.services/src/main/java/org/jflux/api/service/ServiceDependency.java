@@ -128,12 +128,22 @@ public class ServiceDependency {
 		}
 	}
 
+	/**
+	 * How to update a service when a dependency changes.
+	 */
 	public enum UpdateStrategy {
 		/**
-		 * If this dependency changes it will destroy then recreate the service managed by the
-		 * lifecycle.
+		 * The {@link ServiceLifecycle} cannot update the service. The service needs to be disposed
+		 * and recreated to handle the dependency change.
+		 *
+		 * {@link ServiceLifecycle}s for dependencies that are {@link UpdateStrategy#STATIC} will
+		 * never call the {@link ServiceLifecycle#handleDependencyChange} method.
 		 */
 		STATIC,
+		/**
+		 * The {@link ServiceLifecycle} can dynamically update the service when a dependency changes
+		 * via the {@link ServiceLifecycle#handleDependencyChange} method.
+		 */
 		DYNAMIC
 	}
 }
