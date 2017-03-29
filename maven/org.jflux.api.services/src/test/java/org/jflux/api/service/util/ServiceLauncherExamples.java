@@ -39,12 +39,12 @@ public class ServiceLauncherExamples {
 	/**
 	 * Corresponds to AnimationPlayer.PROP_PLAYER_ID, which isn't accessible from this project.
 	 */
-	private final String ANIMATION_PLAYER_PROPERTY_ID = "animationPlayerId";
+	private static final String ANIMATION_PLAYER_PROPERTY_ID = "animationPlayerId";
 
 	/**
 	 * Corresponds to SpeechService.PROP_ID, which isn't accessible from this project.
 	 */
-	private final String SPEECH_SERVICE_PROPERTY_ID = "speechServiceId";
+	private static final String SPEECH_SERVICE_PROPERTY_ID = "speechServiceId";
 
 
 	/*

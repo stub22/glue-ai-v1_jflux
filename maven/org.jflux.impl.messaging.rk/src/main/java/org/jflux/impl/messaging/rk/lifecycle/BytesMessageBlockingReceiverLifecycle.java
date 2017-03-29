@@ -38,6 +38,7 @@ import javax.jms.Session;
 /**
  * @author Matthew Stevenson <www.robokind.org>
  */
+@Deprecated
 public class BytesMessageBlockingReceiverLifecycle<Msg>
 		extends AbstractLifecycleProvider<
 		MessageBlockingReceiver,

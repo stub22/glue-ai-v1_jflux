@@ -45,7 +45,6 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
     protected final static String theSession = "session";
     protected final static String theDestination = "destination";
 
-    @Deprecated
     public JMSAvroMessageSenderLifecycle(Adapter<Msg,Rec> adapter,
             Class<Msg> messageClass, Class<Rec> recordClass,
             String senderId, String sessionId, String destinationId,
@@ -72,7 +71,6 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
                 senderId);
     }
 
-    @Deprecated
     public JMSAvroMessageSenderLifecycle(Adapter<Msg,Rec> adapter,
             Class<Msg> messageClass, Class<Rec> recordClass,
             String senderId, String sessionId, String destinationId){
@@ -81,7 +79,6 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
     }
 
     @Override
-    @Deprecated
     protected JMSAvroMessageSender<Msg,Rec> create(
             Map<String, Object> dependencies) {
 
@@ -98,7 +95,6 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
     }
 
     @Override
-    @Deprecated
     public synchronized void stop() {
         if(myService != null){
             myService.stop();
@@ -106,7 +102,6 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
     }
 
     @Override
-    @Deprecated
     protected void handleChange(String dependencyId, Object service,
             Map<String, Object> dependencies) {
         if(myService == null){
@@ -121,7 +116,6 @@ public class JMSAvroMessageSenderLifecycle<Msg, Rec extends IndexedRecord>
     }
 
     @Override
-    @Deprecated
     public Class<MessageSender> getServiceClass() {
         return MessageSender.class;
     }

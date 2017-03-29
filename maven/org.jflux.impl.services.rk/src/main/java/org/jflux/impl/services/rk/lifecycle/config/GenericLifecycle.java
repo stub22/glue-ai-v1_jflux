@@ -27,11 +27,12 @@ import org.jflux.impl.services.rk.lifecycle.DependencyDescriptor;
  *
  * @author Matthew Stevenson
  */
+@Deprecated
 public class GenericLifecycle<T> extends AbstractLifecycleProvider<T,T> {
     private Adapter<Map<String,Object>, T> myFactory;
     private Adapter<String, Listener<DependencyChange>> myChangeListeners;
-    private Listener<T> myStopListener; 
-                            
+    private Listener<T> myStopListener;
+
     public GenericLifecycle(
             String[] serviceClassNames,
             List<DependencyDescriptor> deps,
@@ -40,7 +41,7 @@ public class GenericLifecycle<T> extends AbstractLifecycleProvider<T,T> {
             Adapter<String,Listener<DependencyChange>> changeListeners,
             Listener<T> stopListener) {
         super(deps);
-        if(serviceClassNames == null || 
+        if(serviceClassNames == null ||
                 serviceFactory == null || changeListeners == null){
             throw new NullPointerException();
         }
@@ -54,7 +55,7 @@ public class GenericLifecycle<T> extends AbstractLifecycleProvider<T,T> {
         myServiceClassNames = serviceClassNames;
         myStopListener = stopListener;
     }
-    
+
     @Override
     protected T create(Map<String, Object> dependencies) {
         return myFactory.adapt(dependencies);
@@ -62,7 +63,7 @@ public class GenericLifecycle<T> extends AbstractLifecycleProvider<T,T> {
 
     @Override
     protected void handleChange(
-            String name, Object dependency, 
+            String name, Object dependency,
             Map<String, Object> availableDependencies) {
         if(myChangeListeners == null){
             return;
@@ -71,11 +72,11 @@ public class GenericLifecycle<T> extends AbstractLifecycleProvider<T,T> {
         if(listener == null){
             return;
         }
-        DependencyChange change = 
+        DependencyChange change =
                 new DependencyChange(this, dependency, availableDependencies);
         listener.handleEvent(change);
     }
-    
+
     @Override
     public void stop(){
         if(myStopListener != null && myService != null){
@@ -88,7 +89,7 @@ public class GenericLifecycle<T> extends AbstractLifecycleProvider<T,T> {
     public Class<T> getServiceClass() {
         return null;
     }
-    
+
     public static class DependencyChange<T,D>{
         private GenericLifecycle<T> myLifecycle;
         private D myDependency;
@@ -109,11 +110,11 @@ public class GenericLifecycle<T> extends AbstractLifecycleProvider<T,T> {
         public D getDependency() {
             return myDependency;
         }
-        
+
         public GenericLifecycle<T> getLifecycle() {
             return myLifecycle;
         }
-        
+
         public T getService() {
             if(myLifecycle == null){
                 return null;
