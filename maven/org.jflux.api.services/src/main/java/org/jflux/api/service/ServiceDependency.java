@@ -18,87 +18,122 @@ package org.jflux.api.service;
 import java.util.Map;
 
 /**
- *
  * @author matt
  */
-public class ServiceDependency {    
-    private final String myDependencyName;
-    private final String myDependencyClassName;
-    private final Cardinality myCardinality;
-    private final UpdateStrategy myUpdateStrategy;
-    private Map<String,String> myDependencyProperties;
-    
-    /**
-     * Create a new required DependencyDescriptor with the given values.
-     * @param dependencyName dependency name within a ServiceLifecycleProvider
-     * @param className Class name of the dependency
-     * @param props Properties of the dependency
-     */
-    public ServiceDependency(String dependencyName, String className, 
-            Cardinality cardinality, UpdateStrategy updateStrategy, 
-            Map<String,String> props){
-        if(dependencyName == null || className == null 
-                || cardinality == null || updateStrategy == null){
-            throw new NullPointerException();
-        }
-        myDependencyName = dependencyName;
-        myDependencyClassName = className;
-        myCardinality = cardinality;
-        myUpdateStrategy = updateStrategy;
-        myDependencyProperties = props;
-    }
-    
-    /**
-     * Returns the dependency name used within a ServiceLifecycleProvider.
-     * @return dependency name used within a ServiceLifecycleProvider
-     */
-    public String getDependencyName(){
-        return myDependencyName;
-    }
-    /**
-     * Returns the Class of dependency.
-     * @return Class of dependency
-     */
-    public String getDependencyClassName(){
-        return myDependencyClassName;
-    }
+public class ServiceDependency {
+	private final String myDependencyName;
+	private final String myDependencyClassName;
+	private final Cardinality myCardinality;
+	private final UpdateStrategy myUpdateStrategy;
+	private final Map<String, String> myDependencyProperties;
 
-    public Cardinality getCardinality(){
-        return myCardinality;
-    }
-    
-    public UpdateStrategy getUpdateStrategy(){
-        return myUpdateStrategy;
-    }
-    
-    public Map<String,String> getProperties() {
-        return myDependencyProperties;
-    }
-    
-    public static enum Cardinality {
-        OPTIONAL_UNARY(false, false),
-        MANDATORY_UNARY(true, false),
-        OPTIONAL_MULTIPLE(false, true),
-        MANDATORY_MULTIPLE(true, true);
-        
-        private boolean myRequiredFlag;
-        private boolean myMultiplicityFlag;
-        
-        private Cardinality(boolean required, boolean multiple){
-            myRequiredFlag = required;
-            myMultiplicityFlag = multiple;
-        }
-        
-        public boolean isRequired(){
-            return myRequiredFlag;
-        }
-        
-        public boolean isMultiple(){
-            return myMultiplicityFlag;
-        }
-    }
-    
-    public static enum UpdateStrategy{
-        STATIC, DYNAMIC
-    }
+
+	/**
+	 * Create a new required DependencyDescriptor with the given values.
+	 *
+	 * @param dependencyName dependency name within a ServiceLifecycleProvider
+	 * @param className      Class name of the dependency
+	 * @param props          Properties of the dependency
+	 */
+	public ServiceDependency(final String dependencyName, final String className,
+							 final Cardinality cardinality, final UpdateStrategy updateStrategy,
+							 final Map<String, String> props) {
+		if (dependencyName == null || className == null
+				|| cardinality == null || updateStrategy == null) {
+			throw new NullPointerException();
+		}
+		myDependencyName = dependencyName;
+		myDependencyClassName = className;
+		myCardinality = cardinality;
+		myUpdateStrategy = updateStrategy;
+		myDependencyProperties = props;
+	}
+
+	/**
+	 * Returns the dependency name used within a ServiceLifecycleProvider.
+	 *
+	 * @return dependency name used within a ServiceLifecycleProvider
+	 */
+	public String getDependencyName() {
+		return myDependencyName;
+	}
+
+	/**
+	 * Returns the Class of dependency.
+	 *
+	 * @return Class of dependency
+	 */
+	public String getDependencyClassName() {
+		return myDependencyClassName;
+	}
+
+	public Cardinality getCardinality() {
+		return myCardinality;
+	}
+
+	public UpdateStrategy getUpdateStrategy() {
+		return myUpdateStrategy;
+	}
+
+	public Map<String, String> getProperties() {
+		return myDependencyProperties;
+	}
+
+	/**
+	 * Dependency Cardinality has two parts requirement and count. All dependencies marked required
+	 * must be available for the ServiceManager to make the service available. If a required
+	 * dependency in lost and there is not replacement, then the service will become unavailable.
+	 * The service will be notified of optional dependencies as they come and go.
+	 *
+	 * If a dependency has a singular (or unary) cardinality, then the service only uses and expects
+	 * a single instance of the dependency. A multiple cardinality means the service uses and
+	 * expects multiple instances of the dependency.
+	 */
+	public enum Cardinality {
+		/**
+		 * The service only uses and expects a single instance of the dependency. The service will
+		 * be notified of this dependency as it comes and goes, but doesn't require it to function.
+		 */
+		OPTIONAL_UNARY(false, false),
+		/**
+		 * The service only uses and expects a single instance of the dependency. This dependency is
+		 * required for the service to be available.
+		 */
+		MANDATORY_UNARY(true, false),
+		/**
+		 * The service uses and expects multiple instances of the dependency.  The service will
+		 * be notified of this dependency as it comes and goes, but doesn't require it to function.
+		 */
+		OPTIONAL_MULTIPLE(false, true),
+		/**
+		 * The service uses and expects multiple instances of the dependency. This dependency is
+		 * required for the service to be available.
+		 */
+		MANDATORY_MULTIPLE(true, true);
+
+		private final boolean myRequiredFlag;
+		private final boolean myMultiplicityFlag;
+
+		Cardinality(final boolean required, final boolean multiple) {
+			myRequiredFlag = required;
+			myMultiplicityFlag = multiple;
+		}
+
+		public boolean isRequired() {
+			return myRequiredFlag;
+		}
+
+		public boolean isMultiple() {
+			return myMultiplicityFlag;
+		}
+	}
+
+	public enum UpdateStrategy {
+		/**
+		 * If this dependency changes it will destroy then recreate the service managed by the
+		 * lifecycle.
+		 */
+		STATIC,
+		DYNAMIC
+	}
 }
