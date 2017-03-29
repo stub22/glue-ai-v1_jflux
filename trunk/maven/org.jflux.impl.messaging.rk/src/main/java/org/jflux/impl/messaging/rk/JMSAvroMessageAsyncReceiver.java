@@ -33,50 +33,52 @@ import javax.jms.Session;
  *
  * @param <Msg> type of Message to be handled and send to listeners
  * @param <Rec> type of Avro Record to receive
+ *
  * @author Matthew Stevenson <www.robokind.org>
  */
 public class JMSAvroMessageAsyncReceiver<Msg, Rec extends IndexedRecord>
-		extends DefaultMessageAsyncReceiver<Msg, Rec> {
-	private static final Logger theLogger = LoggerFactory.getLogger(JMSAvroMessageAsyncReceiver.class);
-	private Session mySession;
-	private Destination myDestination;
-	private Class<Rec> myRecordClass;
-	private Schema myRecordSchema;
+    extends DefaultMessageAsyncReceiver<Msg, Rec> {
 
-	/**
-	 * Creates a new JMSAvroMessageAsyncReceiver
-	 *
-	 * @param session      the JMS Session to use for receiving
-	 * @param destination  the JMS Destination to receive from
-	 * @param recordClass  the Class of the Avro Record being received
-	 * @param recordSchema the Avro Schema of the Record being received
-	 */
-	public JMSAvroMessageAsyncReceiver(Session session, Destination destination,
-									   Class<Rec> recordClass, Schema recordSchema) {
-		if (session == null || destination == null || recordClass == null) {
-			throw new NullPointerException();
-		}
-		mySession = session;
-		myDestination = destination;
-		myRecordClass = recordClass;
-		myRecordSchema = recordSchema;
-	}
+    private static final Logger theLogger = LoggerFactory.getLogger(
+        JMSAvroMessageAsyncReceiver.class);
+    private Session mySession;
+    private Destination myDestination;
+    private Class<Rec> myRecordClass;
+    private Schema myRecordSchema;
 
-	/**
-	 * Start the JMSAvroMessageAsyncReceiver receiving Message.
-	 * Creates and starts a JMSAvroRecordAsyncReceiver to receive Records.
-	 *
-	 * @throws JMSException if there is an error creating a JMS MessageConsumer or starting the JMS
-	 *                      Polling Service.
-	 * @throws Exception    inherited throws statement, should not throw Exception
-	 */
-	@Override
-	public void start() throws JMSException, Exception {
-		MessageConsumer consumer = mySession.createConsumer(myDestination);
-		RecordAsyncReceiver<Rec> pollingService =
-				new JMSAvroRecordAsyncReceiver<>(
-						myRecordClass, myRecordSchema, consumer);
-		setRecordReceiver(pollingService);
-		super.start();
-	}
+    /**
+     * Creates a new JMSAvroMessageAsyncReceiver
+     *
+     * @param session      the JMS Session to use for receiving
+     * @param destination  the JMS Destination to receive from
+     * @param recordClass  the Class of the Avro Record being received
+     * @param recordSchema the Avro Schema of the Record being received
+     */
+    public JMSAvroMessageAsyncReceiver(Session session, Destination destination,
+                                       Class<Rec> recordClass, Schema recordSchema) {
+        if (session == null || destination == null || recordClass == null) {
+            throw new NullPointerException();
+        }
+        mySession = session;
+        myDestination = destination;
+        myRecordClass = recordClass;
+        myRecordSchema = recordSchema;
+    }
+
+    /**
+     * Start the JMSAvroMessageAsyncReceiver receiving Message.
+     * Creates and starts a JMSAvroRecordAsyncReceiver to receive Records.
+     *
+     * @throws JMSException if there is an error creating a JMS MessageConsumer or starting the JMS
+     *                      Polling Service.
+     * @throws Exception    inherited throws statement, should not throw Exception
+     */
+    @Override
+    public void start() throws JMSException, Exception {
+        MessageConsumer consumer = mySession.createConsumer(myDestination);
+        RecordAsyncReceiver<Rec> pollingService = new JMSAvroRecordAsyncReceiver<>(
+            myRecordClass, myRecordSchema, consumer);
+        setRecordReceiver(pollingService);
+        super.start();
+    }
 }

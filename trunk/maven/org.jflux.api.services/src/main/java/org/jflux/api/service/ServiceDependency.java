@@ -59,9 +59,9 @@ public class ServiceDependency {
 	}
 
 	/**
-	 * Returns the Class of dependency.
+	 * Returns the name of the dependency's Class.
 	 *
-	 * @return Class of dependency
+	 * @return the name of the dependency's Class
 	 */
 	public String getDependencyClassName() {
 		return myDependencyClassName;
@@ -129,7 +129,7 @@ public class ServiceDependency {
 	}
 
 	/**
-	 * How to update a service when a dependency changes.
+	 * How a {@link ServiceLifecycle} should be updated when a dependency changes.
 	 */
 	public enum UpdateStrategy {
 		/**

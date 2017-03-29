@@ -2,15 +2,15 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-		<groupId>org.jflux</groupId>
-		<artifactId>org.jflux.modules.main</artifactId>
-		<version>0.2.6-SNAPSHOT</version>
-		<relativePath>../org.jflux.modules.main/pom.xml</relativePath>
-	</parent>
+        <groupId>org.jflux</groupId>
+        <artifactId>org.jflux.modules.main</artifactId>
+        <version>0.2.6-SNAPSHOT</version>
+        <relativePath>../org.jflux.modules.main/pom.xml</relativePath>
+    </parent>
     <artifactId>org.jflux.api.common.rk</artifactId>
     <name>${project.artifactId} OSGi Bundle</name>
     <packaging>bundle</packaging>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.apache.felix</groupId>
@@ -41,10 +41,6 @@
             <artifactId>org.jflux.impl.services.rk</artifactId>
             <version>${project.version}</version>
         </dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>		
     </dependencies>
     <build>
         <plugins>

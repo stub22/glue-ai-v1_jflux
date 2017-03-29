@@ -33,14 +33,15 @@ import org.jflux.impl.messaging.rk.utils.JMSAvroPolymorphicRecordBytesAdapter;
  *
  * @author Matthew Stevenson <www.robokind.org>
  */
-public class JMSAvroPolymorphicSenderLifecycle<Msg> 
+@Deprecated
+public class JMSAvroPolymorphicSenderLifecycle<Msg>
         extends AbstractLifecycleProvider<
                 MessageSender, MessageSender<Msg>> {
     private JMSAvroPolymorphicRecordBytesAdapter<Msg> myAdapter;
 
     protected final static String theSession = "session";
     protected final static String theDestination = "destination";
-    
+
     public JMSAvroPolymorphicSenderLifecycle(
             JMSAvroPolymorphicRecordBytesAdapter<Msg> adapter,
             Class<Msg> messageClass,
@@ -62,10 +63,10 @@ public class JMSAvroPolymorphicSenderLifecycle<Msg>
                 Constants.PROP_MESSAGE_TYPE, messageClass.getName());
         myRegistrationProperties.put(
                 Constants.PROP_RECORD_TYPE, BytesMessage.class.getName());
-        myRegistrationProperties.put(Constants.PROP_MESSAGE_SENDER_ID, 
+        myRegistrationProperties.put(Constants.PROP_MESSAGE_SENDER_ID,
                 senderId);
     }
-    
+
     @Override
     protected MessageSender<Msg> create(
             Map<String, Object> dependencies) {
@@ -75,7 +76,7 @@ public class JMSAvroPolymorphicSenderLifecycle<Msg>
         JMSBytesMessageSender recSender = new JMSBytesMessageSender();
         recSender.setSession(session);
         recSender.setDestination(dest);
-        DefaultMessageSender<Msg,BytesMessage> sender =  
+        DefaultMessageSender<Msg,BytesMessage> sender =
                 new DefaultMessageSender<Msg, BytesMessage>();
         sender.setAdapter(myAdapter);
         sender.setRecordSender(recSender);
@@ -89,7 +90,7 @@ public class JMSAvroPolymorphicSenderLifecycle<Msg>
     }
 
     @Override
-    protected void handleChange(String dependencyId, Object service, 
+    protected void handleChange(String dependencyId, Object service,
             Map<String, Object> dependencies) {
         if(myService == null){
             return;

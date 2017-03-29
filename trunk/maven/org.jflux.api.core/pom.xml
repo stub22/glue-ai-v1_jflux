@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
     <dependencies>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
+            <groupId>org.appdapter</groupId>
+            <artifactId>org.appdapter.bundle.core</artifactId>
         </dependency>
     </dependencies>
 
@@ -91,7 +91,7 @@
                                             </mapper>
                                         </pathconvert>
                                         <propertyfile
-                                                file="${project.build.directory}/config.properties">
+                                            file="${project.build.directory}/config.properties">
                                             <entry key="felix.auto.start"
                                                    value="${bundles} file:modules/${project.build.finalName}.jar"/>
                                             <entry key="org.osgi.framework.bootdelegation"

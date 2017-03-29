@@ -27,36 +27,32 @@ import static org.jflux.impl.encode.avro.SerializationConfigUtils.CONF_OUTPUT_CL
 public class MessageAsyncReceiverLifecycle
 		implements ServiceLifecycle<JMSAvroMessageAsyncReceiver> {
 
-	private static final Logger theLogger = LoggerFactory.getLogger(MessageAsyncReceiverLifecycle.class);
-	//    private final static String theReceiverConfiguration =
-//            "messageReceiverConfig";
-//    private final static String theReceiverSession = "messageReceiverSession";
-//    private final static String theReceiverDestination = "messageReceiverDest";
-	private final static String theReceiverConfiguration = "msg_config_dep";
-	private final static String theReceiverSession = "session_dep";
-	private final static String theReceiverDestination = "destination_dep";
+	private static final Logger theLogger = LoggerFactory.getLogger(
+			MessageAsyncReceiverLifecycle.class);
 
+	private static final ServiceDependency theConfigurationDependency = new ServiceDependency(
+			"msg_config_dep", Configuration.class.getName(),
+			ServiceDependency.Cardinality.MANDATORY_UNARY,
+			ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP);
+
+	private static final ServiceDependency theSessionDependency = new ServiceDependency(
+			"session_dep", Session.class.getName(),
+			ServiceDependency.Cardinality.MANDATORY_UNARY,
+			ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP);
+
+	private static final ServiceDependency theDestinationDependency = new ServiceDependency(
+			"destination_dep", Destination.class.getName(),
+			ServiceDependency.Cardinality.MANDATORY_UNARY,
+			ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP);
 
 	private final static ServiceDependency[] theDependencyArray = {
-			new ServiceDependency(
-					theReceiverConfiguration, Configuration.class.getName(),
-					ServiceDependency.Cardinality.MANDATORY_UNARY,
-					ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP),
-			new ServiceDependency(
-					theReceiverSession, Session.class.getName(),
-					ServiceDependency.Cardinality.MANDATORY_UNARY,
-					ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP),
-			new ServiceDependency(
-					theReceiverDestination, Destination.class.getName(),
-					ServiceDependency.Cardinality.MANDATORY_UNARY,
-					ServiceDependency.UpdateStrategy.STATIC, Collections.EMPTY_MAP)
+			theConfigurationDependency,
+			theSessionDependency,
+			theDestinationDependency
 	};
 	private final static String[] theClassNameArray = {
 			JMSAvroMessageAsyncReceiver.class.getName()
 	};
-
-	public MessageAsyncReceiverLifecycle() {
-	}
 
 	@Override
 	public List<ServiceDependency> getDependencySpecs() {
@@ -65,28 +61,23 @@ public class MessageAsyncReceiverLifecycle
 
 	@Override
 	public JMSAvroMessageAsyncReceiver createService(
-			Map<String, Object> dependencyMap) {
-		Configuration config =
-				(Configuration) dependencyMap.get(theReceiverConfiguration);
-		Session session = (Session) dependencyMap.get(theReceiverSession);
-		Destination dest =
-				(Destination) dependencyMap.get(theReceiverDestination);
+			final Map<String, Object> dependencyMap) {
+		final Configuration config = (Configuration) dependencyMap.get(theConfigurationDependency.getDependencyName());
+		final Session session = (Session) dependencyMap.get(theSessionDependency.getDependencyName());
+		final Destination dest = (Destination) dependencyMap.get(theDestinationDependency.getDependencyName());
 
-		Adapter adapter =
-				(Adapter) config.getPropertyValue(CONF_DECODING_ADAPTER);
-		Schema schema =
-				(Schema) config.getPropertyValue(CONF_AVRO_RECORD_SCHEMA);
-		Class recordClass = (Class) config.getPropertyValue(CONF_OUTPUT_CLASS);
+		final Adapter adapter = (Adapter) config.getPropertyValue(CONF_DECODING_ADAPTER);
+		final Schema schema = (Schema) config.getPropertyValue(CONF_AVRO_RECORD_SCHEMA);
+		final Class recordClass = (Class) config.getPropertyValue(CONF_OUTPUT_CLASS);
 
-		JMSAvroMessageAsyncReceiver receiver =
-				new JMSAvroMessageAsyncReceiver(
-						session, dest, recordClass, schema);
+		final JMSAvroMessageAsyncReceiver receiver = new JMSAvroMessageAsyncReceiver(
+				session, dest, recordClass, schema);
 		receiver.setAdapter(adapter);
 
 		try {
 			receiver.start();
-		} catch (Exception ex) {
-			theLogger.warn("Error starting MessageReciever.", ex);
+		} catch (final Exception ex) {
+			theLogger.error("Error starting MessageReceiver: {}", receiver, ex);
 			return null;
 		}
 
@@ -95,16 +86,16 @@ public class MessageAsyncReceiverLifecycle
 
 	@Override
 	public JMSAvroMessageAsyncReceiver handleDependencyChange(
-			JMSAvroMessageAsyncReceiver service, String changeType,
-			String dependencyName, Object dependency,
-			Map<String, Object> availableDependencies) {
+			final JMSAvroMessageAsyncReceiver service, final String changeType,
+			final String dependencyName, final Object dependency,
+			final Map<String, Object> availableDependencies) {
 		return null;
 	}
 
 	@Override
 	public void disposeService(
-			JMSAvroMessageAsyncReceiver service,
-			Map<String, Object> availableDependencies) {
+			final JMSAvroMessageAsyncReceiver service,
+			final Map<String, Object> availableDependencies) {
 		if (service != null) {
 			service.stop();
 		}

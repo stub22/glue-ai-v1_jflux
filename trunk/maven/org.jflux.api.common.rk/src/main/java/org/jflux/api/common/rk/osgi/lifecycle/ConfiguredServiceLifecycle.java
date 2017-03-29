@@ -33,6 +33,7 @@ import java.util.Properties;
 /**
  * @author Matthew Stevenson <www.jflux.org>
  */
+@Deprecated
 public class ConfiguredServiceLifecycle<T, C, P> extends
 		AbstractLifecycleProvider<T, T> {
 	private static final Logger theLogger = LoggerFactory.getLogger(ConfiguredServiceLifecycle.class);
