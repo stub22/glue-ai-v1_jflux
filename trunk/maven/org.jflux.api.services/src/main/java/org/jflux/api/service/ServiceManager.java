@@ -242,6 +242,7 @@ public class ServiceManager<T> extends PropertyChangeNotifier implements Manager
         if(service == myService){
            myServiceRegistrationStrategy.updateRegistration(myService);
         }else{
+			//TODO if new service is null should we atempt to create a new one?
             myServiceRegistrationStrategy.updateRegistration(service);
             myLifecycle.disposeService(myService, dependencies);
             myService = service;

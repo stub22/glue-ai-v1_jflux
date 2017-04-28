@@ -61,6 +61,13 @@ public class BindingBuilder {
 		myDescriptorProperties.put(key, value);
 		return this;
 	}
+	
+	public BindingBuilder descriptor(Descriptor descriptor){
+		for(String key : descriptor.getPropertyKeys()){
+			property(key, descriptor.getProperty(key));
+		}
+		return dependencyClassName(descriptor.getClassName());
+	}
 
 	public ServiceBinding getBinding(){
 		Descriptor descriptor = new BasicDescriptor(myDependencyClassName, myDescriptorProperties);
