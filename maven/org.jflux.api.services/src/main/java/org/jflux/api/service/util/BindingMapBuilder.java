@@ -1,9 +1,9 @@
 
 package org.jflux.api.service.util;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import org.jflux.api.registry.Descriptor;
 import org.jflux.api.service.ServiceDependency;
 import org.jflux.api.service.ServiceDependency.UpdateStrategy;
 import org.jflux.api.service.binding.ServiceBinding;
@@ -44,6 +44,11 @@ public class BindingMapBuilder {
 
 	public BindingMapBuilder property(String key, String value){
 		myActiveBuilder.property(key, value);
+		return this;
+	}
+	
+	public BindingMapBuilder descriptor(Descriptor descriptor){
+		myActiveBuilder.descriptor(descriptor);
 		return this;
 	}
 

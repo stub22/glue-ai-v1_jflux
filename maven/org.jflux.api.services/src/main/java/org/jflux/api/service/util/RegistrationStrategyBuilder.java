@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jflux.api.registry.Descriptor;
 import org.jflux.api.service.DefaultRegistrationStrategy;
 import org.jflux.api.service.RegistrationStrategy;
 
@@ -29,6 +30,14 @@ public class RegistrationStrategyBuilder<T> {
 	public RegistrationStrategyBuilder<T> property(String key, String value) {
 		myRegistrationProperties.put(key, value);
 		return this;
+	}
+	
+	
+	public RegistrationStrategyBuilder<T> descriptor(Descriptor descriptor){
+		for(String key : descriptor.getPropertyKeys()){
+			property(key, descriptor.getProperty(key));
+		}
+		return className(descriptor.getClassName());
 	}
 
 	public RegistrationStrategy<T> getRegistrationStrategy() {
