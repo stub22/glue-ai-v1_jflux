@@ -2,6 +2,7 @@ package org.jflux.api.registry.util;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import org.jflux.api.registry.Descriptor;
 import org.jflux.api.registry.basic.BasicDescriptor;
 
@@ -9,11 +10,9 @@ import org.jflux.api.registry.basic.BasicDescriptor;
  *
  * @author matt
  */
-
-
-public class DescriptorBuilder {
+public class DescriptorBuilder implements Descriptor{
 	private String myDescriptorClassName;
-	private Map<String,String> myDescriptorProperties = null;
+	private Map<String,String> myDescriptorProperties = new HashMap<>();
 
 	public DescriptorBuilder(){}
 
@@ -54,24 +53,28 @@ public class DescriptorBuilder {
 		myDescriptorClassName = className.getName();
 		return this;
 	}
-
-	public DescriptorBuilder prop(String key, String value){
-		return property(key, value);
-	}
 	
 	public DescriptorBuilder property(String key, String value){
-		if(myDescriptorProperties == null){
-			myDescriptorProperties = new HashMap<>();
-		}
 		myDescriptorProperties.put(key, value);
 		return this;
 	}
 
-	public Descriptor getDescriptor(){
+	public Descriptor getBasicDescriptor(){
 		return new BasicDescriptor(myDescriptorClassName, myDescriptorProperties);
 	}
 
-	public Descriptor build(){
-		return getDescriptor();
+	@Override
+	public String getProperty(String key) {
+		return myDescriptorProperties.get(key);
+	}
+
+	@Override
+	public Set<String> getPropertyKeys() {
+		return myDescriptorProperties.keySet();
+	}
+
+	@Override
+	public String getClassName() {
+		return myDescriptorClassName;
 	}
 }
