@@ -49,12 +49,6 @@ import org.jflux.api.service.binding.ServiceBinding.BindingStrategy;
 import org.jflux.spec.services.jvocab.ServiceManagement_OWL2;
 import java.util.HashMap;
 
-
-
-/**
- *
- * @author Major Jacquote II
- */
 public class ServiceManagerExtender2Go
 		extends ServiceClassListener<SMEManager> {
 
