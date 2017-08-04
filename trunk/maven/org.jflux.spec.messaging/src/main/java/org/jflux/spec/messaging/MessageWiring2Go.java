@@ -18,10 +18,6 @@ import org.jflux.spec.messaging.rdf2go.MsgSvcConf;
 import org.jflux.spec.messaging.rdf2go.MSCConnection;
 import org.jflux.onto.common.osgi.OSGiServPropBinding;
 
-/**
- *
- * @author Major Jacquote <mjacquote@gmail.com>
- */
 
 
 public class MessageWiring2Go {

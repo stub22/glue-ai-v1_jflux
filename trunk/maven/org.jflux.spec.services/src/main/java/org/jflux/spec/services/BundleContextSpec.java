@@ -20,10 +20,6 @@ import org.appdapter.bind.rdf.jena.assembly.KnownComponentImpl;
 import org.jflux.api.service.ServiceManager;
 import org.osgi.framework.FrameworkUtil;
 
-/**
- *
- * @author Major Jacquote II <mjacquote@gmail.com>
- */
 public class BundleContextSpec extends KnownComponentImpl {
 
     private BundleContext context;

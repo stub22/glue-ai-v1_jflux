@@ -19,7 +19,6 @@ import javax.jms.Destination;
 
 /**
  * @author Amy Jessica Book <jgpallack@gmail.com>
- * @author Major Jacquote <mjacquote@gmail.com>
  */
 
 public class DestinationLifecycle implements ServiceLifecycle<Destination> {

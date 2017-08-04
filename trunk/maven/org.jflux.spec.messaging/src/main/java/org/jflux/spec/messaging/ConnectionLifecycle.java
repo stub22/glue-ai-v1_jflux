@@ -41,7 +41,6 @@ import javax.jms.JMSException;
  * object to gracefully handle changes in its environment.
  *
  * @author Jason R. Eads <eadsjr>
- * @author Major Jacquote <mjacquote@gmail.com>
  */
 public class ConnectionLifecycle implements ServiceLifecycle<Connection> {
 	private static final Logger theLogger = LoggerFactory.getLogger(ConnectionLifecycle.class);
