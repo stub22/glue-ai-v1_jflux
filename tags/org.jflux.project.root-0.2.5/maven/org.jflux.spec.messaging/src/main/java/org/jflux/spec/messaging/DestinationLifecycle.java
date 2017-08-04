@@ -19,7 +19,6 @@ import org.jflux.spec.messaging.rdf2go.MSCQueueAMQP;
 /**
  *
  * @author Amy Jessica Book <jgpallack@gmail.com>
- * @author Major Jacquote <mjacquote@gmail.com>
  */
 
 public class DestinationLifecycle implements ServiceLifecycle<Destination> {

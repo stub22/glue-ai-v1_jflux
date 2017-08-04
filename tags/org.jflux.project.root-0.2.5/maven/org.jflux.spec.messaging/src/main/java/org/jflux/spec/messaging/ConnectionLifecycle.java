@@ -39,7 +39,6 @@ import org.jflux.spec.messaging.rdf2go.MSCConnection;
  * object to gracefully handle changes in its environment.
  * 
  * @author Jason R. Eads <eadsjr>
- * @author Major Jacquote <mjacquote@gmail.com>
  */
 public class ConnectionLifecycle implements ServiceLifecycle<Connection> {
     private final static Logger theLogger = Logger.getLogger(ConnectionLifecycle.class.getName());

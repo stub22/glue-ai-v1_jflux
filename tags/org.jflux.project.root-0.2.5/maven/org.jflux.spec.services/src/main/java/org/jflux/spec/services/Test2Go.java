@@ -18,7 +18,7 @@ import org.jflux.impl.registry.OSGiRegistry;
 
 /**
  *
- * @author Major Jacquote II <mjacquote@gmail.com>
+ * @author
  *							 <major@robokindrobots.com>
  * 
  */
