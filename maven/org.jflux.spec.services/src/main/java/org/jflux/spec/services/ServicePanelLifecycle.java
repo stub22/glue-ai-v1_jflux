@@ -10,10 +10,6 @@ import org.jflux.api.service.ServiceLifecycle;
 import org.jflux.swing.services.ServicesFrame;
 import org.osgi.framework.BundleContext;
 
-/**
- *
- * @author Major Jacquote II <mjacquote@gmail.com>
- */
 public class ServicePanelLifecycle implements ServiceLifecycle<ServicesFrame> {
 
     private final static String contextDependency = "bundlecontext_dep";

@@ -16,13 +16,6 @@ import org.jflux.impl.services.rk.osgi.lifecycle.OSGiComponent;
 import org.jflux.api.registry.Registry;
 import org.jflux.impl.registry.OSGiRegistry;
 
-/**
- *
- * @author Major Jacquote II <mjacquote@gmail.com>
- *							 <major@robokindrobots.com>
- * 
- */
-
 
 public class Test2Go {
 	

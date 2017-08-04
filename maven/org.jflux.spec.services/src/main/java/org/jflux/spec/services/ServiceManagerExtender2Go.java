@@ -51,9 +51,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 
-/**
- * @author Major Jacquote II
- */
 public class ServiceManagerExtender2Go
 		extends ServiceClassListener<SMEManager> {
 

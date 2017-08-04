@@ -7,10 +7,6 @@ import org.appdapter.core.name.Ident;
 import com.hp.hpl.jena.assembler.Assembler;
 import com.hp.hpl.jena.assembler.Mode;
 
-/**
- *
- * @author Major Jacquote II <mjacquote@gmail.com>
- */
 public class BundleContextSpecBuilder extends CachingComponentAssembler<BundleContextSpec> {
     private final static String id="http://www.friedularity.org/Connection#libraryID";
             
