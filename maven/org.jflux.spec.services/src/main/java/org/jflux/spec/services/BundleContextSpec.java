@@ -22,7 +22,7 @@ import org.osgi.framework.FrameworkUtil;
 
 /**
  *
- * @author Major Jacquote II <mjacquote@gmail.com>
+ * @author
  */
 public class BundleContextSpec extends KnownComponentImpl {
 
