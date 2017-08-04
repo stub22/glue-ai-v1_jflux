@@ -32,7 +32,7 @@ import org.jflux.impl.services.rk.osgi.lifecycle.OSGiComponent;
 
 /**
  *
- * @author Major Jacquote II <mjacquote@gmail.com>
+ * @author
  */
 public class RegisterWiring {
     public final static String PIPELINE_GRAPH_QN = "csi:pipeline_sheet_0";
